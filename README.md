@@ -26,7 +26,9 @@ To get started with this project, you will need to have the following installed 
 To build and run the project, follow these steps:
 
 * Clone the repository:
-```bash git clone https://github.com/Tuyenxngoc/book360-ui.git
+
+   ```bash
+   git clone https://github.com/Tuyenxngoc/book360-backend.git
 
 * Navigate to the project directory: cd book360-backend
 * Build the project: mvn clean install
