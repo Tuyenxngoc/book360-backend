@@ -25,7 +25,8 @@ To get started with this project, you will need to have the following installed 
 
 To build and run the project, follow these steps:
 
-* Clone the repository: `https://github.com/Tuyenxngoc/book360-backend.git`
+* Clone the repository:
+```bash git clone https://github.com/Tuyenxngoc/book360-ui.git
 * Navigate to the project directory: cd book360-backend
 * Build the project: mvn clean install
 * Run the project: mvn spring-boot:run 
