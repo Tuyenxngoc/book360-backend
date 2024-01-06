@@ -2,6 +2,7 @@ package com.bookstore.bookstore.domain.entity;
 
 import com.bookstore.bookstore.constant.Gender;
 import com.bookstore.bookstore.domain.entity.common.DateAuditing;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -10,7 +11,9 @@ import lombok.Setter;
 import org.hibernate.annotations.Nationalized;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 @Entity
@@ -52,4 +55,19 @@ public class Customer extends DateAuditing {
     )
     private Set<Product> favoriteProducts = new HashSet<>();
 
+    @OneToOne(mappedBy = "customer")
+    @JsonIgnore
+    private User user;
+
+    @OneToOne(cascade = CascadeType.ALL, mappedBy = "customer")
+    private Cart cart;
+
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "customer")
+    private List<Bill> bills = new ArrayList<>();
+
+    public Customer(String name, String phoneNumber) {
+        this.name = name;
+        this.phoneNumber = phoneNumber;
+        this.dob = LocalDate.now();
+    }
 }

@@ -87,4 +87,12 @@ public class Product {
     @OneToMany(mappedBy = "product", cascade = CascadeType.ALL)
     @JsonManagedReference
     private List<ProductImage> images;
+
+    @OneToMany(mappedBy = "product", cascade = CascadeType.ALL)
+    @JsonManagedReference
+    private List<CartDetail> cartDetails;
+
+    @OneToMany(mappedBy = "product", cascade = CascadeType.ALL)
+    @JsonManagedReference
+    private List<BillDetail> billDetails;
 }
