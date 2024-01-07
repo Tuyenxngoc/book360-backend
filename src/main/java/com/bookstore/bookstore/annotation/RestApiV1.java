@@ -1,4 +1,4 @@
-package com.bookstore.bookstore.base;
+package com.bookstore.bookstore.annotation;
 
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
