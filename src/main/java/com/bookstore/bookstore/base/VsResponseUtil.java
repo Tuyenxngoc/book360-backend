@@ -23,7 +23,7 @@ public class VsResponseUtil {
         return ResponseEntity.ok().headers(responseHeaders).body(response);
     }
 
-    public static ResponseEntity<RestData<?>> error(HttpStatus status, String message) {
+    public static ResponseEntity<RestData<?>> error(HttpStatus status, Object message) {
         RestData<?> response = RestData.error(message);
         return new ResponseEntity<>(response, status);
     }
