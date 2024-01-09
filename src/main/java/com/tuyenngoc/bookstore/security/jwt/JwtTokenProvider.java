@@ -16,11 +16,11 @@ import java.util.stream.Collectors;
 @Component
 public class JwtTokenProvider {
 
-    private final String CLAIM_TYPE = "type";
-    private final String TYPE_ACCESS = "access";
-    private final String TYPE_REFRESH = "refresh";
-    private final String USERNAME_KEY = "username";
-    private final String AUTHORITIES_KEY = "auth";
+    private static final String CLAIM_TYPE = "type";
+    private static final String TYPE_ACCESS = "access";
+    private static final String TYPE_REFRESH = "refresh";
+    private static final String USERNAME_KEY = "username";
+    private static final String AUTHORITIES_KEY = "auth";
 
     @Value("${jwt.secret}")
     private String SECRET_KEY;
@@ -76,6 +76,10 @@ public class JwtTokenProvider {
 
     public String extractSubjectFromJwt(String token) {
         return Jwts.parser().setSigningKey(SECRET_KEY).parseClaimsJws(token).getBody().getSubject();
+    }
+
+    public String extractClaimUsername(String token) {
+        return Jwts.parser().setSigningKey(SECRET_KEY).parseClaimsJws(token).getBody().get(USERNAME_KEY).toString();
     }
 
 }

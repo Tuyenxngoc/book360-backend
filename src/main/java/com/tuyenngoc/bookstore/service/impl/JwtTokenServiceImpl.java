@@ -19,17 +19,17 @@ public class JwtTokenServiceImpl implements JwtTokenService {
     private Integer EXPIRATION_TIME_ACCESS_TOKEN;
 
     @Override
-    public void addToCache(String token) {
+    public void saveTokenToRedis(String token) {
         redisTemplate.opsForValue().set(token, LocalDateTime.now().toString(), EXPIRATION_TIME_ACCESS_TOKEN, TimeUnit.MINUTES);
     }
 
     @Override
-    public void setExpired(String token) {
+    public void deleteTokenFromRedis(String token) {
         redisTemplate.delete(token);
     }
 
     @Override
-    public boolean isTokenPresentInCache(String token) {
+    public boolean checkTokenExistenceInRedis(String token) {
         return Boolean.TRUE.equals(redisTemplate.hasKey(token));
     }
 }

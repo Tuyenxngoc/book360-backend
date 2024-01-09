@@ -2,10 +2,10 @@ package com.tuyenngoc.bookstore.service;
 
 public interface JwtTokenService {
 
-    void addToCache(String token);
+    void saveTokenToRedis(String token);
 
-    void setExpired(String token);
+    void deleteTokenFromRedis(String token);
 
-    boolean isTokenPresentInCache(String token);
+    boolean checkTokenExistenceInRedis(String token);
 
 }

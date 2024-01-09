@@ -34,7 +34,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
         try {
             String jwt = JwtUtil.getJwtFromRequest(request);
-            if (jwt != null && tokenProvider.validateToken(jwt) && tokenService.isTokenPresentInCache(jwt)) {
+            if (jwt != null && tokenProvider.validateToken(jwt) && tokenService.checkTokenExistenceInRedis(jwt)) {
                 String userId = tokenProvider.extractSubjectFromJwt(jwt);
                 UserDetails userDetails = customUserDetailsService.loadUserById(userId);
                 UsernamePasswordAuthenticationToken authenticationToken =

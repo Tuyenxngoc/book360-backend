@@ -6,6 +6,8 @@ public class ErrorMessage {
     public static final String UNAUTHORIZED = "exception.unauthorized";
     public static final String FORBIDDEN = "exception.forbidden";
     public static final String FORBIDDEN_UPDATE_DELETE = "exception.forbidden.update-delete";
+    public static final String REQUIRED_REQUEST_BODY_MISSING = "exception.required-request-body-missing";
+    public static final String METHOD_NOT_SUPPORTED = "exception.method-not-supported";
 
     //error validation dto
     public static final String INVALID_SOME_THING_FIELD = "invalid.general";
@@ -31,7 +33,7 @@ public class ErrorMessage {
         public static final String ERR_DUPLICATE_USERNAME_EMAIL = "exception.auth.duplicate.username.email";
         public static final String ERR_ACCOUNT_NOT_ENABLED = "exception.auth.account.not.enabled";
         public static final String ERR_ACCOUNT_LOCKED = "exception.auth.account.locked";
-        public static final String INVALID_REFRESH_TOKEN = "exception.auth.invalid.refresh.token";
+        public static final String ERR_INVALID_REFRESH_TOKEN = "exception.auth.invalid.refresh.token";
         public static final String EXPIRED_REFRESH_TOKEN = "exception.auth.expired.refresh.token";
     }
 

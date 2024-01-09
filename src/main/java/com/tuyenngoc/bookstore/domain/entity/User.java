@@ -38,4 +38,8 @@ public class User extends DateAuditing {
     @OneToOne
     @JoinColumn(name = "customer_id", unique = true, foreignKey = @ForeignKey(name = "FK_USER_CUSTOMER"), referencedColumnName = "customer_id")
     private Customer customer;
+
+    @JsonIgnore
+    @Column(name = "refresh_token")
+    private String refreshToken;
 }
