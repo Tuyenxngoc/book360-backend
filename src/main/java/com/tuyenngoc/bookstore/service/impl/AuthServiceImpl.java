@@ -10,7 +10,9 @@ import com.tuyenngoc.bookstore.domain.dto.request.TokenRefreshRequestDto;
 import com.tuyenngoc.bookstore.domain.dto.response.CommonResponseDto;
 import com.tuyenngoc.bookstore.domain.dto.response.LoginResponseDto;
 import com.tuyenngoc.bookstore.domain.dto.response.TokenRefreshResponseDto;
+import com.tuyenngoc.bookstore.domain.entity.Customer;
 import com.tuyenngoc.bookstore.domain.entity.User;
+import com.tuyenngoc.bookstore.domain.mapper.AddressMapper;
 import com.tuyenngoc.bookstore.domain.mapper.UserMapper;
 import com.tuyenngoc.bookstore.exception.DataIntegrityViolationException;
 import com.tuyenngoc.bookstore.exception.InvalidException;
@@ -57,6 +59,8 @@ public class AuthServiceImpl implements AuthService {
     private final RoleRepository roleRepository;
 
     private final CustomerRepository customerRepository;
+
+    private final AddressMapper addressMapper;
 
     @Override
     public LoginResponseDto login(LoginRequestDto request) {
@@ -136,10 +140,11 @@ public class AuthServiceImpl implements AuthService {
         if (isEmailExists) {
             throw new DataIntegrityViolationException(ErrorMessage.Auth.ERR_DUPLICATE_EMAIL);
         }
+        //Create a new user
         User user = userMapper.toUser(requestDto);
         user.setPassword(passwordEncoder.encode(requestDto.getPassword()));
         user.setRole(roleRepository.findByName(RoleConstant.CUSTOMER.getRoleName()));
-
+        user.setCustomer(customerRepository.save(new Customer(requestDto.getUsername())));
         return userRepository.save(user);
     }
 

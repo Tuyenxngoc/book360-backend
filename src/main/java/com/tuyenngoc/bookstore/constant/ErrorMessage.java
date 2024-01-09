@@ -6,8 +6,10 @@ public class ErrorMessage {
     public static final String UNAUTHORIZED = "exception.unauthorized";
     public static final String FORBIDDEN = "exception.forbidden";
     public static final String FORBIDDEN_UPDATE_DELETE = "exception.forbidden.update-delete";
-    public static final String REQUIRED_REQUEST_BODY_MISSING = "exception.required-request-body-missing";
-    public static final String METHOD_NOT_SUPPORTED = "exception.method-not-supported";
+    public static final String ERR_METHOD_NOT_SUPPORTED = "exception.method-not-supported";
+    public static final String ERR_INVALID_REQUEST_BODY = "exception.required-request-body-missing";
+    public static final String ERR_REQUIRED_MISSING_PARAMETER = "exception.missing-servlet-request-parameter";
+    public static final String ERR_METHOD_ARGUMENT_TYPE_MISMATCH = "exception.method-argument-type-mismatch";
 
     //error validation dto
     public static final String INVALID_SOME_THING_FIELD = "invalid.general";

@@ -68,6 +68,10 @@ public class Customer extends DateAuditing {
     public Customer(String name, String phoneNumber) {
         this.name = name;
         this.phoneNumber = phoneNumber;
-        this.dob = LocalDate.now();
+    }
+
+    public Customer(String name) {
+        this.name = name;
+        this.cart = new Cart();
     }
 }
