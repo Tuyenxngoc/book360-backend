@@ -106,7 +106,7 @@ public class AuthServiceImpl implements AuthService {
         if (jwtTokenProvider.validateToken(refreshToken)) {
             String username = jwtTokenProvider.extractClaimUsername(refreshToken);
 
-            if (jwtTokenService.checkRefreshTokenExistenceInRedis(username, refreshToken)) {
+            if (jwtTokenService.checkRefreshTokenExistenceInRedis(refreshToken, username)) {
                 User user = userRepository.findByUsername(username)
                         .orElseThrow(() -> new InvalidException(ErrorMessage.Auth.ERR_INVALID_REFRESH_TOKEN));
                 CustomUserDetails userDetails = CustomUserDetails.create(user);

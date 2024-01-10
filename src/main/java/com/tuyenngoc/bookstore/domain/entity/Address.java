@@ -1,13 +1,13 @@
 package com.tuyenngoc.bookstore.domain.entity;
 
 import com.fasterxml.jackson.annotation.JsonManagedReference;
-import com.tuyenngoc.bookstore.domain.entity.common.DateAuditing;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Entity
@@ -16,7 +16,7 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 @Table(name = "address")
-public class Address extends DateAuditing {
+public class Address {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -32,5 +32,6 @@ public class Address extends DateAuditing {
 
     @OneToMany(mappedBy = "address", cascade = CascadeType.ALL)
     @JsonManagedReference
-    private List<Customer> customers;
+    private List<Customer> customers = new ArrayList<>();
+
 }

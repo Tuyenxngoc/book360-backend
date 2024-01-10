@@ -2,7 +2,6 @@ package com.tuyenngoc.bookstore.domain.entity;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
-import com.tuyenngoc.bookstore.domain.entity.common.DateAuditing;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -18,7 +17,7 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 @Table(name = "cart")
-public class Cart extends DateAuditing {
+public class Cart {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -29,7 +28,8 @@ public class Cart extends DateAuditing {
     @JsonManagedReference
     private List<CartDetail> cartDetails = new ArrayList<>();
 
-    @OneToOne(mappedBy = "cart")
+    @OneToOne
     @JsonBackReference
     private Customer customer;
+
 }

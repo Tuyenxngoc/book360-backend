@@ -4,7 +4,9 @@ import com.tuyenngoc.bookstore.config.CloudinaryConfig;
 import com.tuyenngoc.bookstore.config.MailConfig;
 import com.tuyenngoc.bookstore.config.properties.AdminInfo;
 import com.tuyenngoc.bookstore.constant.RoleConstant;
+import com.tuyenngoc.bookstore.domain.entity.Customer;
 import com.tuyenngoc.bookstore.domain.entity.Role;
+import com.tuyenngoc.bookstore.domain.entity.User;
 import com.tuyenngoc.bookstore.repository.CustomerRepository;
 import com.tuyenngoc.bookstore.repository.RoleRepository;
 import com.tuyenngoc.bookstore.repository.UserRepository;
@@ -61,14 +63,18 @@ public class BookStoreApplication {
             }
             //init admin
             if (userRepository.count() == 0) {
-//                User admin = User.builder()
-//                        .username(adminInfo.getUsername())
-//                        .password(passwordEncoder.encode(adminInfo.getPassword()))
-//                        .email(adminInfo.getEmail())
-//                        .role(roleRepository.findByName(RoleConstant.ADMINISTRATOR.getRoleName()))
-//                        .customer(customerRepository.save(new Customer(adminInfo.getName(), adminInfo.getPhoneNumber())))
-//                        .build();
-//                userRepository.save(admin);
+                try {
+                    User admin = User.builder()
+                            .username(adminInfo.getUsername())
+                            .password(passwordEncoder.encode(adminInfo.getPassword()))
+                            .email(adminInfo.getEmail())
+                            .role(roleRepository.findByName(RoleConstant.ADMINISTRATOR.getRoleName()))
+                            .customer(customerRepository.save(new Customer(adminInfo.getName(), adminInfo.getPhoneNumber())))
+                            .build();
+                    userRepository.save(admin);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
             }
         };
     }

@@ -24,11 +24,11 @@ public class JwtTokenServiceImpl implements JwtTokenService {
     private final RedisTemplate<String, Object> redisTemplate;
 
     private String getAccessTokenKey(String username) {
-        return ACCESS_TOKEN_KEY + username;
+        return ACCESS_TOKEN_KEY + username.toUpperCase();
     }
 
     private String getRefreshTokenKey(String username) {
-        return REFRESH_TOKEN_KEY + username;
+        return REFRESH_TOKEN_KEY + username.toUpperCase();
     }
 
     @Override

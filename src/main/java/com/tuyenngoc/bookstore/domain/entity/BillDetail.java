@@ -34,4 +34,5 @@ public class BillDetail extends DateAuditing {
     @JoinColumn(name = "bill_id", foreignKey = @ForeignKey(name = "FK_BILL_DETAIL_BILL_ID"), referencedColumnName = "bill_id")
     @JsonBackReference
     private Bill bill;
+
 }

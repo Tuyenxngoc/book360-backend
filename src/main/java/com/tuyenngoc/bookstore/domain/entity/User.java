@@ -1,5 +1,6 @@
 package com.tuyenngoc.bookstore.domain.entity;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.tuyenngoc.bookstore.domain.entity.common.DateAuditing;
@@ -31,12 +32,12 @@ public class User extends DateAuditing {
     @Column(unique = true)
     private String email;
 
-    @OneToOne(cascade = CascadeType.ALL)
+    @ManyToOne
     @JoinColumn(name = "role_id", foreignKey = @ForeignKey(name = "FK_USER_ROLE_ID"))
-    @JsonManagedReference
+    @JsonBackReference
     private Role role;
 
-    @OneToOne(cascade = CascadeType.ALL)
+    @OneToOne
     @JoinColumn(name = "customer_id", foreignKey = @ForeignKey(name = "FK_USER_CUSTOMER_ID"))
     @JsonManagedReference
     private Customer customer;

@@ -12,6 +12,7 @@ import lombok.Setter;
 import org.hibernate.annotations.Nationalized;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.List;
 
 @Entity
@@ -42,14 +43,14 @@ public class Customer extends DateAuditing {
     @JsonBackReference
     private User user;
 
-    @OneToOne(cascade = CascadeType.ALL)
+    @OneToOne(mappedBy = "customer")
     @JoinColumn(name = "cart_id", foreignKey = @ForeignKey(name = "FK_CUSTOMER_CART_ID"), referencedColumnName = "cart_id")
     @JsonManagedReference
     private Cart cart;
 
     @OneToMany(mappedBy = "customer", cascade = CascadeType.ALL)
     @JsonManagedReference
-    private List<Bill> bills;
+    private List<Bill> bills = new ArrayList<>();
 
     @ManyToOne
     @JoinColumn(name = "address_id", foreignKey = @ForeignKey(name = "FK_CUSTOMER_ADDRESS_ID"), referencedColumnName = "address_id")
@@ -63,5 +64,11 @@ public class Customer extends DateAuditing {
             inverseJoinColumns = @JoinColumn(name = "product_id", foreignKey = @ForeignKey(name = "FK_CUSTOMER_FAVORITE_PRODUCT_PRODUCT_ID"), referencedColumnName = "product_id")
     )
     @JsonManagedReference
-    private List<Product> products;
+    private List<Product> products = new ArrayList<>();
+
+    public Customer(String fullName, String phoneNumber) {
+        this.fullName = fullName;
+        this.phoneNumber = phoneNumber;
+    }
+
 }

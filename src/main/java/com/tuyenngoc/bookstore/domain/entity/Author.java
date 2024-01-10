@@ -24,9 +24,11 @@ public class Author extends DateAuditing {
     @Column(name = "author_id")
     private Long id;
 
+    @Column(name = "full_name")
     private String fullName;
 
     @ManyToMany(mappedBy = "authors")
     @JsonBackReference
     private List<Product> products = new ArrayList<>();
+
 }
