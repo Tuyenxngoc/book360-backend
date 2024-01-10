@@ -1,6 +1,6 @@
 package com.tuyenngoc.bookstore.domain.entity;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.tuyenngoc.bookstore.domain.entity.common.DateAuditing;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
@@ -8,14 +8,14 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-import java.util.HashSet;
-import java.util.Set;
+import java.util.List;
 
 @Entity
 @Getter
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
+@Table(name = "address")
 public class Address extends DateAuditing {
 
     @Id
@@ -30,7 +30,7 @@ public class Address extends DateAuditing {
     @Column(name = "address_name")
     private String addressName;
 
-    @ManyToMany(mappedBy = "addresses")
-    @JsonIgnore
-    private Set<Customer> customers = new HashSet<>();
+    @OneToMany(mappedBy = "address", cascade = CascadeType.ALL)
+    @JsonManagedReference
+    private List<Customer> customers;
 }

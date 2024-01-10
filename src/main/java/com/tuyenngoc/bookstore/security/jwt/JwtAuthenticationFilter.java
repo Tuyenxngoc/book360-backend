@@ -33,14 +33,19 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
         try {
-            String jwt = JwtUtil.getJwtFromRequest(request);
-            if (jwt != null && tokenProvider.validateToken(jwt) && tokenService.checkTokenExistenceInRedis(jwt)) {
-                String userId = tokenProvider.extractSubjectFromJwt(jwt);
-                UserDetails userDetails = customUserDetailsService.loadUserById(userId);
-                UsernamePasswordAuthenticationToken authenticationToken =
-                        new UsernamePasswordAuthenticationToken(userDetails, null, userDetails.getAuthorities());
-                authenticationToken.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
-                SecurityContextHolder.getContext().setAuthentication(authenticationToken);
+            String accessToken = JwtUtil.getJwtFromRequest(request);
+
+            if (accessToken != null && tokenProvider.validateToken(accessToken)) {
+                String username = tokenProvider.extractClaimUsername(accessToken);
+
+                if (tokenService.checkAccessTokenExistenceInRedis(accessToken, username)) {
+                    UserDetails userDetails = customUserDetailsService.loadUserByUsername(username);
+                    UsernamePasswordAuthenticationToken authenticationToken =
+                            new UsernamePasswordAuthenticationToken(userDetails, null, userDetails.getAuthorities());
+
+                    authenticationToken.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
+                    SecurityContextHolder.getContext().setAuthentication(authenticationToken);
+                }
             }
         } catch (Exception ex) {
             log.error("Could not set user authentication in security context", ex);

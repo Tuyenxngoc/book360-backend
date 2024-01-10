@@ -2,10 +2,14 @@ package com.tuyenngoc.bookstore.service;
 
 public interface JwtTokenService {
 
-    void saveTokenToRedis(String token);
+    void saveAccessTokenToRedis(String accessToken, String username);
 
-    void deleteTokenFromRedis(String token);
+    void saveRefreshTokenToRedis(String refreshToken, String username);
 
-    boolean checkTokenExistenceInRedis(String token);
+    boolean checkAccessTokenExistenceInRedis(String accessToken, String username);
+
+    boolean checkRefreshTokenExistenceInRedis(String refreshToken, String username);
+
+    void deleteTokenFromRedis(String username);
 
 }

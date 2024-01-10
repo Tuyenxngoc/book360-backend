@@ -1,8 +1,8 @@
 package com.tuyenngoc.bookstore.domain.entity;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
+import com.tuyenngoc.bookstore.domain.entity.common.DateAuditing;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -18,7 +18,8 @@ import java.util.List;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class Product {
+@Table(name = "product")
+public class Product extends DateAuditing {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -69,32 +70,33 @@ public class Product {
     @Column(name = "stock_quantity")
     private Integer stockQuantity;// Số lượng sách còn trong kho.
 
-    @ManyToOne
-    @JoinColumn(name = "category_id", foreignKey = @ForeignKey(name = "FK_PRODUCT_CATEGORY"), referencedColumnName = "category_id")
-    @JsonBackReference
-    private Category category;
+    @OneToMany(mappedBy = "product", cascade = CascadeType.ALL)
+    @JsonManagedReference
+    private List<ProductImage> images = new ArrayList<>();// Danh sách ảnh
 
     @ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     @JoinTable(
             name = "product_author",
-            joinColumns = @JoinColumn(name = "product_id", foreignKey = @ForeignKey(name = "FK_PRODUCT_ID"), referencedColumnName = "product_id"),
-            inverseJoinColumns = @JoinColumn(name = "author_id", foreignKey = @ForeignKey(name = "FK_AUTHOR_ID"), referencedColumnName = "author_id")
+            joinColumns = @JoinColumn(name = "product_id", foreignKey = @ForeignKey(name = "FK_PRODUCT_AUTHOR_PRODUCT_ID"), referencedColumnName = "product_id"),
+            inverseJoinColumns = @JoinColumn(name = "author_id", foreignKey = @ForeignKey(name = "FK_PRODUCT_AUTHOR_AUTHOR_ID"), referencedColumnName = "author_id")
     )
+    @JsonManagedReference
     private List<Author> authors = new ArrayList<>();
 
-    @ManyToMany(mappedBy = "favoriteProducts", cascade = CascadeType.ALL)
-    @JsonIgnore
-    private List<Customer> favoriteByCustomers = new ArrayList<>();
+    @ManyToOne
+    @JoinColumn(name = "category_id", foreignKey = @ForeignKey(name = "FK_PRODUCT_CATE_ID"), referencedColumnName = "category_id")
+    @JsonBackReference
+    private Category category;
 
     @OneToMany(mappedBy = "product", cascade = CascadeType.ALL)
     @JsonManagedReference
-    private List<ProductImage> images;
+    private List<BillDetail> billDetails = new ArrayList<>();
 
     @OneToMany(mappedBy = "product", cascade = CascadeType.ALL)
     @JsonManagedReference
-    private List<CartDetail> cartDetails;
+    private List<CartDetail> cartDetails = new ArrayList<>();
 
-    @OneToMany(mappedBy = "product", cascade = CascadeType.ALL)
-    @JsonManagedReference
-    private List<BillDetail> billDetails;
+    @ManyToMany
+    @JsonBackReference
+    private List<Customer> customers = new ArrayList<>();
 }

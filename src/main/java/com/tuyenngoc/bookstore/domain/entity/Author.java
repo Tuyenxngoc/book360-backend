@@ -1,13 +1,13 @@
 package com.tuyenngoc.bookstore.domain.entity;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.tuyenngoc.bookstore.domain.entity.common.DateAuditing;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -16,7 +16,8 @@ import java.util.List;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class Author {
+@Table(name = "author")
+public class Author extends DateAuditing {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -25,23 +26,7 @@ public class Author {
 
     private String fullName;
 
-    private String biography;
-
-    private String nationality;
-
-    private String websiteUrl;
-
-    private String socialMediaLinks;
-
-    private String email;
-
-    @Temporal(TemporalType.DATE)
-    private LocalDate birthdate;
-
-    @Temporal(TemporalType.DATE)
-    private LocalDate deathdate;
-
     @ManyToMany(mappedBy = "authors")
-    @JsonIgnore
+    @JsonBackReference
     private List<Product> products = new ArrayList<>();
 }

@@ -1,5 +1,7 @@
 package com.tuyenngoc.bookstore.domain.entity;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.tuyenngoc.bookstore.domain.entity.common.DateAuditing;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -10,7 +12,7 @@ import lombok.*;
 @NoArgsConstructor
 @AllArgsConstructor
 @Table(name = "bill_detail")
-public class BillDetail {
+public class BillDetail extends DateAuditing {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -20,11 +22,16 @@ public class BillDetail {
     @Column(nullable = false)
     private int quantity;
 
+    @Column(nullable = false)
+    private double price;
+
     @ManyToOne
     @JoinColumn(name = "product_id", foreignKey = @ForeignKey(name = "FK_BILL_DETAIL_PRODUCT_ID"), referencedColumnName = "product_id")
+    @JsonBackReference
     private Product product;
 
     @ManyToOne
     @JoinColumn(name = "bill_id", foreignKey = @ForeignKey(name = "FK_BILL_DETAIL_BILL_ID"), referencedColumnName = "bill_id")
+    @JsonBackReference
     private Bill bill;
 }

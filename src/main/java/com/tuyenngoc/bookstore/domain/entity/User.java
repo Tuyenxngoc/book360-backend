@@ -1,7 +1,7 @@
 package com.tuyenngoc.bookstore.domain.entity;
 
-import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.tuyenngoc.bookstore.domain.entity.common.DateAuditing;
 import jakarta.persistence.*;
 import lombok.*;
@@ -13,6 +13,7 @@ import org.hibernate.annotations.UuidGenerator;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
+@Table(name = "user")
 public class User extends DateAuditing {
 
     @Id
@@ -30,16 +31,13 @@ public class User extends DateAuditing {
     @Column(unique = true)
     private String email;
 
-    @ManyToOne
-    @JoinColumn(name = "role_id", foreignKey = @ForeignKey(name = "FK_USER_ROLE"), referencedColumnName = "role_id")
-    @JsonBackReference
+    @OneToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "role_id", foreignKey = @ForeignKey(name = "FK_USER_ROLE_ID"))
+    @JsonManagedReference
     private Role role;
 
-    @OneToOne
-    @JoinColumn(name = "customer_id", unique = true, foreignKey = @ForeignKey(name = "FK_USER_CUSTOMER"), referencedColumnName = "customer_id")
+    @OneToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "customer_id", foreignKey = @ForeignKey(name = "FK_USER_CUSTOMER_ID"))
+    @JsonManagedReference
     private Customer customer;
-
-    @JsonIgnore
-    @Column(name = "refresh_token")
-    private String refreshToken;
 }

@@ -10,20 +10,16 @@ import com.tuyenngoc.bookstore.domain.dto.request.TokenRefreshRequestDto;
 import com.tuyenngoc.bookstore.domain.dto.response.CommonResponseDto;
 import com.tuyenngoc.bookstore.domain.dto.response.LoginResponseDto;
 import com.tuyenngoc.bookstore.domain.dto.response.TokenRefreshResponseDto;
-import com.tuyenngoc.bookstore.domain.entity.Customer;
 import com.tuyenngoc.bookstore.domain.entity.User;
-import com.tuyenngoc.bookstore.domain.mapper.AddressMapper;
 import com.tuyenngoc.bookstore.domain.mapper.UserMapper;
 import com.tuyenngoc.bookstore.exception.DataIntegrityViolationException;
 import com.tuyenngoc.bookstore.exception.InvalidException;
 import com.tuyenngoc.bookstore.exception.UnauthorizedException;
-import com.tuyenngoc.bookstore.repository.CustomerRepository;
 import com.tuyenngoc.bookstore.repository.RoleRepository;
 import com.tuyenngoc.bookstore.repository.UserRepository;
 import com.tuyenngoc.bookstore.security.CustomUserDetails;
 import com.tuyenngoc.bookstore.security.jwt.JwtTokenProvider;
 import com.tuyenngoc.bookstore.service.AuthService;
-import com.tuyenngoc.bookstore.util.JwtUtil;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
@@ -58,10 +54,6 @@ public class AuthServiceImpl implements AuthService {
 
     private final RoleRepository roleRepository;
 
-    private final CustomerRepository customerRepository;
-
-    private final AddressMapper addressMapper;
-
     @Override
     public LoginResponseDto login(LoginRequestDto request) {
         try {
@@ -74,8 +66,8 @@ public class AuthServiceImpl implements AuthService {
             String accessToken = jwtTokenProvider.generateToken(customUserDetails, Boolean.FALSE);
             String refreshToken = jwtTokenProvider.generateToken(customUserDetails, Boolean.TRUE);
 
-            userRepository.saveRefreshTokenByUsername(refreshToken, customUserDetails.getUsername());
-            jwtTokenService.saveTokenToRedis(accessToken);
+            jwtTokenService.saveAccessTokenToRedis(accessToken, customUserDetails.getUsername());
+            jwtTokenService.saveRefreshTokenToRedis(refreshToken, customUserDetails.getUsername());
 
             return new LoginResponseDto(
                     customUserDetails.getId(),
@@ -91,11 +83,13 @@ public class AuthServiceImpl implements AuthService {
     }
 
     @Override
-    public CommonResponseDto logout(HttpServletRequest request, HttpServletResponse response, Authentication authentication) {
-        String jwt = JwtUtil.getJwtFromRequest(request);
-        jwtTokenService.deleteTokenFromRedis(jwt);
-        if (authentication != null) {
-            userRepository.removeRefreshToken(authentication.getName());
+    public CommonResponseDto logout(
+            HttpServletRequest request,
+            HttpServletResponse response,
+            Authentication authentication
+    ) {
+        if (authentication != null && authentication.getName() != null) {
+            jwtTokenService.deleteTokenFromRedis(authentication.getName());
         }
 
         SecurityContextLogoutHandler logout = new SecurityContextLogoutHandler();
@@ -111,17 +105,22 @@ public class AuthServiceImpl implements AuthService {
 
         if (jwtTokenProvider.validateToken(refreshToken)) {
             String username = jwtTokenProvider.extractClaimUsername(refreshToken);
-            User user = userRepository.findByUsernameAndRefreshToken(username, refreshToken)
-                    .orElseThrow(() -> new InvalidException(ErrorMessage.Auth.ERR_INVALID_REFRESH_TOKEN));
-            CustomUserDetails userDetails = CustomUserDetails.create(user);
 
-            String newAccessToken = jwtTokenProvider.generateToken(userDetails, Boolean.FALSE);
-            String newRefreshToken = jwtTokenProvider.generateToken(userDetails, Boolean.TRUE);
+            if (jwtTokenService.checkRefreshTokenExistenceInRedis(username, refreshToken)) {
+                User user = userRepository.findByUsername(username)
+                        .orElseThrow(() -> new InvalidException(ErrorMessage.Auth.ERR_INVALID_REFRESH_TOKEN));
+                CustomUserDetails userDetails = CustomUserDetails.create(user);
 
-            userRepository.saveRefreshTokenByUsername(newRefreshToken, user.getUsername());
-            jwtTokenService.saveTokenToRedis(newAccessToken);
+                String newAccessToken = jwtTokenProvider.generateToken(userDetails, Boolean.FALSE);
+                String newRefreshToken = jwtTokenProvider.generateToken(userDetails, Boolean.TRUE);
 
-            return new TokenRefreshResponseDto(newAccessToken, newRefreshToken);
+                jwtTokenService.saveAccessTokenToRedis(newAccessToken, user.getUsername());
+                jwtTokenService.saveRefreshTokenToRedis(newRefreshToken, user.getUsername());
+
+                return new TokenRefreshResponseDto(newAccessToken, newRefreshToken);
+            } else {
+                throw new InvalidException(ErrorMessage.Auth.ERR_INVALID_REFRESH_TOKEN);
+            }
         } else {
             throw new InvalidException(ErrorMessage.Auth.ERR_INVALID_REFRESH_TOKEN);
         }
@@ -144,7 +143,6 @@ public class AuthServiceImpl implements AuthService {
         User user = userMapper.toUser(requestDto);
         user.setPassword(passwordEncoder.encode(requestDto.getPassword()));
         user.setRole(roleRepository.findByName(RoleConstant.CUSTOMER.getRoleName()));
-        user.setCustomer(customerRepository.save(new Customer(requestDto.getUsername())));
         return userRepository.save(user);
     }
 

@@ -23,12 +23,8 @@ public class ProductImage {
     @Column(nullable = false)
     private String image;
 
-    private String image_500x500;
-
-    private String image_50x50;
-
     @ManyToOne
-    @JoinColumn(name = "images")
+    @JoinColumn(name = "product_id", foreignKey = @ForeignKey(name = "FK_PRODUCT_IMAGE_PRODUCT_ID"), referencedColumnName = "product_id")
     @JsonBackReference
     private Product product;
 }
