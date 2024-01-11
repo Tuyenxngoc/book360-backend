@@ -8,7 +8,6 @@ import com.tuyenngoc.bookstore.security.CustomUserDetails;
 import com.tuyenngoc.bookstore.service.UserService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
-import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -19,7 +18,6 @@ public class UserController {
 
     private final UserService userService;
 
-    @Tag(name = "user-controller-admin")
     @Operation(summary = "API get current user login")
     @GetMapping(UrlConstant.User.GET_CURRENT_USER)
     public ResponseEntity<?> getCurrentUser(@Parameter(name = "userDetails", hidden = true)

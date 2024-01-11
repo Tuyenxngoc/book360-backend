@@ -25,20 +25,20 @@ public class User extends DateAuditing {
     @Column(nullable = false, unique = true)
     private String username;
 
+    @Column(nullable = false, unique = true)
+    private String email;
+
     @Column(nullable = false)
     @JsonIgnore
     private String password;
 
-    @Column(unique = true)
-    private String email;
-
     @ManyToOne
-    @JoinColumn(name = "role_id", foreignKey = @ForeignKey(name = "FK_USER_ROLE_ID"))
+    @JoinColumn(name = "role_id", foreignKey = @ForeignKey(name = "FK_USER_ROLE_ID"), referencedColumnName = "role_id")
     @JsonBackReference
     private Role role;
 
     @OneToOne
-    @JoinColumn(name = "customer_id", foreignKey = @ForeignKey(name = "FK_USER_CUSTOMER_ID"))
+    @JoinColumn(name = "customer_id", foreignKey = @ForeignKey(name = "FK_USER_CUSTOMER_ID"), referencedColumnName = "customer_id")
     @JsonManagedReference
     private Customer customer;
 }

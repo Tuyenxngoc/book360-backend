@@ -6,7 +6,7 @@ public enum SortByDataConstant implements SortByInterface {
     PRODUCT {
         @Override
         public String getSortBy(String sortBy) {
-            return null;
+            return "name";
         }
     }
 }

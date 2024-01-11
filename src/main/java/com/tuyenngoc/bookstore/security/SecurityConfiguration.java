@@ -31,7 +31,12 @@ public class SecurityConfiguration {
             "/v3/api-docs/**",
             "/swagger-ui/**",
             "/swagger-ui.html",
-            "/api/v1/auth/**"
+            //user
+
+            //auth
+            "/api/v1/auth/**",
+            //product
+            "api/v1/product/get-products",
     };
 
     private final CustomUserDetailsServiceImpl userDetailsService;

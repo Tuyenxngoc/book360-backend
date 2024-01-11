@@ -29,23 +29,23 @@ public class Customer extends DateAuditing {
     private Long id;
 
     @Nationalized
-    @Column(nullable = false)
+    @Column(nullable = false, name = "full_name")
     private String fullName;
 
     private LocalDate dob;
 
+    @Column(name = "phone_number")
     private String phoneNumber;
 
     @Enumerated(EnumType.STRING)
     private Gender gender;
 
-    @OneToOne(mappedBy = "customer")
+    @OneToOne(mappedBy = "customer", cascade = CascadeType.ALL)
     @JsonBackReference
     private User user;
 
-    @OneToOne(mappedBy = "customer")
-    @JoinColumn(name = "cart_id", foreignKey = @ForeignKey(name = "FK_CUSTOMER_CART_ID"), referencedColumnName = "cart_id")
-    @JsonManagedReference
+    @OneToOne(mappedBy = "customer", cascade = CascadeType.ALL)
+    @JsonBackReference
     private Cart cart;
 
     @OneToMany(mappedBy = "customer", cascade = CascadeType.ALL)
@@ -57,14 +57,14 @@ public class Customer extends DateAuditing {
     @JsonBackReference
     private Address address;
 
-    @ManyToMany
+    @ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     @JoinTable(
             name = "customer_favorite_products",
             joinColumns = @JoinColumn(name = "customer_id", foreignKey = @ForeignKey(name = "FK_CUSTOMER_FAVORITE_PRODUCT_CUSTOMER_ID"), referencedColumnName = "customer_id"),
             inverseJoinColumns = @JoinColumn(name = "product_id", foreignKey = @ForeignKey(name = "FK_CUSTOMER_FAVORITE_PRODUCT_PRODUCT_ID"), referencedColumnName = "product_id")
     )
     @JsonManagedReference
-    private List<Product> products = new ArrayList<>();
+    private List<Product> favoriteProducts = new ArrayList<>();
 
     public Customer(String fullName, String phoneNumber) {
         this.fullName = fullName;

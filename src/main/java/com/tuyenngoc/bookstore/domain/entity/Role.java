@@ -23,7 +23,7 @@ public class Role {
     @Column(name = "role_id")
     private Integer id;
 
-    @Column(nullable = false)
+    @Column(nullable = false, unique = true)
     private String name;
 
     @OneToMany(mappedBy = "role", cascade = CascadeType.ALL)

@@ -29,11 +29,11 @@ public class Bill extends DateAuditing {
     @Column(nullable = false, name = "shipping_address")
     private String shippingAddress;
 
-    @Column(nullable = false)
-    private String email;
-
     @Column(nullable = false, name = "phone_number")
     private String phoneNumber;
+
+    @Column(nullable = false)
+    private String email;
 
     @Column(name = "shipping_fee")
     private double shippingFee;

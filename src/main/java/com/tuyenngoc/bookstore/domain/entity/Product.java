@@ -67,12 +67,28 @@ public class Product extends DateAuditing {
     @Column(name = "page_count")
     private Integer pageCount;// Số trang của sách.
 
+    @Column(name = "sold_quantity")
+    private Integer soldQuantity; // Số lượng đã bán
+
     @Column(name = "stock_quantity")
     private Integer stockQuantity;// Số lượng sách còn trong kho.
 
     @OneToMany(mappedBy = "product", cascade = CascadeType.ALL)
     @JsonManagedReference
     private List<ProductImage> images = new ArrayList<>();// Danh sách ảnh
+
+    @OneToMany(mappedBy = "product", cascade = CascadeType.ALL)
+    @JsonManagedReference
+    private List<BillDetail> billDetails = new ArrayList<>();
+
+    @OneToMany(mappedBy = "product", cascade = CascadeType.ALL)
+    @JsonManagedReference
+    private List<CartDetail> cartDetails = new ArrayList<>();
+
+    @ManyToOne
+    @JoinColumn(name = "category_id", foreignKey = @ForeignKey(name = "FK_PRODUCT_CATE_ID"), referencedColumnName = "category_id")
+    @JsonBackReference
+    private Category category;
 
     @ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     @JoinTable(
@@ -83,20 +99,7 @@ public class Product extends DateAuditing {
     @JsonManagedReference
     private List<Author> authors = new ArrayList<>();
 
-    @ManyToOne
-    @JoinColumn(name = "category_id", foreignKey = @ForeignKey(name = "FK_PRODUCT_CATE_ID"), referencedColumnName = "category_id")
-    @JsonBackReference
-    private Category category;
-
-    @OneToMany(mappedBy = "product", cascade = CascadeType.ALL)
-    @JsonManagedReference
-    private List<BillDetail> billDetails = new ArrayList<>();
-
-    @OneToMany(mappedBy = "product", cascade = CascadeType.ALL)
-    @JsonManagedReference
-    private List<CartDetail> cartDetails = new ArrayList<>();
-
-    @ManyToMany
+    @ManyToMany(mappedBy = "favoriteProducts")
     @JsonBackReference
     private List<Customer> customers = new ArrayList<>();
 }

@@ -24,7 +24,7 @@ public class Author extends DateAuditing {
     @Column(name = "author_id")
     private Long id;
 
-    @Column(name = "full_name")
+    @Column(name = "full_name", nullable = false)
     private String fullName;
 
     @ManyToMany(mappedBy = "authors")

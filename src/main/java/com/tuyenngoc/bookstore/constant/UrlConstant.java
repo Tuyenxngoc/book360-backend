@@ -21,9 +21,21 @@ public class UrlConstant {
         public static final String GET_CURRENT_USER = PRE_FIX + "/current";
     }
 
+    public static class Customer {
+        private static final String PRE_FIX = "/customer";
+        public static final String GET_PRODUCTS = PRE_FIX + "/get-products";
+
+    }
+
     public static class Product {
         private static final String PRE_FIX = "/product";
         public static final String GET_PRODUCTS = PRE_FIX + "/get-products";
+
+    }
+
+    public static class Cart {
+        private static final String PRE_FIX = "/cart";
+        public static final String GET_PRODUCTS = PRE_FIX + "/get-total-products";
 
     }
 }

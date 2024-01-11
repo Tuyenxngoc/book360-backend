@@ -1,6 +1,5 @@
 package com.tuyenngoc.bookstore.domain.entity;
 
-import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
@@ -29,7 +28,7 @@ public class Cart {
     private List<CartDetail> cartDetails = new ArrayList<>();
 
     @OneToOne
-    @JsonBackReference
+    @JoinColumn(name = "customer_id", foreignKey = @ForeignKey(name = "FK_CART_CUSTOMER_ID"), referencedColumnName = "customer_id")
+    @JsonManagedReference
     private Customer customer;
-
 }
