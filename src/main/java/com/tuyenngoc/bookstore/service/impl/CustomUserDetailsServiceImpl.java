@@ -23,7 +23,7 @@ public class CustomUserDetailsServiceImpl implements CustomUserDetailsService, U
     @Transactional
     public UserDetails loadUserByUsername(String usernameOrEmail) throws UsernameNotFoundException {
         User user = userRepository.findByUsernameOrEmail(usernameOrEmail, usernameOrEmail)
-                .orElseThrow(() -> new NotFoundException(ErrorMessage.User.ERR_NOT_FOUND_USERNAME_OR_EMAIL, new String[]{usernameOrEmail}));
+                .orElseThrow(() -> new NotFoundException(ErrorMessage.User.ERR_NOT_FOUND_USERNAME_OR_EMAIL, usernameOrEmail));
         return CustomUserDetails.create(user);
     }
 
@@ -31,7 +31,7 @@ public class CustomUserDetailsServiceImpl implements CustomUserDetailsService, U
     @Transactional
     public UserDetails loadUserById(String id) {
         User user = userRepository.findById(id)
-                .orElseThrow(() -> new NotFoundException(ErrorMessage.User.ERR_NOT_FOUND_ID, new String[]{id}));
+                .orElseThrow(() -> new NotFoundException(ErrorMessage.User.ERR_NOT_FOUND_ID, id));
         return CustomUserDetails.create(user);
     }
 }

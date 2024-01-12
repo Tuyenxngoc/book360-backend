@@ -1,11 +1,13 @@
 package com.tuyenngoc.bookstore.exception;
 
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.springframework.http.HttpStatus;
 
 @Getter
 @Setter
+@NoArgsConstructor
 public class ForbiddenException extends RuntimeException {
 
     private String message;
@@ -19,25 +21,4 @@ public class ForbiddenException extends RuntimeException {
         this.status = HttpStatus.FORBIDDEN;
         this.message = message;
     }
-
-    public ForbiddenException(HttpStatus status, String message) {
-        super(message);
-        this.status = status;
-        this.message = message;
-    }
-
-    public ForbiddenException(String message, String[] params) {
-        super(message);
-        this.status = HttpStatus.FORBIDDEN;
-        this.message = message;
-        this.params = params;
-    }
-
-    public ForbiddenException(HttpStatus status, String message, String[] params) {
-        super(message);
-        this.status = status;
-        this.message = message;
-        this.params = params;
-    }
-
 }

@@ -11,6 +11,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Configuration;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
@@ -33,10 +35,11 @@ public class DatasourceConfig {
                     .collect(Collectors.toList()));
         }
 
+        final List<Category> categories = new ArrayList<>();
         if (categoryRepository.count() == 0) {
-            categoryRepository.saveAll(IntStream.range(0, 3).mapToObj(i ->
+            categories.addAll(categoryRepository.saveAll(IntStream.range(0, 3).mapToObj(i ->
                             new Category(i, "category" + i, "", null))
-                    .collect(Collectors.toList()));
+                    .collect(Collectors.toList())));
         }
 
         if (productRepository.count() == 0) {
@@ -64,7 +67,7 @@ public class DatasourceConfig {
                                     null,
                                     null,
                                     null,
-                                    null,
+                                    categories.get((int) (Math.random() * categories.size())),
                                     null,
                                     null
                             ))

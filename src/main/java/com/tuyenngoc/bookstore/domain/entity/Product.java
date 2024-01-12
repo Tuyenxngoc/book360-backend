@@ -87,7 +87,7 @@ public class Product extends DateAuditing {
 
     @ManyToOne
     @JoinColumn(name = "category_id", foreignKey = @ForeignKey(name = "FK_PRODUCT_CATE_ID"), referencedColumnName = "category_id")
-    @JsonBackReference
+    @JsonManagedReference
     private Category category;
 
     @ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)

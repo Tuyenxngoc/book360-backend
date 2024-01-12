@@ -13,4 +13,7 @@ public interface ProductRepository extends JpaRepository<Product, Integer> {
 
     @Query("SELECT new com.tuyenngoc.bookstore.domain.dto.response.GetProductsResponseDto(p) FROM Product p")
     Page<GetProductsResponseDto> getProducts(Pageable pageable);
+
+    @Query("SELECT new com.tuyenngoc.bookstore.domain.dto.response.GetProductsResponseDto(p) FROM Product p WHERE p.category.id=?1")
+    Page<GetProductsResponseDto> getProductsByCategoryId(int categoryId, Pageable pageable);
 }

@@ -58,13 +58,13 @@ public class BannerServiceImpl implements BannerService {
     @Override
     public Banner getBanner(int bannerId) {
         return bannerRepository.findById(bannerId)
-                .orElseThrow(() -> new NotFoundException(ErrorMessage.Banner.ERR_NOT_FOUND_ID, new String[]{String.valueOf(bannerId)}));
+                .orElseThrow(() -> new NotFoundException(ErrorMessage.Banner.ERR_NOT_FOUND_ID, String.valueOf(bannerId)));
     }
 
     @Override
     public CommonResponseDto updateBanner(int bannerId, BannerDto bannerDto) {
         Banner banner = bannerRepository.findById(bannerId)
-                .orElseThrow(() -> new NotFoundException(ErrorMessage.Banner.ERR_NOT_FOUND_ID, new String[]{String.valueOf(bannerId)}));
+                .orElseThrow(() -> new NotFoundException(ErrorMessage.Banner.ERR_NOT_FOUND_ID, String.valueOf(bannerId)));
 
         uploadFileUtil.destroyFileWithUrl(banner.getImage());
 
@@ -84,7 +84,7 @@ public class BannerServiceImpl implements BannerService {
             bannerRepository.deleteById(bannerId);
             return new CommonResponseDto(SuccessMessage.DELETE);
         } else {
-            throw new NotFoundException(ErrorMessage.Banner.ERR_NOT_FOUND_ID, new String[]{String.valueOf(bannerId)});
+            throw new NotFoundException(ErrorMessage.Banner.ERR_NOT_FOUND_ID, String.valueOf(bannerId));
         }
     }
 
@@ -95,7 +95,7 @@ public class BannerServiceImpl implements BannerService {
             banner = bannerMapper.toBanner(bannerDto);
         } else {
             banner = bannerRepository.findById(bannerDto.getId())
-                    .orElseThrow(() -> new NotFoundException(ErrorMessage.Banner.ERR_NOT_FOUND_ID, new String[]{String.valueOf(bannerDto.getId())}));
+                    .orElseThrow(() -> new NotFoundException(ErrorMessage.Banner.ERR_NOT_FOUND_ID, String.valueOf(bannerDto.getId())));
 
             uploadFileUtil.destroyFileWithUrl(banner.getImage());
 

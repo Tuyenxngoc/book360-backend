@@ -31,11 +31,13 @@ public class UrlConstant {
         private static final String PRE_FIX = "/product";
         public static final String GET_PRODUCTS = PRE_FIX + "/get-products";
 
+        public static final String GET_PRODUCTS_BY_CATEGORY_ID = PRE_FIX + "/get-products-by-categoryId/{categoryId}";
+
     }
 
     public static class Cart {
         private static final String PRE_FIX = "/cart";
-        public static final String GET_PRODUCTS = PRE_FIX + "/get-total-products";
+        public static final String GET_TOTAL_PRODUCTS = PRE_FIX + "/get-total-products/{customerId}";
 
     }
 

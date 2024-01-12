@@ -30,7 +30,7 @@ public class CategoryServiceImpl implements CategoryService {
     private final UploadFileUtil uploadFileUtil;
 
     @Override
-    public Category createCategory(CategoryDto categoryDto) {
+    public CategoryDto createCategory(CategoryDto categoryDto) {
         Category category;
         if (categoryDto.getId() == -1) {
             category = categoryMapper.toCategory(categoryDto);
@@ -41,18 +41,20 @@ public class CategoryServiceImpl implements CategoryService {
             category.setName(categoryDto.getName());
             category.setImage(categoryDto.getImage());
         }
-        return categoryRepository.save(category);
+        Category newCategory = categoryRepository.save(category);
+        return categoryMapper.toCategoryDto(newCategory);
     }
 
     @Override
-    public Category getCategory(int categoryId) {
-        return categoryRepository.findById(categoryId)
+    public CategoryDto getCategory(int categoryId) {
+        Category newCategory = categoryRepository.findById(categoryId)
                 .orElseThrow(() -> new NotFoundException(ErrorMessage.Category.ERR_NOT_FOUND_ID, String.valueOf(categoryId)));
+        return categoryMapper.toCategoryDto(newCategory);
     }
 
     @Override
-    public List<Category> getCategories() {
-        return categoryRepository.findAll();
+    public List<CategoryDto> getCategories() {
+        return categoryRepository.getAllCategories();
     }
 
     @Override
@@ -78,6 +80,5 @@ public class CategoryServiceImpl implements CategoryService {
             throw new NotFoundException(ErrorMessage.Category.ERR_NOT_FOUND_ID, String.valueOf(categoryId));
         }
     }
-
 
 }

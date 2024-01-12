@@ -22,7 +22,7 @@ public class Author extends DateAuditing {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "author_id")
-    private Long id;
+    private Integer id;
 
     @Column(name = "full_name", nullable = false)
     private String fullName;

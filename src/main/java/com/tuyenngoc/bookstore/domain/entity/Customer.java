@@ -26,7 +26,7 @@ public class Customer extends DateAuditing {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "customer_id")
-    private Long id;
+    private Integer id;
 
     @Nationalized
     @Column(nullable = false, name = "full_name")

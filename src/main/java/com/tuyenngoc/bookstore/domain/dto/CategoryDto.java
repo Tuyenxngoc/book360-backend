@@ -1,6 +1,7 @@
 package com.tuyenngoc.bookstore.domain.dto;
 
 import com.tuyenngoc.bookstore.constant.ErrorMessage;
+import com.tuyenngoc.bookstore.domain.entity.Category;
 import jakarta.validation.constraints.NotBlank;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -21,4 +22,10 @@ public class CategoryDto {
 
     @NotBlank(message = ErrorMessage.NOT_BLANK_FIELD)
     private String image;
+
+    public CategoryDto(Category category) {
+        this.id = category.getId();
+        this.name = category.getName();
+        this.image = category.getImage();
+    }
 }
