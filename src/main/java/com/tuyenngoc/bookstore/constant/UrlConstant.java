@@ -33,6 +33,9 @@ public class UrlConstant {
 
         public static final String GET_PRODUCTS_BY_CATEGORY_ID = PRE_FIX + "/get-products-by-categoryId/{categoryId}";
 
+        public static final String GET_PRODUCT_DETAIL = PRE_FIX + "/get-product-detail/{productId}";
+        public static final String GET_PRODUCTS_SAME_AUTHOR = PRE_FIX + "/get-products-same-author/{productId}";
+
     }
 
     public static class Cart {

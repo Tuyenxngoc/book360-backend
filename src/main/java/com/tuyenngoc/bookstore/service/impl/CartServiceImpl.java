@@ -13,10 +13,6 @@ public class CartServiceImpl implements CartService {
 
     @Override
     public int getTotalProducts(Integer customerId) {
-        Integer totalProducts = cartRepository.getTotalProductQuantityByCustomerId(customerId);
-        if (totalProducts == null) {
-            return 0;
-        }
-        return totalProducts;
+        return cartRepository.getTotalProductQuantityByCustomerId(customerId);
     }
 }

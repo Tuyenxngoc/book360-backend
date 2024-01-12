@@ -1,8 +1,10 @@
 package com.tuyenngoc.bookstore.test;
 
+import com.tuyenngoc.bookstore.domain.entity.Author;
 import com.tuyenngoc.bookstore.domain.entity.Banner;
 import com.tuyenngoc.bookstore.domain.entity.Category;
 import com.tuyenngoc.bookstore.domain.entity.Product;
+import com.tuyenngoc.bookstore.repository.AuthorRepository;
 import com.tuyenngoc.bookstore.repository.BannerRepository;
 import com.tuyenngoc.bookstore.repository.CategoryRepository;
 import com.tuyenngoc.bookstore.repository.ProductRepository;
@@ -26,6 +28,8 @@ public class DatasourceConfig {
 
     private final BannerRepository bannerRepository;
 
+    private final AuthorRepository authorRepository;
+
     @PostConstruct
     public void initData() {
 
@@ -39,6 +43,13 @@ public class DatasourceConfig {
         if (categoryRepository.count() == 0) {
             categories.addAll(categoryRepository.saveAll(IntStream.range(0, 3).mapToObj(i ->
                             new Category(i, "category" + i, "", null))
+                    .collect(Collectors.toList())));
+        }
+
+        final List<Author> authors = new ArrayList<>();
+        if (authorRepository.count() == 0) {
+            authors.addAll(authorRepository.saveAll(IntStream.range(0, 10).mapToObj(i ->
+                            new Author(i, "author" + i, null))
                     .collect(Collectors.toList())));
         }
 
@@ -68,7 +79,7 @@ public class DatasourceConfig {
                                     null,
                                     null,
                                     categories.get((int) (Math.random() * categories.size())),
-                                    null,
+                                    List.of(authors.get((int) (Math.random() * authors.size()))),
                                     null
                             ))
                     .collect(Collectors.toList())

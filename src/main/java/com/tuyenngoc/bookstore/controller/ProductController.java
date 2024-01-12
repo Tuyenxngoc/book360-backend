@@ -30,4 +30,16 @@ public class ProductController {
     public ResponseEntity<?> getProductByCategoryId(@PathVariable int categoryId, @Valid @ParameterObject PaginationFullRequestDto requestDto) {
         return VsResponseUtil.success(productService.getProductsByCategoryId(categoryId, requestDto));
     }
+
+    @Operation(summary = "API get product detail")
+    @GetMapping(UrlConstant.Product.GET_PRODUCT_DETAIL)
+    public ResponseEntity<?> getProductDetail(@PathVariable int productId) {
+        return VsResponseUtil.success(productService.getProductDetail(productId));
+    }
+
+    @Operation(summary = "API get products same author")
+    @GetMapping(UrlConstant.Product.GET_PRODUCTS_SAME_AUTHOR)
+    public ResponseEntity<?> getProductSameAuthor(@PathVariable int productId) {
+        return VsResponseUtil.success(productService.getProductsSameAuthor(productId));
+    }
 }

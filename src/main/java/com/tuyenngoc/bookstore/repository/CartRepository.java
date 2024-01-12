@@ -13,6 +13,6 @@ public interface CartRepository extends JpaRepository<Cart, Integer> {
 
     Optional<Cart> findByCustomerId(int customerId);
 
-    @Query("SELECT SUM(cd.quantity) FROM CartDetail cd WHERE cd.cart.customer.id = :customerId")
+    @Query("SELECT COALESCE(SUM(cd.quantity), 0) FROM CartDetail cd WHERE cd.cart.customer.id = :customerId")
     Integer getTotalProductQuantityByCustomerId(@Param("customerId") Integer customerId);
 }
