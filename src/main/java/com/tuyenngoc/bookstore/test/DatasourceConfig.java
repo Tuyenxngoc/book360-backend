@@ -1,7 +1,9 @@
 package com.tuyenngoc.bookstore.test;
 
+import com.tuyenngoc.bookstore.domain.entity.Banner;
 import com.tuyenngoc.bookstore.domain.entity.Category;
 import com.tuyenngoc.bookstore.domain.entity.Product;
+import com.tuyenngoc.bookstore.repository.BannerRepository;
 import com.tuyenngoc.bookstore.repository.CategoryRepository;
 import com.tuyenngoc.bookstore.repository.ProductRepository;
 import jakarta.annotation.PostConstruct;
@@ -20,8 +22,16 @@ public class DatasourceConfig {
 
     private final CategoryRepository categoryRepository;
 
+    private final BannerRepository bannerRepository;
+
     @PostConstruct
     public void initData() {
+
+        if (bannerRepository.count() == 0) {
+            bannerRepository.saveAll(IntStream.range(0, 20).mapToObj(i ->
+                            new Banner(i + 1, "https://res.cloudinary.com/dkegqlchp/image/upload/v1705025283/ms_banner_img3_jeieut.webp", "/test", i))
+                    .collect(Collectors.toList()));
+        }
 
         if (categoryRepository.count() == 0) {
             categoryRepository.saveAll(IntStream.range(0, 3).mapToObj(i ->

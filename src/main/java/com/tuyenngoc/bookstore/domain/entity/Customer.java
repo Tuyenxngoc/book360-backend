@@ -32,6 +32,7 @@ public class Customer extends DateAuditing {
     @Column(nullable = false, name = "full_name")
     private String fullName;
 
+    @Temporal(TemporalType.DATE)
     private LocalDate dob;
 
     @Column(name = "phone_number")
@@ -39,6 +40,8 @@ public class Customer extends DateAuditing {
 
     @Enumerated(EnumType.STRING)
     private Gender gender;
+
+    private String avatar;
 
     @OneToOne(mappedBy = "customer", cascade = CascadeType.ALL)
     @JsonBackReference

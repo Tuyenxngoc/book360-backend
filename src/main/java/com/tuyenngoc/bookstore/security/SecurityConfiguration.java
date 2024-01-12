@@ -36,7 +36,9 @@ public class SecurityConfiguration {
             //auth
             "/api/v1/auth/**",
             //product
-            "api/v1/product/get-products",
+            "/api/v1/product/get-products",
+            //banner
+            "/api/v1/banner/get-all-banners"
     };
 
     private final CustomUserDetailsServiceImpl userDetailsService;

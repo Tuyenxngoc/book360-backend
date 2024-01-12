@@ -26,6 +26,7 @@ public class ErrorMessage {
     public static final String INVALID_TIME = "invalid.time-format";
     public static final String INVALID_REPEAT_PASSWORD = "invalid.password-repeat";
     public static final String INVALID_COORDINATES = "invalid.coordinates";
+    public static final String INVALID_VIEW_ORDER = "invalid.view-order";
 
     public static class Auth {
         public static final String ERR_INCORRECT_USERNAME_PASSWORD = "exception.auth.incorrect.username-password";
@@ -76,5 +77,9 @@ public class ErrorMessage {
 
     public static class CartProduct {
         public static final String ERR_NOT_IN_STOCK = "exception.quantity.not.in.stock";
+    }
+
+    public static class Banner {
+        public static final String ERR_NOT_FOUND_ID = "exception.banner.not.found.id";
     }
 }
