@@ -41,12 +41,25 @@ public class UrlConstant {
 
     public static class Banner {
         private static final String PRE_FIX = "/banner";
-        public static final String GET_ALL_BANNERS = PRE_FIX + "/get-all-banners";
-        public static final String GET_BANNERS = PRE_FIX + "/get-banners";
+
         public static final String GET_BANNER = PRE_FIX + "/get-banner/{bannerId}";
+        public static final String GET_BANNERS = PRE_FIX + "/get-banners";
+        public static final String GET_ALL_BANNERS = PRE_FIX + "/get-all-banners";
+
         public static final String UPDATE_BANNER = PRE_FIX + "/update-banner/{bannerId}";
         public static final String DELETE_BANNER = PRE_FIX + "/delete-banner/{bannerId}";
         public static final String CREATE_BANNER = PRE_FIX + "/create-banner";
+
+    }
+
+    public static class Category {
+        private static final String PRE_FIX = "/category";
+
+        public static final String CREATE_CATEGORY = PRE_FIX + "/create-category";
+        public static final String UPDATE_CATEGORY = PRE_FIX + "/update-category/{categoryId}";
+        public static final String DELETE_CATEGORY = PRE_FIX + "/delete-category/{categoryId}";
+        public static final String GET_CATEGORY = PRE_FIX + "/get-category/{categoryId}";
+        public static final String GET_CATEGORIES = PRE_FIX + "/get-categories";
 
     }
 }

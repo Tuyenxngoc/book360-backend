@@ -27,6 +27,13 @@ public class BannerController {
     }
 
     @PreAuthorize("hasRole('ADMIN')")
+    @Operation(summary = "API get banner")
+    @GetMapping(UrlConstant.Banner.GET_BANNER)
+    public ResponseEntity<?> getBanner(@PathVariable int bannerId) {
+        return VsResponseUtil.success(bannerService.getBanner(bannerId));
+    }
+
+    @PreAuthorize("hasRole('ADMIN')")
     @Operation(summary = "API get banners")
     @GetMapping(UrlConstant.Banner.GET_BANNERS)
     public ResponseEntity<?> getBanners(@ParameterObject @Valid PaginationFullRequestDto requestDto) {

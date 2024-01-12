@@ -38,7 +38,9 @@ public class SecurityConfiguration {
             //product
             "/api/v1/product/get-products",
             //banner
-            "/api/v1/banner/get-all-banners"
+            "/api/v1/banner/get-all-banners",
+            //category
+            "/api/v1/category/get-categories"
     };
 
     private final CustomUserDetailsServiceImpl userDetailsService;
