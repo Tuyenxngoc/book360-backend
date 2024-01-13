@@ -1,7 +1,6 @@
 package com.tuyenngoc.bookstore.domain.entity;
 
-import com.fasterxml.jackson.annotation.JsonBackReference;
-import com.fasterxml.jackson.annotation.JsonManagedReference;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.tuyenngoc.bookstore.constant.Gender;
 import com.tuyenngoc.bookstore.domain.entity.common.DateAuditing;
 import jakarta.persistence.*;
@@ -44,20 +43,20 @@ public class Customer extends DateAuditing {
     private String avatar;
 
     @OneToOne(mappedBy = "customer", cascade = CascadeType.ALL)
-    @JsonBackReference
+    @JsonIgnore
     private User user;
 
     @OneToOne(mappedBy = "customer", cascade = CascadeType.ALL)
-    @JsonBackReference
+    @JsonIgnore
     private Cart cart;
 
     @OneToMany(mappedBy = "customer", cascade = CascadeType.ALL)
-    @JsonManagedReference
+    @JsonIgnore
     private List<Bill> bills = new ArrayList<>();
 
     @ManyToOne
     @JoinColumn(name = "address_id", foreignKey = @ForeignKey(name = "FK_CUSTOMER_ADDRESS_ID"), referencedColumnName = "address_id")
-    @JsonBackReference
+    @JsonIgnore
     private Address address;
 
     @ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
@@ -66,7 +65,7 @@ public class Customer extends DateAuditing {
             joinColumns = @JoinColumn(name = "customer_id", foreignKey = @ForeignKey(name = "FK_CUSTOMER_FAVORITE_PRODUCT_CUSTOMER_ID"), referencedColumnName = "customer_id"),
             inverseJoinColumns = @JoinColumn(name = "product_id", foreignKey = @ForeignKey(name = "FK_CUSTOMER_FAVORITE_PRODUCT_PRODUCT_ID"), referencedColumnName = "product_id")
     )
-    @JsonManagedReference
+    @JsonIgnore
     private List<Product> favoriteProducts = new ArrayList<>();
 
     public Customer(String fullName, String phoneNumber) {

@@ -4,9 +4,7 @@ import com.tuyenngoc.bookstore.annotation.RestApiV1;
 import com.tuyenngoc.bookstore.base.VsResponseUtil;
 import com.tuyenngoc.bookstore.constant.UrlConstant;
 import com.tuyenngoc.bookstore.domain.dto.AddressDto;
-import com.tuyenngoc.bookstore.domain.dto.request.LoginRequestDto;
-import com.tuyenngoc.bookstore.domain.dto.request.RegisterRequestDto;
-import com.tuyenngoc.bookstore.domain.dto.request.TokenRefreshRequestDto;
+import com.tuyenngoc.bookstore.domain.dto.request.*;
 import com.tuyenngoc.bookstore.service.AuthService;
 import io.swagger.v3.oas.annotations.Operation;
 import jakarta.servlet.http.HttpServletRequest;
@@ -15,9 +13,7 @@ import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.*;
 
 @RestApiV1
 @RequiredArgsConstructor
@@ -48,4 +44,17 @@ public class AuthController {
     public ResponseEntity<?> register(@Valid @RequestBody RegisterRequestDto requestDto, @RequestParam float latitude, @RequestParam float longitude) {
         return VsResponseUtil.success(authService.register(requestDto, new AddressDto(latitude, longitude)));
     }
+
+    @Operation(summary = "API forget password")
+    @PostMapping(UrlConstant.Auth.FORGET_PASSWORD)
+    public ResponseEntity<?> forgetPassword(@Valid @RequestBody ForgetPasswordRequestDto requestDto) {
+        return VsResponseUtil.success(authService.forgetPassword(requestDto));
+    }
+
+    @Operation(summary = "API change password")
+    @PatchMapping(UrlConstant.Auth.CHANGE_PASSWORD)
+    public ResponseEntity<?> changePassword(@Valid @RequestBody ChangePasswordRequestDto requestDto, @PathVariable String username) {
+        return VsResponseUtil.success(authService.changePassword(requestDto, username));
+    }
+
 }

@@ -1,7 +1,6 @@
 package com.tuyenngoc.bookstore.domain.entity;
 
-import com.fasterxml.jackson.annotation.JsonBackReference;
-import com.fasterxml.jackson.annotation.JsonManagedReference;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.tuyenngoc.bookstore.domain.entity.common.DateAuditing;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
@@ -48,7 +47,7 @@ public class Product extends DateAuditing {
 
     private String format;// Định dạng của sách (ví dụ: bìa mềm, bìa cứng, ebook, audiobook, v.v.).
 
-    private String dimensions;// Kích thước của sách (ví dụ: chiều cao, chiều rộng).
+    private String size;// Kích thước của sách (ví dụ: chiều cao, chiều rộng).
 
     private double weight;
 
@@ -73,21 +72,21 @@ public class Product extends DateAuditing {
     @Column(name = "stock_quantity")
     private Integer stockQuantity;// Số lượng sách còn trong kho.
 
-    @OneToMany(mappedBy = "product", cascade = CascadeType.ALL)
-    @JsonManagedReference
+    @OneToMany(mappedBy = "product", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @JsonIgnore
     private List<ProductImage> images = new ArrayList<>();// Danh sách ảnh
 
-    @OneToMany(mappedBy = "product", cascade = CascadeType.ALL)
-    @JsonManagedReference
+    @OneToMany(mappedBy = "product", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @JsonIgnore
     private List<BillDetail> billDetails = new ArrayList<>();
 
-    @OneToMany(mappedBy = "product", cascade = CascadeType.ALL)
-    @JsonManagedReference
+    @OneToMany(mappedBy = "product", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @JsonIgnore
     private List<CartDetail> cartDetails = new ArrayList<>();
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "category_id", foreignKey = @ForeignKey(name = "FK_PRODUCT_CATE_ID"), referencedColumnName = "category_id")
-    @JsonManagedReference
+    @JsonIgnore
     private Category category;
 
     @ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
@@ -96,10 +95,10 @@ public class Product extends DateAuditing {
             joinColumns = @JoinColumn(name = "product_id", foreignKey = @ForeignKey(name = "FK_PRODUCT_AUTHOR_PRODUCT_ID"), referencedColumnName = "product_id"),
             inverseJoinColumns = @JoinColumn(name = "author_id", foreignKey = @ForeignKey(name = "FK_PRODUCT_AUTHOR_AUTHOR_ID"), referencedColumnName = "author_id")
     )
-    @JsonManagedReference
+    @JsonIgnore
     private List<Author> authors = new ArrayList<>();
 
-    @ManyToMany(mappedBy = "favoriteProducts")
-    @JsonBackReference
+    @ManyToMany(mappedBy = "favoriteProducts", fetch = FetchType.LAZY)
+    @JsonIgnore
     private List<Customer> customers = new ArrayList<>();
 }

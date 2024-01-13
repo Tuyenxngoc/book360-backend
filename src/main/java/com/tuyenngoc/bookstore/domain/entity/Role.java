@@ -1,6 +1,6 @@
 package com.tuyenngoc.bookstore.domain.entity;
 
-import com.fasterxml.jackson.annotation.JsonManagedReference;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -27,6 +27,6 @@ public class Role {
     private String name;
 
     @OneToMany(mappedBy = "role", cascade = CascadeType.ALL)
-    @JsonManagedReference
+    @JsonIgnore
     private List<User> users = new ArrayList<>();
 }

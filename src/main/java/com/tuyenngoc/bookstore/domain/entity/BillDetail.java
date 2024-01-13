@@ -1,6 +1,6 @@
 package com.tuyenngoc.bookstore.domain.entity;
 
-import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.tuyenngoc.bookstore.domain.entity.common.DateAuditing;
 import jakarta.persistence.*;
 import lombok.*;
@@ -27,12 +27,12 @@ public class BillDetail extends DateAuditing {
 
     @ManyToOne
     @JoinColumn(name = "product_id", foreignKey = @ForeignKey(name = "FK_BILL_DETAIL_PRODUCT_ID"), referencedColumnName = "product_id")
-    @JsonBackReference
+    @JsonIgnore
     private Product product;
 
     @ManyToOne
     @JoinColumn(name = "bill_id", foreignKey = @ForeignKey(name = "FK_BILL_DETAIL_BILL_ID"), referencedColumnName = "bill_id")
-    @JsonBackReference
+    @JsonIgnore
     private Bill bill;
 
 }

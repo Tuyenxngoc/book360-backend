@@ -1,7 +1,6 @@
 package com.tuyenngoc.bookstore.domain.entity;
 
-import com.fasterxml.jackson.annotation.JsonBackReference;
-import com.fasterxml.jackson.annotation.JsonManagedReference;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.tuyenngoc.bookstore.domain.entity.common.DateAuditing;
 import jakarta.persistence.*;
 import lombok.*;
@@ -50,12 +49,12 @@ public class Bill extends DateAuditing {
     private String note;
 
     @OneToMany(mappedBy = "bill", cascade = CascadeType.ALL)
-    @JsonManagedReference
+    @JsonIgnore
     private List<BillDetail> billDetails = new ArrayList<>();
 
     @ManyToOne
     @JoinColumn(name = "customer_id", foreignKey = @ForeignKey(name = "FK_BILL_CUSTOMER_ID"), referencedColumnName = "customer_id")
-    @JsonBackReference
+    @JsonIgnore
     private Customer customer;
 
 }

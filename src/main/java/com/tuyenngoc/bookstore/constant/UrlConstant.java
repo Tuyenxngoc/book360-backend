@@ -9,6 +9,7 @@ public class UrlConstant {
         public static final String LOGOUT = PRE_FIX + "/logout";
         public static final String REGISTER = PRE_FIX + "/register";
         public static final String FORGET_PASSWORD = PRE_FIX + "/forget-password";
+        public static final String CHANGE_PASSWORD = PRE_FIX + "/change-password/{username}";
         public static final String REFRESH_TOKEN = PRE_FIX + "/refresh-token";
 
     }
@@ -25,6 +26,10 @@ public class UrlConstant {
         private static final String PRE_FIX = "/customer";
         public static final String GET_PRODUCTS = PRE_FIX + "/get-products";
 
+        public static final String GET_FAVORITE_PRODUCTS = PRE_FIX + "/{customerId}/favorite-products";
+        public static final String CHECK_FAVORITE_PRODUCT = PRE_FIX + "/{customerId}/favorite-products/{productId}";
+        public static final String ADD_FAVORITE_PRODUCT = PRE_FIX + "/{customerId}/favorite-products/{productId}";
+        public static final String REMOVE_FAVORITE_PRODUCT = PRE_FIX + "/{customerId}/favorite-products/{productId}";
     }
 
     public static class Product {
@@ -40,7 +45,10 @@ public class UrlConstant {
 
     public static class Cart {
         private static final String PRE_FIX = "/cart";
+
         public static final String GET_TOTAL_PRODUCTS = PRE_FIX + "/get-total-products/{customerId}";
+        public static final String ADD_PRODUCT_TO_CART = PRE_FIX + "/add-product-to-cart";
+        public static final String GET_PRODUCTS_FROM_CART = PRE_FIX + "/get-products-form-cart";
 
     }
 

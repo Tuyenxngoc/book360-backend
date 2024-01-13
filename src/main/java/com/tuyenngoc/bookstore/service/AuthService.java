@@ -1,9 +1,7 @@
 package com.tuyenngoc.bookstore.service;
 
 import com.tuyenngoc.bookstore.domain.dto.AddressDto;
-import com.tuyenngoc.bookstore.domain.dto.request.LoginRequestDto;
-import com.tuyenngoc.bookstore.domain.dto.request.RegisterRequestDto;
-import com.tuyenngoc.bookstore.domain.dto.request.TokenRefreshRequestDto;
+import com.tuyenngoc.bookstore.domain.dto.request.*;
 import com.tuyenngoc.bookstore.domain.dto.response.CommonResponseDto;
 import com.tuyenngoc.bookstore.domain.dto.response.LoginResponseDto;
 import com.tuyenngoc.bookstore.domain.dto.response.TokenRefreshResponseDto;
@@ -22,4 +20,7 @@ public interface AuthService {
 
     User register(RegisterRequestDto requestDto, AddressDto addressDto);
 
+    CommonResponseDto forgetPassword(ForgetPasswordRequestDto requestDto);
+
+    CommonResponseDto changePassword(ChangePasswordRequestDto requestDto, String username);
 }

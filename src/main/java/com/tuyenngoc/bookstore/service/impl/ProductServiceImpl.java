@@ -3,6 +3,7 @@ package com.tuyenngoc.bookstore.service.impl;
 import com.tuyenngoc.bookstore.constant.ErrorMessage;
 import com.tuyenngoc.bookstore.constant.SortByDataConstant;
 import com.tuyenngoc.bookstore.domain.dto.pagination.PaginationFullRequestDto;
+import com.tuyenngoc.bookstore.domain.dto.pagination.PaginationRequestDto;
 import com.tuyenngoc.bookstore.domain.dto.pagination.PaginationResponseDto;
 import com.tuyenngoc.bookstore.domain.dto.pagination.PagingMeta;
 import com.tuyenngoc.bookstore.domain.dto.response.GetProductDetailResponseDto;
@@ -69,12 +70,29 @@ public class ProductServiceImpl implements ProductService {
 
     @Override
     public GetProductDetailResponseDto getProductDetail(int productId) {
-        return productRepository.getProductDetail(productId)
-                .orElseThrow(() -> new NotFoundException(ErrorMessage.Product.ERR_NOT_FOUND_ID, String.valueOf(productId)));
+        return Optional.ofNullable(productRedisService.getProductDetails(productId))
+                .orElseGet(() -> {
+                    GetProductDetailResponseDto productDetails = productRepository.getProductDetail(productId)
+                            .orElseThrow(() -> new NotFoundException(ErrorMessage.Product.ERR_NOT_FOUND_ID, String.valueOf(productId)));
+
+                    productRedisService.saveProductDetails(productId, productDetails);
+
+                    return productDetails;
+                });
     }
 
     @Override
-    public List<GetProductsResponseDto> getProductsSameAuthor(int productId) {
-        return productRepository.findProductsBySameAuthor(productId);
+    public List<GetProductsResponseDto> getProductsSameAuthor(int productId, PaginationRequestDto request) {
+
+        Pageable pageable = PaginationUtil.buildPageable(request);
+
+        return Optional.ofNullable(productRedisService.getProductsSameAuthor(productId, pageable))
+                .orElseGet(() -> {
+                    Page<GetProductsResponseDto> page = productRepository.getProductsSameAuthor(productId, pageable);
+
+                    productRedisService.saveProductsSameAuthor(productId, page.getContent(), pageable);
+
+                    return page.getContent();
+                });
     }
 }

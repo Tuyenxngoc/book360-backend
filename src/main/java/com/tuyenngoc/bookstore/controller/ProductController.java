@@ -4,6 +4,7 @@ import com.tuyenngoc.bookstore.annotation.RestApiV1;
 import com.tuyenngoc.bookstore.base.VsResponseUtil;
 import com.tuyenngoc.bookstore.constant.UrlConstant;
 import com.tuyenngoc.bookstore.domain.dto.pagination.PaginationFullRequestDto;
+import com.tuyenngoc.bookstore.domain.dto.pagination.PaginationRequestDto;
 import com.tuyenngoc.bookstore.service.ProductService;
 import io.swagger.v3.oas.annotations.Operation;
 import jakarta.validation.Valid;
@@ -39,7 +40,7 @@ public class ProductController {
 
     @Operation(summary = "API get products same author")
     @GetMapping(UrlConstant.Product.GET_PRODUCTS_SAME_AUTHOR)
-    public ResponseEntity<?> getProductSameAuthor(@PathVariable int productId) {
-        return VsResponseUtil.success(productService.getProductsSameAuthor(productId));
+    public ResponseEntity<?> getProductSameAuthor(@PathVariable int productId, @Valid @ParameterObject PaginationRequestDto requestDto) {
+        return VsResponseUtil.success(productService.getProductsSameAuthor(productId, requestDto));
     }
 }

@@ -1,13 +1,7 @@
 package com.tuyenngoc.bookstore.test;
 
-import com.tuyenngoc.bookstore.domain.entity.Author;
-import com.tuyenngoc.bookstore.domain.entity.Banner;
-import com.tuyenngoc.bookstore.domain.entity.Category;
-import com.tuyenngoc.bookstore.domain.entity.Product;
-import com.tuyenngoc.bookstore.repository.AuthorRepository;
-import com.tuyenngoc.bookstore.repository.BannerRepository;
-import com.tuyenngoc.bookstore.repository.CategoryRepository;
-import com.tuyenngoc.bookstore.repository.ProductRepository;
+import com.tuyenngoc.bookstore.domain.entity.*;
+import com.tuyenngoc.bookstore.repository.*;
 import jakarta.annotation.PostConstruct;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Configuration;
@@ -29,6 +23,8 @@ public class DatasourceConfig {
     private final BannerRepository bannerRepository;
 
     private final AuthorRepository authorRepository;
+
+    private final ProductImageRepository productImageRepository;
 
     @PostConstruct
     public void initData() {
@@ -53,6 +49,13 @@ public class DatasourceConfig {
                     .collect(Collectors.toList())));
         }
 
+        final List<ProductImage> productImages = new ArrayList<>();
+        if (productImageRepository.count() == 0) {
+            productImages.addAll(productImageRepository.saveAll(IntStream.range(0, 10).mapToObj(i ->
+                            new ProductImage(i, "https://product.hstatic.net/200000343865/product/5_8d9416ec8a8740f282abd22dd1f8052a.jpg", null))
+                    .collect(Collectors.toList())));
+        }
+
         if (productRepository.count() == 0) {
             productRepository.saveAll(IntStream.range(0, 100)
                     .mapToObj(i ->
@@ -73,9 +76,9 @@ public class DatasourceConfig {
                                     "",
                                     "",
                                     0,
-                                    0,
-                                    0,
-                                    null,
+                                    i + 1,
+                                    i + 1,
+                                    List.of(productImages.get((int) (Math.random() * productImages.size()))),
                                     null,
                                     null,
                                     categories.get((int) (Math.random() * categories.size())),

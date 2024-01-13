@@ -1,6 +1,6 @@
 package com.tuyenngoc.bookstore.domain.entity;
 
-import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.tuyenngoc.bookstore.domain.entity.common.DateAuditing;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
@@ -28,7 +28,7 @@ public class Author extends DateAuditing {
     private String fullName;
 
     @ManyToMany(mappedBy = "authors")
-    @JsonBackReference
+    @JsonIgnore
     private List<Product> products = new ArrayList<>();
 
 }

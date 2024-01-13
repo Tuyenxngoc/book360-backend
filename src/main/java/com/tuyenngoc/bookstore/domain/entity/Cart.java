@@ -1,6 +1,6 @@
 package com.tuyenngoc.bookstore.domain.entity;
 
-import com.fasterxml.jackson.annotation.JsonManagedReference;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -24,11 +24,11 @@ public class Cart {
     private Integer id;
 
     @OneToMany(mappedBy = "cart", cascade = CascadeType.ALL)
-    @JsonManagedReference
+    @JsonIgnore
     private List<CartDetail> cartDetails = new ArrayList<>();
 
     @OneToOne
     @JoinColumn(name = "customer_id", foreignKey = @ForeignKey(name = "FK_CART_CUSTOMER_ID"), referencedColumnName = "customer_id")
-    @JsonManagedReference
+    @JsonIgnore
     private Customer customer;
 }

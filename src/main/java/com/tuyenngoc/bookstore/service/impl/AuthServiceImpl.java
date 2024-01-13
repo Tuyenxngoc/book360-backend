@@ -4,25 +4,33 @@ import com.tuyenngoc.bookstore.constant.ErrorMessage;
 import com.tuyenngoc.bookstore.constant.RoleConstant;
 import com.tuyenngoc.bookstore.constant.SuccessMessage;
 import com.tuyenngoc.bookstore.domain.dto.AddressDto;
-import com.tuyenngoc.bookstore.domain.dto.request.LoginRequestDto;
-import com.tuyenngoc.bookstore.domain.dto.request.RegisterRequestDto;
-import com.tuyenngoc.bookstore.domain.dto.request.TokenRefreshRequestDto;
+import com.tuyenngoc.bookstore.domain.dto.common.DataMailDto;
+import com.tuyenngoc.bookstore.domain.dto.request.*;
 import com.tuyenngoc.bookstore.domain.dto.response.CommonResponseDto;
 import com.tuyenngoc.bookstore.domain.dto.response.LoginResponseDto;
 import com.tuyenngoc.bookstore.domain.dto.response.TokenRefreshResponseDto;
+import com.tuyenngoc.bookstore.domain.entity.Cart;
+import com.tuyenngoc.bookstore.domain.entity.Customer;
 import com.tuyenngoc.bookstore.domain.entity.User;
 import com.tuyenngoc.bookstore.domain.mapper.UserMapper;
 import com.tuyenngoc.bookstore.exception.DataIntegrityViolationException;
 import com.tuyenngoc.bookstore.exception.InvalidException;
+import com.tuyenngoc.bookstore.exception.NotFoundException;
 import com.tuyenngoc.bookstore.exception.UnauthorizedException;
+import com.tuyenngoc.bookstore.repository.CartRepository;
+import com.tuyenngoc.bookstore.repository.CustomerRepository;
 import com.tuyenngoc.bookstore.repository.RoleRepository;
 import com.tuyenngoc.bookstore.repository.UserRepository;
 import com.tuyenngoc.bookstore.security.CustomUserDetails;
 import com.tuyenngoc.bookstore.security.jwt.JwtTokenProvider;
 import com.tuyenngoc.bookstore.service.AuthService;
+import com.tuyenngoc.bookstore.util.RandomPasswordUtil;
+import com.tuyenngoc.bookstore.util.SendMailUtil;
+import jakarta.mail.MessagingException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.MessageSource;
 import org.springframework.context.i18n.LocaleContextHolder;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -34,6 +42,12 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.authentication.logout.SecurityContextLogoutHandler;
 import org.springframework.stereotype.Service;
 
+import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.concurrent.CompletableFuture;
+
+@Slf4j
 @Service
 @RequiredArgsConstructor
 public class AuthServiceImpl implements AuthService {
@@ -53,6 +67,12 @@ public class AuthServiceImpl implements AuthService {
     private final PasswordEncoder passwordEncoder;
 
     private final RoleRepository roleRepository;
+
+    private final SendMailUtil sendMailUtil;
+
+    private final CustomerRepository customerRepository;
+
+    private final CartRepository cartRepository;
 
     @Override
     public LoginResponseDto login(LoginRequestDto request) {
@@ -128,7 +148,7 @@ public class AuthServiceImpl implements AuthService {
 
     @Override
     public User register(RegisterRequestDto requestDto, AddressDto addressDto) {
-        if (!requestDto.isPasswordMatch()) {
+        if (!requestDto.getPassword().equals(requestDto.getRepeatPassword())) {
             throw new InvalidException(ErrorMessage.INVALID_REPEAT_PASSWORD);
         }
         boolean isUsernameExists = userRepository.existsByUsername(requestDto.getUsername());
@@ -139,11 +159,105 @@ public class AuthServiceImpl implements AuthService {
         if (isEmailExists) {
             throw new DataIntegrityViolationException(ErrorMessage.Auth.ERR_DUPLICATE_EMAIL);
         }
+
+        Map<String, Object> properties = new HashMap<>();
+        properties.put("username", requestDto.getUsername());
+        properties.put("password", requestDto.getPassword());
+
+        DataMailDto mailDto = new DataMailDto();
+        mailDto.setTo(requestDto.getEmail());
+        mailDto.setSubject("Đăng ký thành công");
+        mailDto.setProperties(properties);
+
+        CompletableFuture.runAsync(() -> {
+            try {
+                sendMailUtil.sendEmailWithHTML(mailDto, "registerSuccess.html");
+            } catch (MessagingException e) {
+                e.printStackTrace();
+            }
+        });
+
+        Customer customer = new Customer();
+        customer.setFullName(requestDto.getUsername());
+        customerRepository.save(customer);
+
+        Cart cart = new Cart();
+        cart.setCustomer(customer);
+        cartRepository.save(cart);
+
         //Create a new user
         User user = userMapper.toUser(requestDto);
         user.setPassword(passwordEncoder.encode(requestDto.getPassword()));
         user.setRole(roleRepository.findByName(RoleConstant.CUSTOMER.getRoleName()));
+        user.setCustomer(customer);
         return userRepository.save(user);
     }
 
+    @Override
+    public CommonResponseDto forgetPassword(ForgetPasswordRequestDto requestDto) {
+        User user = userRepository.findByUsernameAndEmail(requestDto.getUsername(), requestDto.getEmail())
+                .orElseThrow(() -> new NotFoundException(ErrorMessage.User.ERR_NOT_FOUND_ACCOUNT));
+
+        String newPassword = RandomPasswordUtil.random();
+
+        user.setPassword(passwordEncoder.encode(newPassword));
+        userRepository.save(user);
+
+        Map<String, Object> properties = new HashMap<>();
+        properties.put("username", requestDto.getUsername());
+        properties.put("newPassword", newPassword);
+
+        DataMailDto mailDto = new DataMailDto();
+        mailDto.setTo(requestDto.getEmail());
+        mailDto.setSubject("Lấy lại mật khẩu");
+        mailDto.setProperties(properties);
+
+        CompletableFuture.runAsync(() -> {
+            try {
+                sendMailUtil.sendEmailWithHTML(mailDto, "forgetPassword.html");
+            } catch (MessagingException e) {
+                e.printStackTrace();
+            }
+        });
+
+        String message = messageSource.getMessage(SuccessMessage.User.FORGET_PASSWORD, null, LocaleContextHolder.getLocale());
+        return new CommonResponseDto(message);
+    }
+
+    @Override
+    public CommonResponseDto changePassword(ChangePasswordRequestDto requestDto, String username) {
+        if (!requestDto.getPassword().equals(requestDto.getRepeatPassword())) {
+            throw new InvalidException(ErrorMessage.INVALID_REPEAT_PASSWORD);
+        }
+
+        User user = userRepository.findByUsername(username)
+                .orElseThrow(() -> new NotFoundException(ErrorMessage.User.ERR_NOT_FOUND_USERNAME, username));
+
+        boolean isCorrectPassword = passwordEncoder.matches(requestDto.getOldPassword(), user.getPassword());
+        if (!isCorrectPassword) {
+            throw new InvalidException(ErrorMessage.Auth.ERR_INCORRECT_PASSWORD);
+        }
+
+        user.setPassword(passwordEncoder.encode(requestDto.getPassword()));
+        userRepository.save(user);
+
+        Map<String, Object> properties = new HashMap<>();
+        properties.put("currentTime", new Date());
+
+        DataMailDto mailDto = new DataMailDto();
+        mailDto.setTo(user.getEmail());
+        mailDto.setSubject("Đổi mật khẩu thành công");
+        mailDto.setProperties(properties);
+
+        CompletableFuture.runAsync(() -> {
+            try {
+                sendMailUtil.sendEmailWithHTML(mailDto, "changePassword.html");
+            } catch (MessagingException e) {
+                log.error("Failed to send email {}", e.getMessage(), e);
+            }
+        });
+
+        String message = messageSource.getMessage(SuccessMessage.User.CHANGE_PASSWORD, null, LocaleContextHolder.getLocale());
+        return new CommonResponseDto(message);
+    }
 }

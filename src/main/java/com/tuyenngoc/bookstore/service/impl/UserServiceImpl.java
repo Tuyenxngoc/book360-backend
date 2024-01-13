@@ -1,5 +1,6 @@
 package com.tuyenngoc.bookstore.service.impl;
 
+import com.tuyenngoc.bookstore.constant.ErrorMessage;
 import com.tuyenngoc.bookstore.domain.dto.UserDto;
 import com.tuyenngoc.bookstore.domain.entity.User;
 import com.tuyenngoc.bookstore.domain.mapper.UserMapper;
@@ -21,7 +22,7 @@ public class UserServiceImpl implements UserService {
     @Override
     public UserDto getCurrentUser(CustomUserDetails userDetails) {
         User user = userRepository.findByUsername(userDetails.getUsername())
-                .orElseThrow(() -> new NotFoundException(""));
+                .orElseThrow(() -> new NotFoundException(ErrorMessage.User.ERR_NOT_FOUND_USERNAME, userDetails.getUsername()));
         return userMapper.toUserDto(user);
     }
 }

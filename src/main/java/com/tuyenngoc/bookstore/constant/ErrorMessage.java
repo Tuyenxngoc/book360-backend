@@ -27,9 +27,13 @@ public class ErrorMessage {
     public static final String INVALID_REPEAT_PASSWORD = "invalid.password-repeat";
     public static final String INVALID_COORDINATES = "invalid.coordinates";
     public static final String INVALID_VIEW_ORDER = "invalid.view-order";
+    public static final String MINIMUM_ONE = "invalid.minimum-one";
+    public static final String MINIMUM_ZERO = "invalid.minimum-zero";
+    public static final String MAXIMUM_ONE_HUNDRED = "invalid.maximum-one-hundred";
 
     public static class Auth {
         public static final String ERR_INCORRECT_USERNAME_PASSWORD = "exception.auth.incorrect.username-password";
+        public static final String ERR_INCORRECT_PASSWORD = "exception.auth.incorrect.password";
         public static final String ERR_INCORRECT_EMAIL = "exception.auth.incorrect.email";
         public static final String ERR_DUPLICATE_USERNAME = "exception.auth.duplicate.username";
         public static final String ERR_DUPLICATE_EMAIL = "exception.auth.duplicate.email";
@@ -45,6 +49,7 @@ public class ErrorMessage {
         public static final String ERR_NOT_FOUND_USERNAME = "exception.user.not.found.username";
         public static final String ERR_NOT_FOUND_EMAIL = "exception.user.not.found.email";
         public static final String ERR_NOT_FOUND_ID = "exception.user.not.found.id";
+        public static final String ERR_NOT_FOUND_ACCOUNT = "exception.user.not.found.account";
     }
 
     public static class Customer {
@@ -53,6 +58,7 @@ public class ErrorMessage {
 
     public static class Product {
         public static final String ERR_NOT_FOUND_ID = "exception.product.not.found.id";
+        public static final String ERR_INSUFFICIENT_STOCK = "exception.product.insufficient.stock";
     }
 
     public static class Category {

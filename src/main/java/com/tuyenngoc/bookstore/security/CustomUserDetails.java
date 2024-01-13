@@ -17,6 +17,9 @@ public class CustomUserDetails implements UserDetails {
     private final String id;
 
     @Getter
+    private final int customerId;
+
+    @Getter
     private final String email;
 
     @JsonIgnore
@@ -27,8 +30,9 @@ public class CustomUserDetails implements UserDetails {
 
     private final Collection<? extends GrantedAuthority> authorities;
 
-    public CustomUserDetails(String id, String email, String username, String password, Collection<? extends GrantedAuthority> authorities) {
+    public CustomUserDetails(String id, int customerId, String email, String username, String password, Collection<? extends GrantedAuthority> authorities) {
         this.id = id;
+        this.customerId = customerId;
         this.email = email;
         this.username = username;
         this.password = password;
@@ -38,7 +42,7 @@ public class CustomUserDetails implements UserDetails {
     public static CustomUserDetails create(User user) {
         List<GrantedAuthority> authorities = new ArrayList<>();
         authorities.add(new SimpleGrantedAuthority(user.getRole().getName()));
-        return new CustomUserDetails(user.getId(), user.getEmail(), user.getUsername(), user.getPassword(), authorities);
+        return new CustomUserDetails(user.getId(), user.getCustomer().getId(), user.getEmail(), user.getUsername(), user.getPassword(), authorities);
     }
 
     @Override
