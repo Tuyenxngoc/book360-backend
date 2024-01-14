@@ -10,6 +10,8 @@ import java.util.List;
 
 public interface ProductService {
 
+    PaginationResponseDto<GetProductsResponseDto> findProduct(PaginationFullRequestDto requestDto);
+
     PaginationResponseDto<GetProductsResponseDto> getProducts(PaginationFullRequestDto requestDto);
 
     PaginationResponseDto<GetProductsResponseDto> getProductsByCategoryId(int categoryId, PaginationFullRequestDto request);
@@ -17,4 +19,5 @@ public interface ProductService {
     GetProductDetailResponseDto getProductDetail(int productId);
 
     List<GetProductsResponseDto> getProductsSameAuthor(int productId, PaginationRequestDto request);
+
 }

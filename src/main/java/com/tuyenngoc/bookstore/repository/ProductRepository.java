@@ -18,6 +18,9 @@ public interface ProductRepository extends JpaRepository<Product, Integer> {
     @Query("SELECT new com.tuyenngoc.bookstore.domain.dto.response.GetProductsResponseDto(p) FROM Product p")
     Page<GetProductsResponseDto> getProducts(Pageable pageable);
 
+    @Query("SELECT new com.tuyenngoc.bookstore.domain.dto.response.GetProductsResponseDto(p) FROM Product p WHERE (p.name LIKE %:keyword%) OR (p.category.name LIKE %:keyword%)")
+    Page<GetProductsResponseDto> getProducts(@Param("keyword") String keyword, Pageable pageable);
+
     @Query("SELECT new com.tuyenngoc.bookstore.domain.dto.response.GetProductsResponseDto(p) FROM Product p WHERE p.category.id= :categoryId")
     Page<GetProductsResponseDto> getProductsByCategoryId(@Param("categoryId") int categoryId, Pageable pageable);
 

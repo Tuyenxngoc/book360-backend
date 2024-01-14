@@ -10,6 +10,7 @@ public class ErrorMessage {
     public static final String ERR_INVALID_REQUEST_BODY = "exception.required-request-body-missing";
     public static final String ERR_REQUIRED_MISSING_PARAMETER = "exception.missing-servlet-request-parameter";
     public static final String ERR_METHOD_ARGUMENT_TYPE_MISMATCH = "exception.method-argument-type-mismatch";
+    public static final String ERR_RESOURCE_NOT_FOUND = "exception.resource-not-found";
 
     //error validation dto
     public static final String INVALID_SOME_THING_FIELD = "invalid.general";
@@ -72,6 +73,7 @@ public class ErrorMessage {
     public static class Cart {
         public static final String ERR_NOT_FOUND_ID = "exception.cart.not.found.id";
         public static final String ERR_NOT_FOUND_CUSTOMER_ID = "exception.cart.not.found.customer-id";
+        public static final String ERR_NOT_FOUND_PRODUCT_ID = "exception.cart.not.found.product-id";
 
     }
 

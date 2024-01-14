@@ -26,6 +26,12 @@ public class ProductController {
         return VsResponseUtil.success(productService.getProducts(requestDto));
     }
 
+    @Operation(summary = "API find product")
+    @GetMapping(UrlConstant.Product.FIND_PRODUCT)
+    public ResponseEntity<?> findProduct(@ParameterObject PaginationFullRequestDto requestDto) {
+        return VsResponseUtil.success(productService.findProduct(requestDto));
+    }
+
     @Operation(summary = "API get products by categoryId")
     @GetMapping(UrlConstant.Product.GET_PRODUCTS_BY_CATEGORY_ID)
     public ResponseEntity<?> getProductByCategoryId(@PathVariable int categoryId, @Valid @ParameterObject PaginationFullRequestDto requestDto) {

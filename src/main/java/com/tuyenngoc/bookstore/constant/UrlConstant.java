@@ -34,7 +34,9 @@ public class UrlConstant {
 
     public static class Product {
         private static final String PRE_FIX = "/product";
+
         public static final String GET_PRODUCTS = PRE_FIX + "/get-products";
+        public static final String FIND_PRODUCT = PRE_FIX + "/find-products";
 
         public static final String GET_PRODUCTS_BY_CATEGORY_ID = PRE_FIX + "/get-products-by-categoryId/{categoryId}";
 
@@ -46,11 +48,21 @@ public class UrlConstant {
     public static class Cart {
         private static final String PRE_FIX = "/cart";
 
-        public static final String GET_TOTAL_PRODUCTS = PRE_FIX + "/get-total-products/{customerId}";
-        public static final String ADD_PRODUCT_TO_CART = PRE_FIX + "/add-product-to-cart";
-        public static final String GET_PRODUCTS_FROM_CART = PRE_FIX + "/get-products-form-cart";
+        public static final String GET_TOTAL_PRODUCTS = PRE_FIX + "/get-total-products";
+        public static final String ADD_PRODUCT_TO_CART = PRE_FIX + "/add-product";
+        public static final String GET_PRODUCTS_FROM_CART = PRE_FIX + "/get-products";
+        public static final String UPDATE_CART_DETAIL = PRE_FIX + "/update-cart";
+        public static final String DELETE_PRODUCT = PRE_FIX + "/delete-product/{productId}";
 
     }
+
+    public static class Bill {
+        private static final String PRE_FIX = "/bill";
+
+        public static final String SAVE_ORDER = PRE_FIX + "/save-order";
+
+    }
+
 
     public static class Banner {
         private static final String PRE_FIX = "/banner";

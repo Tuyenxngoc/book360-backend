@@ -20,6 +20,7 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
+import org.springframework.web.servlet.resource.NoResourceFoundException;
 
 import java.util.HashMap;
 import java.util.LinkedHashMap;
@@ -223,5 +224,18 @@ public class GlobalExceptionHandle {
         return VsResponseUtil.error(HttpStatus.BAD_REQUEST, errorMessage);
     }
 
+    /**
+     * Xử lý ngoại lệ khi không tìm thấy tài nguyên tĩnh.
+     *
+     * @param ex Ngoại lệ NoResourceFoundException
+     * @return ResponseEntity chứa thông tin lỗi và mã HTTP 404 Not Found
+     */
+    @ExceptionHandler(NoResourceFoundException.class)
+    @ResponseStatus(HttpStatus.NOT_FOUND)
+    public ResponseEntity<RestData<?>> handleNoResourceFoundException(NoResourceFoundException ex) {
+        String resourcePath = ex.getResourcePath();
+        String errorMessage = messageSource.getMessage(ErrorMessage.ERR_RESOURCE_NOT_FOUND, new Object[]{resourcePath}, LocaleContextHolder.getLocale());
+        return VsResponseUtil.error(HttpStatus.NOT_FOUND, errorMessage);
+    }
 
 }

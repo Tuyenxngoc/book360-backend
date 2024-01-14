@@ -8,4 +8,5 @@ import org.mapstruct.Mapper;
 public interface BannerMapper {
 
     Banner toBanner(BannerDto bannerDto);
+
 }

@@ -30,6 +30,20 @@ public class ProductServiceImpl implements ProductService {
     private final ProductRedisService productRedisService;
 
     @Override
+    public PaginationResponseDto<GetProductsResponseDto> findProduct(PaginationFullRequestDto requestDto) {
+        Pageable pageable = PaginationUtil.buildPageable(requestDto, SortByDataConstant.PRODUCT);
+
+        Page<GetProductsResponseDto> page = productRepository.getProducts(requestDto.getKeyword(), pageable);
+        PagingMeta pagingMeta = PaginationUtil.buildPagingMeta(requestDto, SortByDataConstant.PRODUCT, page);
+
+        PaginationResponseDto<GetProductsResponseDto> responseDto = new PaginationResponseDto<>();
+        responseDto.setItems(page.getContent());
+        responseDto.setMeta(pagingMeta);
+
+        return responseDto;
+    }
+
+    @Override
     public PaginationResponseDto<GetProductsResponseDto> getProducts(PaginationFullRequestDto requestDto) {
         Pageable pageable = PaginationUtil.buildPageable(requestDto, SortByDataConstant.PRODUCT);
 

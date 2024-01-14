@@ -15,6 +15,10 @@ public class SuccessMessage {
     }
 
     public static class Cart {
-        public static final String ADD_PRODUCT_TO_CAR = "success.cart.add-product-to-car";
+        public static final String ADD_PRODUCT = "success.cart.add-product";
+    }
+
+    public static class Bill {
+        public static final String SAVE_ORDER = "success.bill.save-order";
     }
 }

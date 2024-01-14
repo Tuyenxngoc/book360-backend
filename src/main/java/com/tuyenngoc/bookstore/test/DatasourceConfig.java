@@ -62,7 +62,7 @@ public class DatasourceConfig {
                             new Product(i,
                                     "product" + i,
                                     "this is description" + i,
-                                    "https://product.hstatic.net/200000343865/product/4_2e7827a50f964419affcd78ff0614200_large.jpg",
+                                    "https://product.hstatic.net/200000343865/product/newton_6f78e36f267d4e6ab8e60f529cbf55a0.jpg",
                                     10000 * i,
                                     10,
                                     "isbn" + i,
