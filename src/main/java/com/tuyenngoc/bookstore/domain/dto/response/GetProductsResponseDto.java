@@ -32,5 +32,4 @@ public class GetProductsResponseDto {
         this.price = product.getPrice();
         this.discount = product.getDiscount();
     }
-
 }

@@ -20,5 +20,7 @@ public class SuccessMessage {
 
     public static class Bill {
         public static final String SAVE_ORDER = "success.bill.save-order";
+        public static final String CANCEL_ORDER = "success.bill.cancel-order";
+
     }
 }

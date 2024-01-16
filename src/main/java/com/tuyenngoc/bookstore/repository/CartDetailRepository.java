@@ -32,4 +32,8 @@ public interface CartDetailRepository extends JpaRepository<CartDetail, Integer>
     @Query("SELECT cd.product FROM CartDetail cd WHERE cd.cart.id = :cartId AND cd.product.id=:productId")
     Optional<Product> findProduct(@Param("cartId") int cartId,
                                   @Param("productId") int productId);
+
+    @Transactional
+    @Modifying
+    void deleteAllInBatch(Iterable<CartDetail> cartDetails);
 }

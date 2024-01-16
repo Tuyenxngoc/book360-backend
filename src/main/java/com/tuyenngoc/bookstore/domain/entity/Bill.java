@@ -48,7 +48,7 @@ public class Bill extends DateAuditing {
 
     private String note;
 
-    @OneToMany(mappedBy = "bill", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "bill", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     @JsonIgnore
     private List<BillDetail> billDetails = new ArrayList<>();
 

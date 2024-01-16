@@ -19,6 +19,13 @@ public enum SortByDataConstant implements SortByInterface {
                 default -> "createdDate";
             };
         }
+    },
+
+    BILL {
+        @Override
+        public String getSortBy(String sortBy) {
+            return "createdDate";
+        }
     }
 
 }

@@ -12,6 +12,7 @@ import org.springframework.context.i18n.LocaleContextHolder;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.HttpMessageNotReadableException;
+import org.springframework.security.access.AccessDeniedException;
 import org.springframework.validation.BindException;
 import org.springframework.validation.FieldError;
 import org.springframework.web.HttpRequestMethodNotSupportedException;
@@ -20,6 +21,7 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
+import org.springframework.web.multipart.MaxUploadSizeExceededException;
 import org.springframework.web.servlet.resource.NoResourceFoundException;
 
 import java.util.HashMap;
@@ -96,7 +98,6 @@ public class GlobalExceptionHandle {
     @ResponseStatus(HttpStatus.NOT_FOUND)
     public ResponseEntity<RestData<?>> handlerNotFoundException(NotFoundException ex) {
         String errorMessage = messageSource.getMessage(ex.getMessage(), ex.getParams(), LocaleContextHolder.getLocale());
-        log.error(errorMessage, ex);
         return VsResponseUtil.error(ex.getStatus(), errorMessage);
     }
 
@@ -110,7 +111,6 @@ public class GlobalExceptionHandle {
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     public ResponseEntity<RestData<?>> handlerInvalidException(InvalidException ex) {
         String errorMessage = messageSource.getMessage(ex.getMessage(), ex.getParams(), LocaleContextHolder.getLocale());
-        log.error(errorMessage, ex);
         return VsResponseUtil.error(ex.getStatus(), errorMessage);
     }
 
@@ -124,7 +124,6 @@ public class GlobalExceptionHandle {
     @ResponseStatus(HttpStatus.BAD_GATEWAY)
     public ResponseEntity<RestData<?>> handleUploadImageException(UploadFileException ex) {
         String errorMessage = messageSource.getMessage(ex.getMessage(), ex.getParams(), LocaleContextHolder.getLocale());
-        log.error(errorMessage, ex);
         return VsResponseUtil.error(ex.getStatus(), errorMessage);
     }
 
@@ -138,7 +137,6 @@ public class GlobalExceptionHandle {
     @ResponseStatus(HttpStatus.UNAUTHORIZED)
     public ResponseEntity<RestData<?>> handleUnauthorizedException(UnauthorizedException ex) {
         String errorMessage = messageSource.getMessage(ex.getMessage(), ex.getParams(), LocaleContextHolder.getLocale());
-        log.error(errorMessage, ex);
         return VsResponseUtil.error(ex.getStatus(), errorMessage);
     }
 
@@ -148,12 +146,11 @@ public class GlobalExceptionHandle {
      * @param ex Ngoại lệ ForbiddenException
      * @return ResponseEntity chứa thông tin lỗi và mã HTTP 403 Forbidden
      */
-    @ExceptionHandler(ForbiddenException.class)
+    @ExceptionHandler(AccessDeniedException.class)
     @ResponseStatus(HttpStatus.FORBIDDEN)
-    public ResponseEntity<RestData<?>> handleAccessDeniedException(ForbiddenException ex) {
-        String errorMessage = messageSource.getMessage(ex.getMessage(), ex.getParams(), LocaleContextHolder.getLocale());
-        log.error(errorMessage, ex);
-        return VsResponseUtil.error(ex.getStatus(), errorMessage);
+    public ResponseEntity<RestData<?>> handleAccessDeniedException(AccessDeniedException ex) {
+        String errorMessage = messageSource.getMessage(ErrorMessage.FORBIDDEN, null, LocaleContextHolder.getLocale());
+        return VsResponseUtil.error(HttpStatus.FORBIDDEN, errorMessage);
     }
 
     /**
@@ -166,7 +163,6 @@ public class GlobalExceptionHandle {
     @ResponseStatus(HttpStatus.CONFLICT)
     public ResponseEntity<RestData<?>> handleDataIntegrityViolationException(DataIntegrityViolationException ex) {
         String errorMessage = messageSource.getMessage(ex.getMessage(), ex.getParams(), LocaleContextHolder.getLocale());
-        log.error(errorMessage, ex);
         return VsResponseUtil.error(ex.getStatus(), errorMessage);
     }
 
@@ -238,4 +234,16 @@ public class GlobalExceptionHandle {
         return VsResponseUtil.error(HttpStatus.NOT_FOUND, errorMessage);
     }
 
+    /**
+     * Xử lý ngoại lệ khi tải lên tệp tin vượt quá kích thước tối đa cho phép.
+     *
+     * @param ex Ngoại lệ MaxUploadSizeExceededException
+     * @return ResponseEntity chứa thông tin lỗi và mã HTTP 413 Payload Too Large
+     */
+    @ExceptionHandler(MaxUploadSizeExceededException.class)
+    @ResponseStatus(HttpStatus.PAYLOAD_TOO_LARGE)
+    public ResponseEntity<RestData<?>> handleMaxUploadSizeExceeded(MaxUploadSizeExceededException ex) {
+        String errorMessage = messageSource.getMessage(ErrorMessage.ERR_MAX_UPLOAD_SIZE_EXCEEDED, null, LocaleContextHolder.getLocale());
+        return VsResponseUtil.error(HttpStatus.PAYLOAD_TOO_LARGE, errorMessage);
+    }
 }

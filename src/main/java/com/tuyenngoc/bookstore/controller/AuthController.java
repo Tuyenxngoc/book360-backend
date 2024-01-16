@@ -1,10 +1,12 @@
 package com.tuyenngoc.bookstore.controller;
 
+import com.tuyenngoc.bookstore.annotation.CurrentUser;
 import com.tuyenngoc.bookstore.annotation.RestApiV1;
 import com.tuyenngoc.bookstore.base.VsResponseUtil;
 import com.tuyenngoc.bookstore.constant.UrlConstant;
 import com.tuyenngoc.bookstore.domain.dto.AddressDto;
 import com.tuyenngoc.bookstore.domain.dto.request.*;
+import com.tuyenngoc.bookstore.security.CustomUserDetails;
 import com.tuyenngoc.bookstore.service.AuthService;
 import io.swagger.v3.oas.annotations.Operation;
 import jakarta.servlet.http.HttpServletRequest;
@@ -13,7 +15,10 @@ import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.PatchMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestParam;
 
 @RestApiV1
 @RequiredArgsConstructor
@@ -53,8 +58,9 @@ public class AuthController {
 
     @Operation(summary = "API change password")
     @PatchMapping(UrlConstant.Auth.CHANGE_PASSWORD)
-    public ResponseEntity<?> changePassword(@Valid @RequestBody ChangePasswordRequestDto requestDto, @PathVariable String username) {
-        return VsResponseUtil.success(authService.changePassword(requestDto, username));
+    public ResponseEntity<?> changePassword(@Valid @RequestBody ChangePasswordRequestDto requestDto,
+                                            @CurrentUser CustomUserDetails userDetails) {
+        return VsResponseUtil.success(authService.changePassword(requestDto, userDetails.getUsername()));
     }
 
 }

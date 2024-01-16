@@ -32,10 +32,16 @@ public class ProductController {
         return VsResponseUtil.success(productService.findProduct(requestDto));
     }
 
-    @Operation(summary = "API get products by categoryId")
+    @Operation(summary = "API get products by category id")
     @GetMapping(UrlConstant.Product.GET_PRODUCTS_BY_CATEGORY_ID)
     public ResponseEntity<?> getProductByCategoryId(@PathVariable int categoryId, @Valid @ParameterObject PaginationFullRequestDto requestDto) {
         return VsResponseUtil.success(productService.getProductsByCategoryId(categoryId, requestDto));
+    }
+
+    @Operation(summary = "API get products by author id")
+    @GetMapping(UrlConstant.Product.GET_PRODUCTS_BY_AUTHOR_ID)
+    public ResponseEntity<?> getProductByAuthorId(@PathVariable int authorId, @Valid @ParameterObject PaginationFullRequestDto requestDto) {
+        return VsResponseUtil.success(productService.getProductByAuthorId(authorId, requestDto));
     }
 
     @Operation(summary = "API get product detail")

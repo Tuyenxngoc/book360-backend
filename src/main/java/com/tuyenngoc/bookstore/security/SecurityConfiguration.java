@@ -33,14 +33,17 @@ public class SecurityConfiguration {
             "/swagger-ui/**",
             "/swagger-ui.html",
             //auth
-            "/api/v1/auth/**",
-            "/api/v1/customer/*/favorite-products/*",
+            "/api/v1/auth/register",
+            "/api/v1/auth/refresh-token",
+            "/api/v1/auth/login",
+            "/api/v1/auth/forget-password",
             //product
             "/api/v1/product/find-products",
             "/api/v1/product/get-products",
-            "/api/v1/product/get-products-by-categoryId/*",
             "/api/v1/product/get-product-detail/*",
             "/api/v1/product/get-products-same-author/*",
+            "/api/v1/product/get-products-by-categoryId/*",
+            "/api/v1/product/get-products-by-authorId/*",
             //banner
             "/api/v1/banner/get-all-banners",
             //category

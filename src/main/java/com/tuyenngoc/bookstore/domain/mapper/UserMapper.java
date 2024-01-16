@@ -14,7 +14,10 @@ public interface UserMapper {
 
     @Mappings({
             @Mapping(target = "roleName", source = "role.name"),
-            @Mapping(target = "customerId", source = "customer.id")
+            @Mapping(target = "avatar", source = "customer.avatar"),
+            @Mapping(target = "address", source = "customer.address.addressName"),
+            @Mapping(target = "gender", source = "customer.gender"),
+            @Mapping(target = "customerName", source = "customer.fullName")
     })
     UserDto toUserDto(User user);
 

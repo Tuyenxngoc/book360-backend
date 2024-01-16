@@ -2,6 +2,7 @@ package com.tuyenngoc.bookstore.domain.dto.request;
 
 import com.tuyenngoc.bookstore.constant.ErrorMessage;
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Pattern;
 import lombok.AllArgsConstructor;
@@ -36,6 +37,7 @@ public class OrderRequestDto {
 
     private String note;
 
+    @NotEmpty(message = ErrorMessage.NOT_BLANK_FIELD)
     @NotNull(message = ErrorMessage.INVALID_SOME_THING_FIELD_IS_REQUIRED)
     private List<Integer> listProductId;
 

@@ -30,7 +30,7 @@ public class Address {
     @Column(name = "address_name")
     private String addressName;
 
-    @OneToMany(mappedBy = "address", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "address", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     @JsonIgnore
     private List<Customer> customers = new ArrayList<>();
 

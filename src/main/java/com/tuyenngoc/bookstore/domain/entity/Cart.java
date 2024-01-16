@@ -23,7 +23,7 @@ public class Cart {
     @Column(name = "cart_id")
     private Integer id;
 
-    @OneToMany(mappedBy = "cart", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "cart", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     @JsonIgnore
     private List<CartDetail> cartDetails = new ArrayList<>();
 

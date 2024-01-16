@@ -109,4 +109,18 @@ public class ProductServiceImpl implements ProductService {
                     return page.getContent();
                 });
     }
+
+    @Override
+    public PaginationResponseDto<GetProductsResponseDto> getProductByAuthorId(int authorId, PaginationFullRequestDto requestDto) {
+        Pageable pageable = PaginationUtil.buildPageable(requestDto, SortByDataConstant.PRODUCT);
+
+        Page<GetProductsResponseDto> page = productRepository.getProductsByAuthorId(authorId, pageable);
+        PagingMeta pagingMeta = PaginationUtil.buildPagingMeta(requestDto, SortByDataConstant.PRODUCT, page);
+
+        PaginationResponseDto<GetProductsResponseDto> responseDto = new PaginationResponseDto<>();
+        responseDto.setItems(page.getContent());
+        responseDto.setMeta(pagingMeta);
+
+        return responseDto;
+    }
 }

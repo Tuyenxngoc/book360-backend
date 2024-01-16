@@ -20,4 +20,5 @@ public interface ProductService {
 
     List<GetProductsResponseDto> getProductsSameAuthor(int productId, PaginationRequestDto request);
 
+    PaginationResponseDto<GetProductsResponseDto> getProductByAuthorId(int authorId, PaginationFullRequestDto requestDto);
 }

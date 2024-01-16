@@ -50,7 +50,7 @@ public class Customer extends DateAuditing {
     @JsonIgnore
     private Cart cart;
 
-    @OneToMany(mappedBy = "customer", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "customer", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     @JsonIgnore
     private List<Bill> bills = new ArrayList<>();
 

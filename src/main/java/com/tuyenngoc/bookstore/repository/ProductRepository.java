@@ -30,4 +30,9 @@ public interface ProductRepository extends JpaRepository<Product, Integer> {
     @Query("SELECT new com.tuyenngoc.bookstore.domain.dto.response.GetProductsResponseDto(p) FROM Product p JOIN p.authors a WHERE a IN (SELECT a FROM Product p2 JOIN p2.authors a WHERE p2.id = :productId) AND p.id <> :productId")
     Page<GetProductsResponseDto> getProductsSameAuthor(@Param("productId") Integer productId, Pageable pageable);
 
+    @Query("SELECT COUNT(p) FROM Product p WHERE p.stockQuantity = 0")
+    int getCountProductSoldOut();
+
+    @Query("SELECT new com.tuyenngoc.bookstore.domain.dto.response.GetProductsResponseDto(p) FROM Product p JOIN p.authors a WHERE a.id = :authorId")
+    Page<GetProductsResponseDto> getProductsByAuthorId(@Param("authorId") int authorId, Pageable pageable);
 }

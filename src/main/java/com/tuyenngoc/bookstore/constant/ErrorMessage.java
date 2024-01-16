@@ -25,12 +25,16 @@ public class ErrorMessage {
     public static final String INVALID_DATE_FEATURE = "invalid.date-future";
     public static final String INVALID_DATETIME = "invalid.datetime-format";
     public static final String INVALID_TIME = "invalid.time-format";
+    public static final String INVALID_FILE_REQUIRED = "invalid.file.required";
+    public static final String INVALID_FILE_SIZE = "invalid.file.size";
+    public static final String INVALID_FILE_TYPE = "invalid.file.type";
     public static final String INVALID_REPEAT_PASSWORD = "invalid.password-repeat";
     public static final String INVALID_COORDINATES = "invalid.coordinates";
     public static final String INVALID_VIEW_ORDER = "invalid.view-order";
     public static final String MINIMUM_ONE = "invalid.minimum-one";
     public static final String MINIMUM_ZERO = "invalid.minimum-zero";
     public static final String MAXIMUM_ONE_HUNDRED = "invalid.maximum-one-hundred";
+    public static final String ERR_MAX_UPLOAD_SIZE_EXCEEDED = "invalid.max-upload-size-exceeded";
 
     public static class Auth {
         public static final String ERR_INCORRECT_USERNAME_PASSWORD = "exception.auth.incorrect.username-password";
@@ -82,6 +86,7 @@ public class ErrorMessage {
     }
 
     public static class Bill {
+        public static final String ERR_NOT_FOUND_ID = "exception.bill.not.found.id";
         public static final String ERR_NOT_ALLOW_CANCEL = "exception.order.not.allow.cancel";
     }
 

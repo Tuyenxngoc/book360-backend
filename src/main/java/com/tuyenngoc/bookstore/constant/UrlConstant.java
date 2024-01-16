@@ -9,7 +9,7 @@ public class UrlConstant {
         public static final String LOGOUT = PRE_FIX + "/logout";
         public static final String REGISTER = PRE_FIX + "/register";
         public static final String FORGET_PASSWORD = PRE_FIX + "/forget-password";
-        public static final String CHANGE_PASSWORD = PRE_FIX + "/change-password/{username}";
+        public static final String CHANGE_PASSWORD = PRE_FIX + "/change-password";
         public static final String REFRESH_TOKEN = PRE_FIX + "/refresh-token";
 
     }
@@ -17,19 +17,23 @@ public class UrlConstant {
     public static class User {
         private static final String PRE_FIX = "/user";
 
-        public static final String GET_USERS = PRE_FIX;
-        public static final String GET_USER = PRE_FIX + "/{userId}";
         public static final String GET_CURRENT_USER = PRE_FIX + "/current";
     }
 
     public static class Customer {
         private static final String PRE_FIX = "/customer";
-        public static final String GET_PRODUCTS = PRE_FIX + "/get-products";
 
-        public static final String GET_FAVORITE_PRODUCTS = PRE_FIX + "/{customerId}/favorite-products";
-        public static final String CHECK_FAVORITE_PRODUCT = PRE_FIX + "/{customerId}/favorite-products/{productId}";
-        public static final String ADD_FAVORITE_PRODUCT = PRE_FIX + "/{customerId}/favorite-products/{productId}";
-        public static final String REMOVE_FAVORITE_PRODUCT = PRE_FIX + "/{customerId}/favorite-products/{productId}";
+        public static final String GET_FAVORITE_PRODUCTS = PRE_FIX + "/favorite-products";
+        public static final String CHECK_FAVORITE_PRODUCT = PRE_FIX + "/favorite-products/{productId}";
+        public static final String ADD_FAVORITE_PRODUCT = PRE_FIX + "/favorite-products/{productId}";
+        public static final String REMOVE_FAVORITE_PRODUCT = PRE_FIX + "/favorite-products/{productId}";
+
+        public static final String UPLOAD_IMAGE = PRE_FIX + "/upload-image";
+
+        public static final String UPDATE_CUSTOMER = PRE_FIX;
+
+        public static final String GET_TODO = PRE_FIX + "/get-todo";
+
     }
 
     public static class Product {
@@ -39,6 +43,7 @@ public class UrlConstant {
         public static final String FIND_PRODUCT = PRE_FIX + "/find-products";
 
         public static final String GET_PRODUCTS_BY_CATEGORY_ID = PRE_FIX + "/get-products-by-categoryId/{categoryId}";
+        public static final String GET_PRODUCTS_BY_AUTHOR_ID = PRE_FIX + "/get-products-by-authorId/{authorId}";
 
         public static final String GET_PRODUCT_DETAIL = PRE_FIX + "/get-product-detail/{productId}";
         public static final String GET_PRODUCTS_SAME_AUTHOR = PRE_FIX + "/get-products-same-author/{productId}";
@@ -60,6 +65,9 @@ public class UrlConstant {
         private static final String PRE_FIX = "/bill";
 
         public static final String SAVE_ORDER = PRE_FIX + "/save-order";
+        public static final String GET_BILLS = PRE_FIX + "/get-bills";
+
+        public static final String CANCEL_ORDER = PRE_FIX + "/cancel-order/{billId}";
 
     }
 

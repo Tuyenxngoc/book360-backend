@@ -21,4 +21,11 @@ public class InvalidException extends RuntimeException {
         this.status = HttpStatus.BAD_REQUEST;
         this.message = message;
     }
+
+    public InvalidException(String message, String... args) {
+        super(message);
+        this.status = HttpStatus.BAD_REQUEST;
+        this.message = message;
+        this.params = args;
+    }
 }

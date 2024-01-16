@@ -84,7 +84,7 @@ public class Product extends DateAuditing {
     @JsonIgnore
     private List<CartDetail> cartDetails = new ArrayList<>();
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne
     @JoinColumn(name = "category_id", foreignKey = @ForeignKey(name = "FK_PRODUCT_CATE_ID"), referencedColumnName = "category_id")
     @JsonIgnore
     private Category category;
