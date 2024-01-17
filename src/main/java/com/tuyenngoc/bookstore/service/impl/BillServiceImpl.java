@@ -10,6 +10,7 @@ import com.tuyenngoc.bookstore.domain.dto.pagination.PagingMeta;
 import com.tuyenngoc.bookstore.domain.dto.request.OrderRequestDto;
 import com.tuyenngoc.bookstore.domain.dto.response.CommonResponseDto;
 import com.tuyenngoc.bookstore.domain.dto.response.GetBillResponseDto;
+import com.tuyenngoc.bookstore.domain.dto.response.GetCountBillResponseDto;
 import com.tuyenngoc.bookstore.domain.entity.*;
 import com.tuyenngoc.bookstore.domain.mapper.BillMapper;
 import com.tuyenngoc.bookstore.exception.InvalidException;
@@ -151,6 +152,19 @@ public class BillServiceImpl implements BillService {
 
         String message = messageSource.getMessage(SuccessMessage.Bill.CANCEL_ORDER, null, LocaleContextHolder.getLocale());
         return new CommonResponseDto(message);
+    }
+
+    @Override
+    public GetCountBillResponseDto getCountBillsByStatus(int customerId) {
+
+        int unpaid = billRepository.getCountBillByStatusAndCustomerId(BillStatus.WAIT_FOR_CONFIRMATION.getName(), customerId);
+        int toShip = billRepository.getCountBillByStatusAndCustomerId(BillStatus.WAIT_FOR_DELIVERY.getName(), customerId);
+        int shipping = billRepository.getCountBillByStatusAndCustomerId(BillStatus.DELIVERING.getName(), customerId);
+        int completed = billRepository.getCountBillByStatusAndCustomerId(BillStatus.DELIVERED.getName(), customerId);
+        int cancelled = billRepository.getCountBillByStatusAndCustomerId(BillStatus.CANCELLED.getName(), customerId);
+        int refund = billRepository.getCountBillByStatusAndCustomerId(BillStatus.REFUND.getName(), customerId);
+
+        return new GetCountBillResponseDto(unpaid, toShip, shipping, completed, cancelled, refund);
     }
 
 }

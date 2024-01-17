@@ -43,4 +43,9 @@ public interface BillRepository extends JpaRepository<Bill, Integer> {
 
     @Query("SELECT count(b) FROM Bill b WHERE b.orderStatus=:status")
     int getCountBillByStatus(@Param("status") String status);
+
+    @Query("SELECT count(b) FROM Bill b WHERE b.orderStatus=:status AND b.customer.id =:customerId")
+    int getCountBillByStatusAndCustomerId(@Param("status") String status,
+                                          @Param("customerId") int customerId
+    );
 }

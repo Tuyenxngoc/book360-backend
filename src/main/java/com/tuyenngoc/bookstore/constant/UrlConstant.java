@@ -66,6 +66,7 @@ public class UrlConstant {
 
         public static final String SAVE_ORDER = PRE_FIX + "/save-order";
         public static final String GET_BILLS = PRE_FIX + "/get-bills";
+        public static final String GET_COUNT_BILLS = PRE_FIX + "/get-count-bills";
 
         public static final String CANCEL_ORDER = PRE_FIX + "/cancel-order/{billId}";
 

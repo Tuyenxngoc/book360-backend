@@ -5,6 +5,7 @@ import com.tuyenngoc.bookstore.domain.dto.pagination.PaginationResponseDto;
 import com.tuyenngoc.bookstore.domain.dto.request.OrderRequestDto;
 import com.tuyenngoc.bookstore.domain.dto.response.CommonResponseDto;
 import com.tuyenngoc.bookstore.domain.dto.response.GetBillResponseDto;
+import com.tuyenngoc.bookstore.domain.dto.response.GetCountBillResponseDto;
 import com.tuyenngoc.bookstore.domain.entity.Bill;
 import com.tuyenngoc.bookstore.domain.entity.BillDetail;
 import com.tuyenngoc.bookstore.domain.entity.Product;
@@ -20,4 +21,6 @@ public interface BillService {
     PaginationResponseDto<GetBillResponseDto> getBills(int customerId, PaginationFullRequestDto requestDto, String billStatus);
 
     CommonResponseDto cancelOrder(int customerId, int billId);
+
+    GetCountBillResponseDto getCountBillsByStatus(int customerId);
 }
