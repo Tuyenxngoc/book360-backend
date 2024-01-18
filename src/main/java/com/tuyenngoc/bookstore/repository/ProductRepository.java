@@ -35,4 +35,5 @@ public interface ProductRepository extends JpaRepository<Product, Integer> {
 
     @Query("SELECT new com.tuyenngoc.bookstore.domain.dto.response.GetProductsResponseDto(p) FROM Product p JOIN p.authors a WHERE a.id = :authorId")
     Page<GetProductsResponseDto> getProductsByAuthorId(@Param("authorId") int authorId, Pageable pageable);
+
 }

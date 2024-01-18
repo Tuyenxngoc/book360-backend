@@ -15,16 +15,13 @@ public class LoginResponseDto {
 
     private String tokenType = TokenType.BEARER.name();
 
-    private String id;
-
     private String accessToken;
 
     private String refreshToken;
 
     private Collection<? extends GrantedAuthority> authorities;
 
-    public LoginResponseDto(String id, String accessToken, String refreshToken, Collection<? extends GrantedAuthority> authorities) {
-        this.id = id;
+    public LoginResponseDto(String accessToken, String refreshToken, Collection<? extends GrantedAuthority> authorities) {
         this.accessToken = accessToken;
         this.refreshToken = refreshToken;
         this.authorities = authorities;

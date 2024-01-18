@@ -90,7 +90,6 @@ public class AuthServiceImpl implements AuthService {
             jwtTokenService.saveRefreshTokenToRedis(refreshToken, customUserDetails.getUsername());
 
             return new LoginResponseDto(
-                    customUserDetails.getId(),
                     accessToken,
                     refreshToken,
                     customUserDetails.getAuthorities()
