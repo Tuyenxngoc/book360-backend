@@ -73,7 +73,7 @@ public class CustomerController {
     @Operation(summary = "API upload images")
     @PostMapping(value = UrlConstant.Customer.UPLOAD_IMAGES, consumes = "multipart/form-data")
     public ResponseEntity<?> uploadImages(@RequestParam("files") List<MultipartFile> files,
-                                         @CurrentUser CustomUserDetails userDetails) {
+                                          @CurrentUser CustomUserDetails userDetails) {
         return VsResponseUtil.success(customerService.uploadImages(userDetails.getUsername(), files));
     }
 

@@ -48,7 +48,7 @@ public enum SortByDataConstant implements SortByInterface {
             };
         }
     },
-    CATEGORY{
+    CATEGORY {
         @Override
         public String getSortBy(String sortBy) {
             return switch (sortBy) {

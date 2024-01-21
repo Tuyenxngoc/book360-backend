@@ -35,10 +35,11 @@ public class CategoryServiceImpl implements CategoryService {
 
     private final UploadFileUtil uploadFileUtil;
 
+    //Todo remove images
     @Override
     public CategoryDto createCategory(CategoryDto categoryDto) {
         Category category;
-        if (categoryDto.getId() == -1) {
+        if (categoryDto.getId() == null) {
             category = categoryMapper.toCategory(categoryDto);
         } else {
             category = categoryRepository.findById(categoryDto.getId())
@@ -104,7 +105,8 @@ public class CategoryServiceImpl implements CategoryService {
     public CommonResponseDto deleteCategory(int categoryId) {
         if (categoryRepository.existsById(categoryId)) {
             categoryRepository.deleteById(categoryId);
-            return new CommonResponseDto(SuccessMessage.DELETE);
+            String message = messageSource.getMessage(SuccessMessage.DELETE, null, LocaleContextHolder.getLocale());
+            return new CommonResponseDto(message);
         } else {
             throw new NotFoundException(ErrorMessage.Category.ERR_NOT_FOUND_ID, String.valueOf(categoryId));
         }
