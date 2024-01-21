@@ -25,7 +25,7 @@ public class JwtAuthenticationEntryPoint implements AuthenticationEntryPoint {
             AuthenticationException authException
     ) throws IOException, ServletException {
         MessageSource messageSource = BeanUtil.getBean(MessageSource.class);
-        String message = messageSource.getMessage(ErrorMessage.UNAUTHORIZED, null, LocaleContextHolder.getLocale());
+        String message = messageSource.getMessage(ErrorMessage.ERR_UNAUTHORIZED, null, LocaleContextHolder.getLocale());
         response.setStatus(HttpStatus.UNAUTHORIZED.value());
         response.setContentType(MediaType.APPLICATION_JSON_VALUE);
         response.getOutputStream().write((new ObjectMapper().writeValueAsBytes(RestData.error(message))));

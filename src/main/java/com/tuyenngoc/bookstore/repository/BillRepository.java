@@ -48,4 +48,28 @@ public interface BillRepository extends JpaRepository<Bill, Integer> {
     int getCountBillByStatusAndCustomerId(@Param("status") String status,
                                           @Param("customerId") int customerId
     );
+
+    @Query("SELECT count(b) FROM Bill b")
+    int getCountBills();
+
+    @Query("SELECT b FROM Bill b JOIN b.billDetails bd WHERE bd.product.name LIKE %:keyword%")
+    Page<Bill> getBillsByProductName(
+            @Param("keyword") String keyword,
+            Pageable pageable
+    );
+
+    @Query("SELECT b FROM Bill b WHERE b.consigneeName LIKE %:keyword%")
+    Page<Bill> getBillsByConsigneeName(
+            @Param("keyword") String keyword,
+            Pageable pageable
+    );
+
+    @Query("SELECT b FROM Bill b WHERE b.id =:billId")
+    Page<Bill> getBillsById(
+            @Param("billId") int billId,
+            Pageable pageable
+    );
+
+    @Query("SELECT b FROM Bill b")
+    Page<Bill> getBills(Pageable pageable);
 }

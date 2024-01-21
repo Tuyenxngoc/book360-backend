@@ -15,11 +15,11 @@ import lombok.Setter;
 @AllArgsConstructor
 public class AddressDto {
 
-    @NotBlank(message = ErrorMessage.NOT_BLANK_FIELD)
+    @NotBlank(message = ErrorMessage.INVALID_NOT_BLANK_FIELD)
     @Size(min = -90, max = 90, message = ErrorMessage.INVALID_COORDINATES)
     private double latitude;
 
-    @NotBlank(message = ErrorMessage.NOT_BLANK_FIELD)
+    @NotBlank(message = ErrorMessage.INVALID_NOT_BLANK_FIELD)
     @Size(min = -180, max = 180, message = ErrorMessage.INVALID_COORDINATES)
     private double longitude;
 

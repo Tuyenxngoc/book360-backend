@@ -13,10 +13,10 @@ import lombok.Setter;
 @AllArgsConstructor
 public class ForgetPasswordRequestDto {
 
-    @NotBlank(message = ErrorMessage.NOT_BLANK_FIELD)
+    @NotBlank(message = ErrorMessage.INVALID_NOT_BLANK_FIELD)
     private String username;
 
-    @NotBlank(message = ErrorMessage.NOT_BLANK_FIELD)
+    @NotBlank(message = ErrorMessage.INVALID_NOT_BLANK_FIELD)
     private String email;
 
 }

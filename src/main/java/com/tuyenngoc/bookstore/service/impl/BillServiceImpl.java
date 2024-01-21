@@ -1,9 +1,6 @@
 package com.tuyenngoc.bookstore.service.impl;
 
-import com.tuyenngoc.bookstore.constant.BillStatus;
-import com.tuyenngoc.bookstore.constant.ErrorMessage;
-import com.tuyenngoc.bookstore.constant.SortByDataConstant;
-import com.tuyenngoc.bookstore.constant.SuccessMessage;
+import com.tuyenngoc.bookstore.constant.*;
 import com.tuyenngoc.bookstore.domain.dto.pagination.PaginationFullRequestDto;
 import com.tuyenngoc.bookstore.domain.dto.pagination.PaginationResponseDto;
 import com.tuyenngoc.bookstore.domain.dto.pagination.PagingMeta;
@@ -165,6 +162,46 @@ public class BillServiceImpl implements BillService {
         int refund = billRepository.getCountBillByStatusAndCustomerId(BillStatus.REFUND.getName(), customerId);
 
         return new GetCountBillResponseDto(unpaid, toShip, shipping, completed, cancelled, refund);
+    }
+
+    @Override
+    public int getCountBills() {
+        return billRepository.getCountBills();
+    }
+
+    @Override
+    public PaginationResponseDto<Bill> getAllBills(PaginationFullRequestDto requestDto, String billStatus) {
+
+        Pageable pageable = PaginationUtil.buildPageable(requestDto, SortByDataConstant.BILL);
+
+        String searchBy = requestDto.getSearchBy();
+
+        Page<Bill> page;
+        if (searchBy == null || searchBy.isEmpty()) {
+            page = billRepository.getBills(pageable);
+        } else if (searchBy.equals(SearchByConstant.Bill.BILL_ID)) {
+           try{
+               int id = Integer.parseInt(requestDto.getKeyword());
+               page = billRepository.getBillsById(id, pageable);
+           }catch (Exception e){
+               page = billRepository.getBillsById(-1, pageable);
+           }
+        } else if (searchBy.equals(SearchByConstant.Bill.CUSTOMER_NAME)) {
+            page = billRepository.getBillsByConsigneeName(requestDto.getKeyword(), pageable);
+        } else if (searchBy.equals(SearchByConstant.Bill.PRODUCT_NAME)) {
+            page = billRepository.getBillsByProductName(requestDto.getKeyword(), pageable);
+        } else {
+            page = billRepository.getBills(pageable);
+        }
+
+        PagingMeta pagingMeta = PaginationUtil.buildPagingMeta(requestDto, SortByDataConstant.BILL, page);
+
+        PaginationResponseDto<Bill> responseDto = new PaginationResponseDto<>();
+
+        responseDto.setItems(page.getContent());
+        responseDto.setMeta(pagingMeta);
+
+        return responseDto;
     }
 
 }

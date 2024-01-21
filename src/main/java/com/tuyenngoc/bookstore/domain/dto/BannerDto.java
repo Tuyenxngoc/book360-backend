@@ -14,17 +14,17 @@ import lombok.Setter;
 @AllArgsConstructor
 public class BannerDto {
 
-    @NotBlank(message = ErrorMessage.NOT_BLANK_FIELD)
+    @NotBlank(message = ErrorMessage.INVALID_NOT_BLANK_FIELD)
     private int id;
 
-    @NotBlank(message = ErrorMessage.NOT_BLANK_FIELD)
+    @NotBlank(message = ErrorMessage.INVALID_NOT_BLANK_FIELD)
     private String image;
 
-    @NotBlank(message = ErrorMessage.NOT_BLANK_FIELD)
+    @NotBlank(message = ErrorMessage.INVALID_NOT_BLANK_FIELD)
     private String url;
 
     @Positive(message = ErrorMessage.INVALID_VIEW_ORDER)
-    @NotBlank(message = ErrorMessage.NOT_BLANK_FIELD)
+    @NotBlank(message = ErrorMessage.INVALID_NOT_BLANK_FIELD)
     private int viewOrder;
 
 }

@@ -19,8 +19,8 @@ public class CartDetailDto {
     @NotNull(message = ErrorMessage.INVALID_SOME_THING_FIELD_IS_REQUIRED)
     private Integer productId;
 
-    @Min(value = 1, message = ErrorMessage.MINIMUM_ONE)
-    @Max(value = 100, message = ErrorMessage.MAXIMUM_ONE_HUNDRED)
+    @Min(value = 1, message = ErrorMessage.INVALID_MINIMUM_ONE)
+    @Max(value = 100, message = ErrorMessage.INVALID_MAXIMUM_ONE_HUNDRED)
     @NotNull(message = ErrorMessage.INVALID_SOME_THING_FIELD_IS_REQUIRED)
     private Integer quantity;
 }

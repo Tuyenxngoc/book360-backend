@@ -11,7 +11,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 public class TokenRefreshRequestDto {
 
-    @NotBlank(message = ErrorMessage.NOT_BLANK_FIELD)
+    @NotBlank(message = ErrorMessage.INVALID_NOT_BLANK_FIELD)
     private String refreshToken;
 
 }

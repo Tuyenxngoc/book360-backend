@@ -6,7 +6,17 @@ public enum SortByDataConstant implements SortByInterface {
     PRODUCT {
         @Override
         public String getSortBy(String sortBy) {
-            return "name";
+            return switch (sortBy) {
+                case "id" -> "id";
+                case "name" -> "name";
+                case "price" -> "price";
+                case "discount" -> "discount";
+                case "weight" -> "weight";
+                case "pageCount" -> "pageCount";
+                case "soldQuantity" -> "soldQuantity";
+                case "stockQuantity" -> "stockQuantity";
+                default -> "createdDate";
+            };
         }
     },
 
@@ -26,6 +36,16 @@ public enum SortByDataConstant implements SortByInterface {
         public String getSortBy(String sortBy) {
             return "createdDate";
         }
+    },
+
+    CUSTOMER {
+        @Override
+        public String getSortBy(String sortBy) {
+            if (sortBy.equals("address"))
+                return "address";
+            return "fullName";
+        }
     }
+
 
 }

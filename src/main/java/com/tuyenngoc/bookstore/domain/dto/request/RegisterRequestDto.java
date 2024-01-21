@@ -14,18 +14,18 @@ import lombok.Setter;
 @AllArgsConstructor
 public class RegisterRequestDto {
 
-    @NotBlank(message = ErrorMessage.NOT_BLANK_FIELD)
+    @NotBlank(message = ErrorMessage.INVALID_NOT_BLANK_FIELD)
     @Pattern(regexp = "^[a-z][a-z0-9]{3,15}$", message = ErrorMessage.INVALID_FORMAT_USERNAME)
     private String username;
 
-    @NotBlank(message = ErrorMessage.NOT_BLANK_FIELD)
+    @NotBlank(message = ErrorMessage.INVALID_NOT_BLANK_FIELD)
     @Pattern(regexp = "^(?=.*[a-zA-Z])(?=.*\\d)[a-zA-Z\\d]{6,}$", message = ErrorMessage.INVALID_FORMAT_PASSWORD)
     private String password;
 
-    @NotBlank(message = ErrorMessage.NOT_BLANK_FIELD)
+    @NotBlank(message = ErrorMessage.INVALID_NOT_BLANK_FIELD)
     private String repeatPassword;
 
-    @NotBlank(message = ErrorMessage.NOT_BLANK_FIELD)
+    @NotBlank(message = ErrorMessage.INVALID_NOT_BLANK_FIELD)
     @Pattern(regexp = "^[a-zA-Z0-9_!#$%&'*+/=?`{|}~^.-]+@[a-zA-Z0-9.-]+$", message = ErrorMessage.INVALID_FORMAT_EMAIL)
     private String email;
 

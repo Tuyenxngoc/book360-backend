@@ -23,4 +23,8 @@ public interface BillService {
     CommonResponseDto cancelOrder(int customerId, int billId);
 
     GetCountBillResponseDto getCountBillsByStatus(int customerId);
+
+    int getCountBills();
+
+    PaginationResponseDto<Bill> getAllBills(PaginationFullRequestDto requestDto, String billStatus);
 }

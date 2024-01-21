@@ -4,13 +4,14 @@ import com.tuyenngoc.bookstore.constant.BillStatus;
 import com.tuyenngoc.bookstore.constant.ErrorMessage;
 import com.tuyenngoc.bookstore.constant.SortByDataConstant;
 import com.tuyenngoc.bookstore.constant.SuccessMessage;
-import com.tuyenngoc.bookstore.domain.dto.CustomerDto;
 import com.tuyenngoc.bookstore.domain.dto.pagination.PaginationFullRequestDto;
 import com.tuyenngoc.bookstore.domain.dto.pagination.PaginationResponseDto;
 import com.tuyenngoc.bookstore.domain.dto.pagination.PagingMeta;
+import com.tuyenngoc.bookstore.domain.dto.request.UpdateCustomerRequestDto;
 import com.tuyenngoc.bookstore.domain.dto.response.CommonResponseDto;
 import com.tuyenngoc.bookstore.domain.dto.response.GetProductsResponseDto;
 import com.tuyenngoc.bookstore.domain.dto.response.GetTodoResponseDto;
+import com.tuyenngoc.bookstore.domain.entity.Address;
 import com.tuyenngoc.bookstore.domain.entity.Customer;
 import com.tuyenngoc.bookstore.domain.entity.Product;
 import com.tuyenngoc.bookstore.exception.InvalidException;
@@ -30,6 +31,9 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.time.LocalDate;
+import java.time.format.DateTimeParseException;
+
 @Service
 @RequiredArgsConstructor
 public class CustomerServiceImpl implements CustomerService {
@@ -42,9 +46,9 @@ public class CustomerServiceImpl implements CustomerService {
 
     private final UploadFileUtil uploadFileUtil;
 
-    private final UploadRedisService uploadRedisService;
-
     private final MessageSource messageSource;
+
+    private final UploadRedisService uploadRedisService;
 
     @Override
     public PaginationResponseDto<GetProductsResponseDto> getFavoriteProducts(int customerId, PaginationFullRequestDto request) {
@@ -111,13 +115,28 @@ public class CustomerServiceImpl implements CustomerService {
     }
 
     @Override
-    public CommonResponseDto updateCustomer(int customerId, CustomerDto customerDto) {
+    public CommonResponseDto updateCustomer(int customerId, UpdateCustomerRequestDto updateCustomerRequestDto) {
+        LocalDate dob;
+        try {
+            dob = LocalDate.parse(updateCustomerRequestDto.getDob());
+            if (dob.isAfter(LocalDate.now())) {
+                throw new InvalidException(ErrorMessage.INVALID_DATE_PAST);
+            }
+        } catch (DateTimeParseException e) {
+            throw new InvalidException(ErrorMessage.INVALID_DATE, updateCustomerRequestDto.getDob());
+        }
         Customer customer = customerRepository.findById(customerId)
                 .orElseThrow(() -> new NotFoundException(ErrorMessage.Customer.ERR_NOT_FOUND_ID, String.valueOf(customerId)));
 
-        customer.setFullName(customerDto.getFullName());
-        customer.setPhoneNumber(customerDto.getPhoneNumber());
-        customer.setAvatar(customerDto.getAvatar());
+        Address address = new Address();
+        address.setAddressName(updateCustomerRequestDto.getAddress());
+
+        customer.setFullName(updateCustomerRequestDto.getFullName());
+        customer.setPhoneNumber(updateCustomerRequestDto.getPhoneNumber());
+        customer.setAvatar(updateCustomerRequestDto.getAvatar());
+        customer.setDob(dob);
+        customer.setAddress(address);
+        customer.setGender(updateCustomerRequestDto.getGender());
 
         customerRepository.save(customer);
 
@@ -133,5 +152,24 @@ public class CustomerServiceImpl implements CustomerService {
         int deliveringCount = billRepository.getCountBillByStatus(BillStatus.DELIVERING.getName());
         int cancelledCount = billRepository.getCountBillByStatus(BillStatus.CANCELLED.getName());
         return new GetTodoResponseDto(productSoldOut, waitForConfirmationCount, waitForDeliveryCount, deliveringCount, cancelledCount);
+    }
+
+    @Override
+    public int getCountCustomer() {
+        return customerRepository.getCountCustomer();
+    }
+
+    @Override
+    public PaginationResponseDto<Customer> getCustomers(PaginationFullRequestDto requestDto) {
+        Pageable pageable = PaginationUtil.buildPageable(requestDto, SortByDataConstant.CUSTOMER);
+
+        Page<Customer> page = customerRepository.getCustomersByFullName(requestDto.getKeyword(), pageable);
+        PagingMeta meta = PaginationUtil.buildPagingMeta(requestDto, SortByDataConstant.CUSTOMER, page);
+
+        PaginationResponseDto<Customer> responseDto = new PaginationResponseDto<>();
+        responseDto.setItems(page.getContent());
+        responseDto.setMeta(meta);
+
+        return responseDto;
     }
 }

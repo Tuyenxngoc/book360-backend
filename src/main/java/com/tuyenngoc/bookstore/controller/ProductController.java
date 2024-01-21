@@ -11,6 +11,7 @@ import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springdoc.core.annotations.ParameterObject;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 
@@ -54,5 +55,19 @@ public class ProductController {
     @GetMapping(UrlConstant.Product.GET_PRODUCTS_SAME_AUTHOR)
     public ResponseEntity<?> getProductSameAuthor(@PathVariable int productId, @Valid @ParameterObject PaginationRequestDto requestDto) {
         return VsResponseUtil.success(productService.getProductsSameAuthor(productId, requestDto));
+    }
+
+    @PreAuthorize(value = "hasRole('ADMIN')")
+    @Operation(summary = "API get quantity products")
+    @GetMapping(UrlConstant.Product.GET_QUANTITY_PRODUCTS)
+    public ResponseEntity<?> getRevenue() {
+        return VsResponseUtil.success(productService.getQuantityProducts());
+    }
+
+    @PreAuthorize("hasRole('ADMIN')")
+    @Operation(summary = "API get all products")
+    @GetMapping(UrlConstant.Product.GET_PRODUCTS_ADMIN)
+    public ResponseEntity<?> getProductsForAdmin(@Valid @ParameterObject PaginationFullRequestDto requestDto) {
+        return VsResponseUtil.success(productService.getProductsForAdmin(requestDto));
     }
 }

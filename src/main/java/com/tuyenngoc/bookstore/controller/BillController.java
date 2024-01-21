@@ -10,10 +10,13 @@ import com.tuyenngoc.bookstore.security.CustomUserDetails;
 import com.tuyenngoc.bookstore.service.BillService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.tags.Tag;
+import io.swagger.v3.oas.annotations.tags.Tags;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springdoc.core.annotations.ParameterObject;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 @RestApiV1
@@ -39,8 +42,8 @@ public class BillController {
         return VsResponseUtil.success(billService.getBills(userDetails.getCustomerId(), requestDto, billStatus));
     }
 
-    @Operation(summary = "API get bills")
-    @GetMapping(UrlConstant.Bill.GET_COUNT_BILLS)
+    @Operation(summary = "API get count bills by status")
+    @GetMapping(UrlConstant.Bill.GET_COUNT_BILLS_BY_STATUS)
     public ResponseEntity<?> getCountBillsByStatus(@CurrentUser CustomUserDetails userDetails) {
         return VsResponseUtil.success(billService.getCountBillsByStatus(userDetails.getCustomerId()));
     }
@@ -51,4 +54,26 @@ public class BillController {
                                          @CurrentUser CustomUserDetails userDetails) {
         return VsResponseUtil.success(billService.cancelOrder(userDetails.getCustomerId(), billId));
     }
+
+    @PreAuthorize("hasRole('ADMIN')")
+    @Tag(name = "Bill controller admin")
+    @Operation(summary = "API get count bills")
+    @GetMapping(UrlConstant.Bill.GET_COUNT_BILLS)
+    public ResponseEntity<?> getCountBills() {
+        return VsResponseUtil.success(billService.getCountBills());
+    }
+
+    @PreAuthorize(value = "hasRole('ADMIN')")
+    @Tag(name = "Bill controller admin")
+    @Operation(summary = "API get all bills")
+    @GetMapping(UrlConstant.Bill.GET_ALL_BILLS)
+    public ResponseEntity<?> getAllBills(
+            @RequestParam(name = "billStatus", required = false, defaultValue = "")
+            @Parameter(description = "The status of the bill (unpaid, to_ship, shipping, completed, cancelled, refund, delivery_failed)")
+                    String billStatus,
+            @ParameterObject PaginationFullRequestDto requestDto
+    ) {
+        return VsResponseUtil.success(billService.getAllBills(requestDto, billStatus));
+    }
+
 }

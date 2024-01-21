@@ -29,17 +29,19 @@ public class UrlConstant {
         public static final String REMOVE_FAVORITE_PRODUCT = PRE_FIX + "/favorite-products/{productId}";
 
         public static final String UPLOAD_IMAGE = PRE_FIX + "/upload-image";
-
         public static final String UPDATE_CUSTOMER = PRE_FIX;
 
+        //Admin
         public static final String GET_TODO = PRE_FIX + "/get-todo";
-
+        public static final String GET_COUNT_CUSTOMER = PRE_FIX + "/get-count-customer";
+        public static final String GET_CUSTOMERS = PRE_FIX + "/get-customers";
     }
 
     public static class Product {
         private static final String PRE_FIX = "/product";
 
         public static final String GET_PRODUCTS = PRE_FIX + "/get-products";
+        public static final String GET_PRODUCTS_ADMIN = PRE_FIX + "/get-all-products";
         public static final String FIND_PRODUCT = PRE_FIX + "/find-products";
 
         public static final String GET_PRODUCTS_BY_CATEGORY_ID = PRE_FIX + "/get-products-by-categoryId/{categoryId}";
@@ -47,6 +49,8 @@ public class UrlConstant {
 
         public static final String GET_PRODUCT_DETAIL = PRE_FIX + "/get-product-detail/{productId}";
         public static final String GET_PRODUCTS_SAME_AUTHOR = PRE_FIX + "/get-products-same-author/{productId}";
+
+        public static final String GET_QUANTITY_PRODUCTS = PRE_FIX + "/get-quantity";
 
     }
 
@@ -66,7 +70,10 @@ public class UrlConstant {
 
         public static final String SAVE_ORDER = PRE_FIX + "/save-order";
         public static final String GET_BILLS = PRE_FIX + "/get-bills";
+        public static final String GET_COUNT_BILLS_BY_STATUS = PRE_FIX + "/get-count-bills-by-status";
         public static final String GET_COUNT_BILLS = PRE_FIX + "/get-count-bills";
+
+        public static final String GET_ALL_BILLS = PRE_FIX + "/get-all-bills";
 
         public static final String CANCEL_ORDER = PRE_FIX + "/cancel-order/{billId}";
 

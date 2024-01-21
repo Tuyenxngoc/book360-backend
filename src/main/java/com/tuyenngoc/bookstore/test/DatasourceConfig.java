@@ -31,13 +31,13 @@ public class DatasourceConfig {
 
         if (bannerRepository.count() == 0) {
             bannerRepository.saveAll(IntStream.range(0, 20).mapToObj(i ->
-                            new Banner(i + 1, "https://res.cloudinary.com/dkegqlchp/image/upload/v1705025283/ms_banner_img3_jeieut.webp", "/test", i))
+                            new Banner(i + 1, "https://res.cloudinary.com/dkegqlchp/image/upload/v1705742296/ms_banner_img4_ceuqne.webp", "/test", i))
                     .collect(Collectors.toList()));
         }
 
         final List<Category> categories = new ArrayList<>();
         if (categoryRepository.count() == 0) {
-            categories.addAll(categoryRepository.saveAll(IntStream.range(0, 3).mapToObj(i ->
+            categories.addAll(categoryRepository.saveAll(IntStream.range(0, 8).mapToObj(i ->
                             new Category(i, "category" + i, "", null))
                     .collect(Collectors.toList())));
         }
@@ -62,7 +62,7 @@ public class DatasourceConfig {
                             new Product(i,
                                     "product" + i,
                                     "this is description" + i,
-                                    "https://product.hstatic.net/200000343865/product/newton_6f78e36f267d4e6ab8e60f529cbf55a0.jpg",
+                                    "https://product.hstatic.net/200000343865/product/5_8d9416ec8a8740f282abd22dd1f8052a.jpg",
                                     10000 * i,
                                     10,
                                     "isbn" + i,

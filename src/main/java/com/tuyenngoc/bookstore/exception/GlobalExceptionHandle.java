@@ -149,7 +149,7 @@ public class GlobalExceptionHandle {
     @ExceptionHandler(AccessDeniedException.class)
     @ResponseStatus(HttpStatus.FORBIDDEN)
     public ResponseEntity<RestData<?>> handleAccessDeniedException(AccessDeniedException ex) {
-        String errorMessage = messageSource.getMessage(ErrorMessage.FORBIDDEN, null, LocaleContextHolder.getLocale());
+        String errorMessage = messageSource.getMessage(ErrorMessage.ERR_FORBIDDEN, null, LocaleContextHolder.getLocale());
         return VsResponseUtil.error(HttpStatus.FORBIDDEN, errorMessage);
     }
 
@@ -175,7 +175,7 @@ public class GlobalExceptionHandle {
     @ExceptionHandler(HttpMessageNotReadableException.class)
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     public ResponseEntity<RestData<?>> handleHttpMessageNotReadableException(HttpMessageNotReadableException ex) {
-        String errorMessage = messageSource.getMessage(ErrorMessage.ERR_INVALID_REQUEST_BODY, null, LocaleContextHolder.getLocale());
+        String errorMessage = messageSource.getMessage(ErrorMessage.ERR_REQUEST_BODY, null, LocaleContextHolder.getLocale());
         return VsResponseUtil.error(HttpStatus.BAD_REQUEST, errorMessage);
     }
 
@@ -243,7 +243,7 @@ public class GlobalExceptionHandle {
     @ExceptionHandler(MaxUploadSizeExceededException.class)
     @ResponseStatus(HttpStatus.PAYLOAD_TOO_LARGE)
     public ResponseEntity<RestData<?>> handleMaxUploadSizeExceeded(MaxUploadSizeExceededException ex) {
-        String errorMessage = messageSource.getMessage(ErrorMessage.ERR_MAX_UPLOAD_SIZE_EXCEEDED, null, LocaleContextHolder.getLocale());
+        String errorMessage = messageSource.getMessage(ErrorMessage.INVALID_MAX_UPLOAD_SIZE_EXCEEDED, null, LocaleContextHolder.getLocale());
         return VsResponseUtil.error(HttpStatus.PAYLOAD_TOO_LARGE, errorMessage);
     }
 }
