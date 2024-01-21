@@ -41,11 +41,22 @@ public enum SortByDataConstant implements SortByInterface {
     CUSTOMER {
         @Override
         public String getSortBy(String sortBy) {
-            if (sortBy.equals("address"))
-                return "address";
-            return "fullName";
+            return switch (sortBy) {
+                case "id" -> "id";
+                case "fullName" -> "fullName";
+                default -> "createdDate";
+            };
         }
-    }
-
+    },
+    CATEGORY{
+        @Override
+        public String getSortBy(String sortBy) {
+            return switch (sortBy) {
+                case "id" -> "id";
+                case "name" -> "name";
+                default -> "createdDate";
+            };
+        }
+    },
 
 }

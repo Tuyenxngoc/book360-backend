@@ -9,6 +9,8 @@ import com.tuyenngoc.bookstore.domain.dto.response.GetTodoResponseDto;
 import com.tuyenngoc.bookstore.domain.entity.Customer;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.util.List;
+
 public interface CustomerService {
 
     PaginationResponseDto<GetProductsResponseDto> getFavoriteProducts(int customerId, PaginationFullRequestDto request);
@@ -21,6 +23,8 @@ public interface CustomerService {
 
     String uploadImage(String username, MultipartFile file);
 
+    List<String> uploadImages(String username, List<MultipartFile> files);
+
     CommonResponseDto updateCustomer(int customerId, UpdateCustomerRequestDto updateCustomerRequestDto);
 
     GetTodoResponseDto getTodo(int customerId);
@@ -28,4 +32,5 @@ public interface CustomerService {
     int getCountCustomer();
 
     PaginationResponseDto<Customer> getCustomers(PaginationFullRequestDto requestDto);
+
 }

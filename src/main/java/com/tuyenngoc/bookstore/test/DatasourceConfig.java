@@ -38,7 +38,7 @@ public class DatasourceConfig {
         final List<Category> categories = new ArrayList<>();
         if (categoryRepository.count() == 0) {
             categories.addAll(categoryRepository.saveAll(IntStream.range(0, 8).mapToObj(i ->
-                            new Category(i, "category" + i, "", null))
+                            new Category(i, "category" + i, "https://res.cloudinary.com/dkegqlchp/image/upload/v1705837691/banner_home_pro_4_fs4kao.webp", null))
                     .collect(Collectors.toList())));
         }
 

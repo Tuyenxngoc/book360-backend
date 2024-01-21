@@ -11,6 +11,9 @@ public class ErrorMessage {
     public static final String ERR_REQUIRED_MISSING_PARAMETER = "exception.missing-servlet-request-parameter";
     public static final String ERR_METHOD_ARGUMENT_TYPE_MISMATCH = "exception.method-argument-type-mismatch";
     public static final String ERR_RESOURCE_NOT_FOUND = "exception.resource-not-found";
+    public static final String ERR_MISSING_SERVLET_REQUEST_PART = "exception.request.part.missing";
+    public static final String ERR_UNSUPPORTED_MEDIA_TYPE = "exception.unsupported.media.type";
+    public static final String ERR_MULTIPART_EXCEPTION = "exception.multipart";
 
     public static final String INVALID_SOME_THING_FIELD = "invalid.general";
     public static final String INVALID_FORMAT_SOME_THING_FIELD = "invalid.general.format";

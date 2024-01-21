@@ -1,9 +1,11 @@
 package com.tuyenngoc.bookstore.service;
 
+import java.util.List;
+
 public interface UploadRedisService {
 
-    void saveUrl(String username, String url);
+    void saveUrls(String username, List<String> urls);
 
-    String getUrl(String username);
+    List<String> getUrls(String username);
 
 }

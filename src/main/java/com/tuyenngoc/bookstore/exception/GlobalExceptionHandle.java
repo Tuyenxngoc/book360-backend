@@ -10,11 +10,13 @@ import org.hibernate.validator.internal.engine.path.PathImpl;
 import org.springframework.context.MessageSource;
 import org.springframework.context.i18n.LocaleContextHolder;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.validation.BindException;
 import org.springframework.validation.FieldError;
+import org.springframework.web.HttpMediaTypeNotSupportedException;
 import org.springframework.web.HttpRequestMethodNotSupportedException;
 import org.springframework.web.bind.MissingServletRequestParameterException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -22,12 +24,15 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
 import org.springframework.web.multipart.MaxUploadSizeExceededException;
+import org.springframework.web.multipart.MultipartException;
+import org.springframework.web.multipart.support.MissingServletRequestPartException;
 import org.springframework.web.servlet.resource.NoResourceFoundException;
 
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.Objects;
+import java.util.stream.Collectors;
 
 @Slf4j
 @RestControllerAdvice
@@ -246,4 +251,49 @@ public class GlobalExceptionHandle {
         String errorMessage = messageSource.getMessage(ErrorMessage.INVALID_MAX_UPLOAD_SIZE_EXCEEDED, null, LocaleContextHolder.getLocale());
         return VsResponseUtil.error(HttpStatus.PAYLOAD_TOO_LARGE, errorMessage);
     }
+
+    /**
+     * Xử lý ngoại lệ khi thiếu một phần của yêu cầu.
+     *
+     * @param ex Ngoại lệ MissingServletRequestPartException
+     * @return ResponseEntity chứa thông tin lỗi và mã HTTP 400 Bad request
+     */
+    @ExceptionHandler(MissingServletRequestPartException.class)
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    public ResponseEntity<RestData<?>> handleMissingServletRequestPartException(MissingServletRequestPartException ex) {
+        String partName = ex.getRequestPartName();
+        String errorMessage = messageSource.getMessage(ErrorMessage.ERR_MISSING_SERVLET_REQUEST_PART, new Object[]{partName}, LocaleContextHolder.getLocale());
+        return VsResponseUtil.error(HttpStatus.BAD_REQUEST, errorMessage);
+    }
+
+    /**
+     * Xử lý ngoại lệ khi Content-Type không được hỗ trợ.
+     *
+     * @param ex Ngoại lệ HttpMediaTypeNotSupportedException
+     * @return ResponseEntity chứa thông tin lỗi và mã HTTP 415 Unsupported Media Type
+     */
+    @ExceptionHandler(HttpMediaTypeNotSupportedException.class)
+    @ResponseStatus(HttpStatus.UNSUPPORTED_MEDIA_TYPE)
+    public ResponseEntity<RestData<?>> handleHttpMediaTypeNotSupportedException(HttpMediaTypeNotSupportedException ex) {
+        String supportedContentType = ex.getSupportedMediaTypes().stream()
+                .map(MediaType::toString)
+                .collect(Collectors.joining());
+        String errorMessage = messageSource.getMessage(ErrorMessage.ERR_UNSUPPORTED_MEDIA_TYPE, new Object[]{supportedContentType}, LocaleContextHolder.getLocale());
+        return VsResponseUtil.error(HttpStatus.UNSUPPORTED_MEDIA_TYPE, errorMessage);
+    }
+
+    /**
+     * Xử lý ngoại lệ khi có lỗi trong quá trình xử lý multipart.
+     *
+     * @param ex Ngoại lệ MultipartException
+     * @return ResponseEntity chứa thông tin lỗi và mã HTTP 500 Internal Server Error
+     */
+    @ExceptionHandler(MultipartException.class)
+    @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
+    public ResponseEntity<RestData<?>> handleMultipartException(MultipartException ex) {
+        log.error("Multipart Exception: {}", ex.getMessage(), ex);
+        String errorMessage = messageSource.getMessage(ErrorMessage.ERR_MULTIPART_EXCEPTION, null, LocaleContextHolder.getLocale());
+        return VsResponseUtil.error(HttpStatus.INTERNAL_SERVER_ERROR, errorMessage);
+    }
+
 }

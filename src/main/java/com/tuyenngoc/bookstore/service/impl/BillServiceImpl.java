@@ -180,12 +180,12 @@ public class BillServiceImpl implements BillService {
         if (searchBy == null || searchBy.isEmpty()) {
             page = billRepository.getBills(pageable);
         } else if (searchBy.equals(SearchByConstant.Bill.BILL_ID)) {
-           try{
-               int id = Integer.parseInt(requestDto.getKeyword());
-               page = billRepository.getBillsById(id, pageable);
-           }catch (Exception e){
-               page = billRepository.getBillsById(-1, pageable);
-           }
+            try {
+                int id = Integer.parseInt(requestDto.getKeyword());
+                page = billRepository.getBillsById(id, pageable);
+            } catch (Exception e) {
+                page = billRepository.getBillsById(-1, pageable);
+            }
         } else if (searchBy.equals(SearchByConstant.Bill.CUSTOMER_NAME)) {
             page = billRepository.getBillsByConsigneeName(requestDto.getKeyword(), pageable);
         } else if (searchBy.equals(SearchByConstant.Bill.PRODUCT_NAME)) {

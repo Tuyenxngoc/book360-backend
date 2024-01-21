@@ -18,6 +18,8 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.util.List;
+
 @RestApiV1
 @RequiredArgsConstructor
 public class CustomerController {
@@ -64,6 +66,15 @@ public class CustomerController {
     public ResponseEntity<?> updateCustomer(@Valid @RequestBody UpdateCustomerRequestDto updateCustomerRequestDto,
                                             @CurrentUser CustomUserDetails userDetails) {
         return VsResponseUtil.success(customerService.updateCustomer(userDetails.getCustomerId(), updateCustomerRequestDto));
+    }
+
+    @PreAuthorize("hasRole('ADMIN')")
+    @Tag(name = "Customer admin")
+    @Operation(summary = "API upload images")
+    @PostMapping(value = UrlConstant.Customer.UPLOAD_IMAGES, consumes = "multipart/form-data")
+    public ResponseEntity<?> uploadImages(@RequestParam("files") List<MultipartFile> files,
+                                         @CurrentUser CustomUserDetails userDetails) {
+        return VsResponseUtil.success(customerService.uploadImages(userDetails.getUsername(), files));
     }
 
     @PreAuthorize("hasRole('ADMIN')")

@@ -45,7 +45,7 @@ public class SecurityConfiguration {
             "/api/v1/product/get-products-by-categoryId/*",
             "/api/v1/product/get-products-by-authorId/*",
             //banner
-            "/api/v1/banner/get-all-banners",
+            "/api/v1/banner/get-banners",
             //category
             "/api/v1/category/get-categories"
     };

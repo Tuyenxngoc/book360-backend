@@ -1,5 +1,6 @@
 package com.tuyenngoc.bookstore.domain.dto.response;
 
+import com.tuyenngoc.bookstore.domain.dto.CategoryDto;
 import com.tuyenngoc.bookstore.domain.entity.Product;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -24,6 +25,8 @@ public class GetProductsResponseDto {
 
     private int discount;
 
+    private CategoryDto category;
+
     public GetProductsResponseDto(Product product) {
         this.productId = product.getId();
         this.name = product.getName();
@@ -31,5 +34,6 @@ public class GetProductsResponseDto {
         this.quantity = product.getStockQuantity();
         this.price = product.getPrice();
         this.discount = product.getDiscount();
+        this.category = new CategoryDto(product.getCategory());
     }
 }

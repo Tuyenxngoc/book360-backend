@@ -7,6 +7,7 @@ import com.tuyenngoc.bookstore.domain.dto.pagination.PaginationFullRequestDto;
 import com.tuyenngoc.bookstore.domain.dto.pagination.PaginationRequestDto;
 import com.tuyenngoc.bookstore.service.ProductService;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springdoc.core.annotations.ParameterObject;
@@ -58,6 +59,7 @@ public class ProductController {
     }
 
     @PreAuthorize(value = "hasRole('ADMIN')")
+    @Tag(name = "Product controller admin")
     @Operation(summary = "API get quantity products")
     @GetMapping(UrlConstant.Product.GET_QUANTITY_PRODUCTS)
     public ResponseEntity<?> getRevenue() {
@@ -65,6 +67,7 @@ public class ProductController {
     }
 
     @PreAuthorize("hasRole('ADMIN')")
+    @Tag(name = "Product controller admin")
     @Operation(summary = "API get all products")
     @GetMapping(UrlConstant.Product.GET_PRODUCTS_ADMIN)
     public ResponseEntity<?> getProductsForAdmin(@Valid @ParameterObject PaginationFullRequestDto requestDto) {

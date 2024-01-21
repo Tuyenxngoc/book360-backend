@@ -37,8 +37,8 @@ public class BannerServiceImpl implements BannerService {
     private final BannerMapper bannerMapper;
 
     @Override
-    public List<Banner> getAllBanners() {
-        return bannerRepository.findAll();
+    public List<BannerDto> getBanners() {
+        return bannerRepository.getBanners();
     }
 
     @Override

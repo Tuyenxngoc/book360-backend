@@ -1,21 +1,27 @@
 package com.tuyenngoc.bookstore.service.impl;
 
 import com.tuyenngoc.bookstore.constant.ErrorMessage;
+import com.tuyenngoc.bookstore.constant.SortByDataConstant;
 import com.tuyenngoc.bookstore.constant.SuccessMessage;
 import com.tuyenngoc.bookstore.domain.dto.CategoryDto;
+import com.tuyenngoc.bookstore.domain.dto.pagination.PaginationFullRequestDto;
+import com.tuyenngoc.bookstore.domain.dto.pagination.PaginationResponseDto;
+import com.tuyenngoc.bookstore.domain.dto.pagination.PagingMeta;
 import com.tuyenngoc.bookstore.domain.dto.response.CommonResponseDto;
+import com.tuyenngoc.bookstore.domain.dto.response.GetCategoriesResponseDto;
 import com.tuyenngoc.bookstore.domain.entity.Category;
 import com.tuyenngoc.bookstore.domain.mapper.CategoryMapper;
 import com.tuyenngoc.bookstore.exception.NotFoundException;
 import com.tuyenngoc.bookstore.repository.CategoryRepository;
 import com.tuyenngoc.bookstore.service.CategoryService;
+import com.tuyenngoc.bookstore.util.PaginationUtil;
 import com.tuyenngoc.bookstore.util.UploadFileUtil;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.MessageSource;
 import org.springframework.context.i18n.LocaleContextHolder;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
-
-import java.util.List;
 
 @Service
 @RequiredArgsConstructor
@@ -53,8 +59,31 @@ public class CategoryServiceImpl implements CategoryService {
     }
 
     @Override
-    public List<CategoryDto> getCategories() {
-        return categoryRepository.getAllCategories();
+    public PaginationResponseDto<CategoryDto> getCategories(PaginationFullRequestDto requestDto) {
+        Pageable pageable = PaginationUtil.buildPageable(requestDto, SortByDataConstant.CATEGORY);
+
+        Page<CategoryDto> page = categoryRepository.getCategories(pageable);
+        PagingMeta pagingMeta = PaginationUtil.buildPagingMeta(requestDto, SortByDataConstant.PRODUCT, page);
+
+        PaginationResponseDto<CategoryDto> responseDto = new PaginationResponseDto<>();
+        responseDto.setItems(page.getContent());
+        responseDto.setMeta(pagingMeta);
+
+        return responseDto;
+    }
+
+    @Override
+    public PaginationResponseDto<GetCategoriesResponseDto> getAllCategories(PaginationFullRequestDto requestDto) {
+        Pageable pageable = PaginationUtil.buildPageable(requestDto, SortByDataConstant.CATEGORY);
+
+        Page<GetCategoriesResponseDto> page = categoryRepository.getAllCategories(pageable);
+        PagingMeta pagingMeta = PaginationUtil.buildPagingMeta(requestDto, SortByDataConstant.PRODUCT, page);
+
+        PaginationResponseDto<GetCategoriesResponseDto> responseDto = new PaginationResponseDto<>();
+        responseDto.setItems(page.getContent());
+        responseDto.setMeta(pagingMeta);
+
+        return responseDto;
     }
 
     @Override
