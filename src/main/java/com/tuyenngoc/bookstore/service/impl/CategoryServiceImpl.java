@@ -88,20 +88,6 @@ public class CategoryServiceImpl implements CategoryService {
     }
 
     @Override
-    public CommonResponseDto updateCategory(int categoryId, CategoryDto categoryDto) {
-        Category category = categoryRepository.findById(categoryId)
-                .orElseThrow(() -> new NotFoundException(ErrorMessage.Category.ERR_NOT_FOUND_ID, String.valueOf(categoryId)));
-
-        uploadFileUtil.destroyFileWithUrl(categoryDto.getImage());
-
-        category.setName(categoryDto.getName());
-        category.setImage(categoryDto.getImage());
-
-        String message = messageSource.getMessage(SuccessMessage.UPDATE, null, LocaleContextHolder.getLocale());
-        return new CommonResponseDto(message);
-    }
-
-    @Override
     public CommonResponseDto deleteCategory(int categoryId) {
         if (categoryRepository.existsById(categoryId)) {
             categoryRepository.deleteById(categoryId);

@@ -53,14 +53,6 @@ public class CategoryController {
 
     @PreAuthorize("hasRole('ADMIN')")
     @Tag(name = "Category controller admin")
-    @Operation(summary = "API update category")
-    @PutMapping(value = UrlConstant.Category.UPDATE_CATEGORY)
-    public ResponseEntity<?> updateCustomer(@PathVariable int categoryId, @Valid @RequestBody CategoryDto categoryDto) {
-        return VsResponseUtil.success(categoryService.updateCategory(categoryId, categoryDto));
-    }
-
-    @PreAuthorize("hasRole('ADMIN')")
-    @Tag(name = "Category controller admin")
     @Operation(summary = "API delete category")
     @DeleteMapping(UrlConstant.Category.DELETE_CATEGORY)
     public ResponseEntity<?> deleteCategory(@PathVariable int categoryId) {

@@ -18,8 +18,6 @@ public interface CategoryService {
 
     CategoryDto createCategory(CategoryDto categoryDto);
 
-    CommonResponseDto updateCategory(int categoryId, CategoryDto categoryDto);
-
     CommonResponseDto deleteCategory(int categoryId);
 
 }
