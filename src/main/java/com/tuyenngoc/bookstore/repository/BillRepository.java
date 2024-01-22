@@ -14,7 +14,7 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface BillRepository extends JpaRepository<Bill, Integer> {
 
-    @Query("SELECT b.orderStatus FROM Bill b WHERE b.id =:billId AND b.customer.id =:customerId")
+    @Query("SELECT b.billStatus FROM Bill b WHERE b.id =:billId AND b.customer.id =:customerId")
     String getBillStatusByIdAndCustomerId(
             @Param("billId") int billId,
             @Param("customerId") int customerId
@@ -26,7 +26,7 @@ public interface BillRepository extends JpaRepository<Bill, Integer> {
             Pageable pageable
     );
 
-    @Query("SELECT new com.tuyenngoc.bookstore.domain.dto.response.GetBillResponseDto(b) FROM Bill b WHERE b.customer.id=:customerId AND b.orderStatus = :billStatus")
+    @Query("SELECT new com.tuyenngoc.bookstore.domain.dto.response.GetBillResponseDto(b) FROM Bill b WHERE b.customer.id=:customerId AND b.billStatus= :billStatus")
     Page<GetBillResponseDto> getBills(
             @Param("customerId") int customerId,
             @Param("billStatus") String billStatus,
@@ -35,16 +35,16 @@ public interface BillRepository extends JpaRepository<Bill, Integer> {
 
     @Modifying
     @Transactional
-    @Query("UPDATE Bill b SET b.orderStatus=:billStatus WHERE b.id =:billId")
+    @Query("UPDATE Bill b SET b.billStatus=:billStatus WHERE b.id =:billId")
     void updateBillStatus(
             @Param("billId") int billId,
             @Param("billStatus") String billStatus
     );
 
-    @Query("SELECT count(b) FROM Bill b WHERE b.orderStatus=:status")
+    @Query("SELECT count(b) FROM Bill b WHERE b.billStatus=:status")
     int getCountBillByStatus(@Param("status") String status);
 
-    @Query("SELECT count(b) FROM Bill b WHERE b.orderStatus=:status AND b.customer.id =:customerId")
+    @Query("SELECT count(b) FROM Bill b WHERE b.billStatus=:status AND b.customer.id =:customerId")
     int getCountBillByStatusAndCustomerId(@Param("status") String status,
                                           @Param("customerId") int customerId
     );
@@ -52,24 +52,30 @@ public interface BillRepository extends JpaRepository<Bill, Integer> {
     @Query("SELECT count(b) FROM Bill b")
     int getCountBills();
 
-    @Query("SELECT b FROM Bill b JOIN b.billDetails bd WHERE bd.product.name LIKE %:keyword%")
+    @Query("SELECT b FROM Bill b JOIN b.billDetails bd WHERE bd.product.name LIKE %:keyword% AND b.billStatus=:status")
     Page<Bill> getBillsByProductName(
+            @Param("status") String status,
             @Param("keyword") String keyword,
             Pageable pageable
     );
 
-    @Query("SELECT b FROM Bill b WHERE b.consigneeName LIKE %:keyword%")
+    @Query("SELECT b FROM Bill b WHERE b.consigneeName LIKE %:keyword% AND b.billStatus=:status")
     Page<Bill> getBillsByConsigneeName(
+            @Param("status") String status,
             @Param("keyword") String keyword,
             Pageable pageable
     );
 
-    @Query("SELECT b FROM Bill b WHERE b.id =:billId")
+    @Query("SELECT b FROM Bill b WHERE b.id =:billId AND b.billStatus=:status")
     Page<Bill> getBillsById(
-            @Param("billId") int billId,
+            @Param("status") String status,
+            @Param("billId") Integer billId,
             Pageable pageable
     );
 
-    @Query("SELECT b FROM Bill b")
-    Page<Bill> getBills(Pageable pageable);
+    @Query("SELECT b FROM Bill b WHERE b.billStatus=:status")
+    Page<Bill> getBills(
+            @Param("status") String status,
+            Pageable pageable
+    );
 }

@@ -51,7 +51,7 @@ public class BillServiceImpl implements BillService {
 
         Bill newBill = billMapper.toBill(requestDto);
         newBill.setShippingFee(30000);
-        newBill.setOrderStatus(BillStatus.WAIT_FOR_CONFIRMATION.getName());
+        newBill.setBillStatus(BillStatus.WAIT_FOR_CONFIRMATION.getName());
         newBill.setCustomer(customer);
         return newBill;
     }
@@ -110,12 +110,10 @@ public class BillServiceImpl implements BillService {
 
     @Override
     public PaginationResponseDto<GetBillResponseDto> getBills(int customerId, PaginationFullRequestDto requestDto, String billStatus) {
-        String billStatusName = BillStatus.getByKey(billStatus);
-
         Pageable pageable = PaginationUtil.buildPageable(requestDto, SortByDataConstant.BILL);
 
         Page<GetBillResponseDto> page;
-
+        String billStatusName = BillStatus.getByKey(billStatus);
         if (billStatusName == null) {
             page = billRepository.getBills(customerId, pageable);
         } else {
@@ -153,7 +151,6 @@ public class BillServiceImpl implements BillService {
 
     @Override
     public GetCountBillResponseDto getCountBillsByStatus(int customerId) {
-
         int unpaid = billRepository.getCountBillByStatusAndCustomerId(BillStatus.WAIT_FOR_CONFIRMATION.getName(), customerId);
         int toShip = billRepository.getCountBillByStatusAndCustomerId(BillStatus.WAIT_FOR_DELIVERY.getName(), customerId);
         int shipping = billRepository.getCountBillByStatusAndCustomerId(BillStatus.DELIVERING.getName(), customerId);
@@ -178,20 +175,20 @@ public class BillServiceImpl implements BillService {
 
         Page<Bill> page;
         if (searchBy == null || searchBy.isEmpty()) {
-            page = billRepository.getBills(pageable);
+            page = billRepository.getBills(billStatus, pageable);
         } else if (searchBy.equals(SearchByConstant.Bill.BILL_ID)) {
             try {
                 int id = Integer.parseInt(requestDto.getKeyword());
-                page = billRepository.getBillsById(id, pageable);
+                page = billRepository.getBillsById(billStatus, id, pageable);
             } catch (Exception e) {
-                page = billRepository.getBillsById(-1, pageable);
+                page = billRepository.getBillsById(billStatus, null, pageable);
             }
         } else if (searchBy.equals(SearchByConstant.Bill.CUSTOMER_NAME)) {
-            page = billRepository.getBillsByConsigneeName(requestDto.getKeyword(), pageable);
+            page = billRepository.getBillsByConsigneeName(billStatus, requestDto.getKeyword(), pageable);
         } else if (searchBy.equals(SearchByConstant.Bill.PRODUCT_NAME)) {
-            page = billRepository.getBillsByProductName(requestDto.getKeyword(), pageable);
+            page = billRepository.getBillsByProductName(billStatus, requestDto.getKeyword(), pageable);
         } else {
-            page = billRepository.getBills(pageable);
+            page = billRepository.getBills(billStatus, pageable);
         }
 
         PagingMeta pagingMeta = PaginationUtil.buildPagingMeta(requestDto, SortByDataConstant.BILL, page);

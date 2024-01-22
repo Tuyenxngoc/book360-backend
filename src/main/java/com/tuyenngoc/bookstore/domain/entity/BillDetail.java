@@ -27,7 +27,6 @@ public class BillDetail extends DateAuditing {
 
     @ManyToOne
     @JoinColumn(name = "product_id", foreignKey = @ForeignKey(name = "FK_BILL_DETAIL_PRODUCT_ID"), referencedColumnName = "product_id")
-    @JsonIgnore
     private Product product;
 
     @ManyToOne

@@ -43,13 +43,12 @@ public class Bill extends DateAuditing {
     @Column(name = "payment_method")
     private String paymentMethod;
 
-    @Column(name = "order_status")
-    private String orderStatus;
+    @Column(name = "bill_status")
+    private String billStatus;
 
     private String note;
 
     @OneToMany(mappedBy = "bill", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-    @JsonIgnore
     private List<BillDetail> billDetails = new ArrayList<>();
 
     @ManyToOne

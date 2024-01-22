@@ -3,6 +3,7 @@ package com.tuyenngoc.bookstore.domain.dto;
 import com.tuyenngoc.bookstore.constant.ErrorMessage;
 import com.tuyenngoc.bookstore.domain.entity.Banner;
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Positive;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -15,8 +16,7 @@ import lombok.Setter;
 @AllArgsConstructor
 public class BannerDto {
 
-    @NotBlank(message = ErrorMessage.INVALID_NOT_BLANK_FIELD)
-    private int id;
+    private Integer id;
 
     @NotBlank(message = ErrorMessage.INVALID_NOT_BLANK_FIELD)
     private String image;
@@ -24,9 +24,8 @@ public class BannerDto {
     @NotBlank(message = ErrorMessage.INVALID_NOT_BLANK_FIELD)
     private String url;
 
-    @Positive(message = ErrorMessage.INVALID_VIEW_ORDER)
-    @NotBlank(message = ErrorMessage.INVALID_NOT_BLANK_FIELD)
-    private int viewOrder;
+    @NotNull(message = ErrorMessage.INVALID_SOME_THING_FIELD_IS_REQUIRED)
+    private Integer viewOrder;
 
     public BannerDto(Banner banner) {
         this.id = banner.getId();

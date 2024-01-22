@@ -61,43 +61,15 @@ public class BannerServiceImpl implements BannerService {
                 .orElseThrow(() -> new NotFoundException(ErrorMessage.Banner.ERR_NOT_FOUND_ID, String.valueOf(bannerId)));
     }
 
-    @Override
-    public CommonResponseDto updateBanner(int bannerId, BannerDto bannerDto) {
-        Banner banner = bannerRepository.findById(bannerId)
-                .orElseThrow(() -> new NotFoundException(ErrorMessage.Banner.ERR_NOT_FOUND_ID, String.valueOf(bannerId)));
-
-        uploadFileUtil.destroyFileWithUrl(banner.getImage());
-
-        banner.setImage(bannerDto.getImage());
-        banner.setUrl(bannerDto.getUrl());
-        banner.setViewOrder(bannerDto.getViewOrder());
-
-        bannerRepository.save(banner);
-
-        String message = messageSource.getMessage(SuccessMessage.UPDATE, null, LocaleContextHolder.getLocale());
-        return new CommonResponseDto(message);
-    }
-
-    @Override
-    public CommonResponseDto deleteBanner(int bannerId) {
-        if (bannerRepository.existsById(bannerId)) {
-            bannerRepository.deleteById(bannerId);
-            return new CommonResponseDto(SuccessMessage.DELETE);
-        } else {
-            throw new NotFoundException(ErrorMessage.Banner.ERR_NOT_FOUND_ID, String.valueOf(bannerId));
-        }
-    }
-
+    //Todo remove url
     @Override
     public Banner createBanner(BannerDto bannerDto) {
         Banner banner;
-        if (bannerDto.getId() == -1) {
+        if (bannerDto.getId() == null) {
             banner = bannerMapper.toBanner(bannerDto);
         } else {
             banner = bannerRepository.findById(bannerDto.getId())
                     .orElseThrow(() -> new NotFoundException(ErrorMessage.Banner.ERR_NOT_FOUND_ID, String.valueOf(bannerDto.getId())));
-
-            uploadFileUtil.destroyFileWithUrl(banner.getImage());
 
             banner.setImage(bannerDto.getImage());
             banner.setUrl(bannerDto.getUrl());
@@ -105,4 +77,16 @@ public class BannerServiceImpl implements BannerService {
         }
         return bannerRepository.save(banner);
     }
+
+    @Override
+    public CommonResponseDto deleteBanner(int bannerId) {
+        if (bannerRepository.existsById(bannerId)) {
+            bannerRepository.deleteById(bannerId);
+            String message = messageSource.getMessage(SuccessMessage.DELETE, null, LocaleContextHolder.getLocale());
+            return new CommonResponseDto(message);
+        } else {
+            throw new NotFoundException(ErrorMessage.Banner.ERR_NOT_FOUND_ID, String.valueOf(bannerId));
+        }
+    }
+
 }

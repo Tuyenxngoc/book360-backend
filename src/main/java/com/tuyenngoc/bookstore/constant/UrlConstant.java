@@ -71,39 +71,36 @@ public class UrlConstant {
 
         public static final String SAVE_ORDER = PRE_FIX + "/save-order";
         public static final String GET_BILLS = PRE_FIX + "/get-bills";
-        public static final String GET_COUNT_BILLS_BY_STATUS = PRE_FIX + "/get-count-bills-by-status";
-        public static final String GET_COUNT_BILLS = PRE_FIX + "/get-count-bills";
-
-        public static final String GET_ALL_BILLS = PRE_FIX + "/get-all-bills";
-
         public static final String CANCEL_ORDER = PRE_FIX + "/cancel-order/{billId}";
+        public static final String GET_COUNT_BILLS_BY_STATUS = PRE_FIX + "/get-count-bills-by-status";
 
+        public static final String GET_COUNT_BILLS = PRE_FIX + "/get-count-bills";
+        public static final String GET_ALL_BILLS = PRE_FIX + "/get-all-bills";
     }
-
 
     public static class Banner {
         private static final String PRE_FIX = "/banner";
 
+        //User
         public static final String GET_BANNERS = PRE_FIX + "/get-banners";
 
+        //Admin
         public static final String GET_ALL_BANNERS = PRE_FIX + "/get-all-banners";
         public static final String GET_BANNER = PRE_FIX + "/get-banner/{bannerId}";
-        public static final String UPDATE_BANNER = PRE_FIX + "/update-banner/{bannerId}";
         public static final String DELETE_BANNER = PRE_FIX + "/delete-banner/{bannerId}";
         public static final String CREATE_BANNER = PRE_FIX + "/create-banner";
-
     }
 
     public static class Category {
         private static final String PRE_FIX = "/category";
 
-        public static final String CREATE_CATEGORY = PRE_FIX + "/create-category";
-        public static final String UPDATE_CATEGORY = PRE_FIX + "/update-category/{categoryId}";
-        public static final String DELETE_CATEGORY = PRE_FIX + "/delete-category/{categoryId}";
-        public static final String GET_CATEGORY = PRE_FIX + "/get-category/{categoryId}";
+        //User
         public static final String GET_CATEGORIES = PRE_FIX + "/get-categories";
 
         //admin
         public static final String GET_ALL_CATEGORIES = PRE_FIX + "/get-all-categories";
+        public static final String GET_CATEGORY = PRE_FIX + "/get-category/{categoryId}";
+        public static final String CREATE_CATEGORY = PRE_FIX + "/create-category";
+        public static final String DELETE_CATEGORY = PRE_FIX + "/delete-category/{categoryId}";
     }
 }

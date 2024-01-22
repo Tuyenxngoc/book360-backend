@@ -5,10 +5,10 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-@AllArgsConstructor
-@NoArgsConstructor
 @Setter
 @Getter
+@AllArgsConstructor
+@NoArgsConstructor
 public class PagingMeta {
 
     private Long totalElements;
@@ -23,4 +23,7 @@ public class PagingMeta {
 
     private String sortType;
 
+    private String keyword;
+
+    private String searchBy;
 }

@@ -15,6 +15,7 @@ public enum SortByDataConstant implements SortByInterface {
                 case "pageCount" -> "pageCount";
                 case "soldQuantity" -> "soldQuantity";
                 case "stockQuantity" -> "stockQuantity";
+                case "lastModifiedDate" -> "lastModifiedDate";
                 default -> "createdDate";
             };
         }
@@ -26,6 +27,7 @@ public enum SortByDataConstant implements SortByInterface {
             return switch (sortBy) {
                 case "id" -> "id";
                 case "viewOrder" -> "viewOrder";
+                case "lastModifiedDate" -> "lastModifiedDate";
                 default -> "createdDate";
             };
         }
@@ -34,7 +36,16 @@ public enum SortByDataConstant implements SortByInterface {
     BILL {
         @Override
         public String getSortBy(String sortBy) {
-            return "createdDate";
+            return switch (sortBy) {
+                case "id" -> "id";
+                case "consigneeName" -> "consigneeName";
+                case "shippingAddress" -> "shippingAddress";
+                case "shippingFee" -> "shippingFee";
+                case "totalAmount" -> "totalAmount";
+                case "paymentMethod" -> "paymentMethod";
+                case "lastModifiedDate" -> "lastModifiedDate";
+                default -> "createdDate";
+            };
         }
     },
 
@@ -44,6 +55,7 @@ public enum SortByDataConstant implements SortByInterface {
             return switch (sortBy) {
                 case "id" -> "id";
                 case "fullName" -> "fullName";
+                case "lastModifiedDate" -> "lastModifiedDate";
                 default -> "createdDate";
             };
         }
@@ -54,6 +66,7 @@ public enum SortByDataConstant implements SortByInterface {
             return switch (sortBy) {
                 case "id" -> "id";
                 case "name" -> "name";
+                case "lastModifiedDate" -> "lastModifiedDate";
                 default -> "createdDate";
             };
         }

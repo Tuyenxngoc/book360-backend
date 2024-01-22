@@ -25,7 +25,6 @@ public class ErrorMessage {
     public static final String INVALID_FORMAT_EMAIL = "invalid.email-format";
     public static final String INVALID_FORMAT_PHONE = "invalid.phone-format";
     public static final String INVALID_COORDINATES = "invalid.coordinates";
-    public static final String INVALID_VIEW_ORDER = "invalid.view-order";
     public static final String INVALID_MINIMUM_ONE = "invalid.minimum-one";
     public static final String INVALID_MINIMUM_ZERO = "invalid.minimum-zero";
     public static final String INVALID_MAXIMUM_ONE_HUNDRED = "invalid.maximum-one-hundred";

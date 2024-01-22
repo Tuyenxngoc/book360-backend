@@ -3,7 +3,6 @@ package com.tuyenngoc.bookstore.domain.dto;
 import com.tuyenngoc.bookstore.constant.ErrorMessage;
 import com.tuyenngoc.bookstore.domain.entity.Category;
 import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;

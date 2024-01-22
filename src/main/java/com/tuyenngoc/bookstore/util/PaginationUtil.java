@@ -34,7 +34,9 @@ public class PaginationUtil {
                 request.getPageNum() + CommonConstant.ONE_INT_VALUE,
                 request.getPageSize(),
                 request.getSortBy(constant),
-                request.getIsAscending().equals(Boolean.TRUE) ? CommonConstant.SORT_TYPE_ASC : CommonConstant.SORT_TYPE_DESC
+                request.getIsAscending().equals(Boolean.TRUE) ? CommonConstant.SORT_TYPE_ASC : CommonConstant.SORT_TYPE_DESC,
+                request.getKeyword(),
+                request.getSearchBy()
         );
     }
 }

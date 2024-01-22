@@ -28,7 +28,7 @@ public class BannerController {
     }
 
     @PreAuthorize("hasRole('ADMIN')")
-    @Tag(name = "Banner admin")
+    @Tag(name = "Banner controller admin")
     @Operation(summary = "API get banner")
     @GetMapping(UrlConstant.Banner.GET_BANNER)
     public ResponseEntity<?> getBanner(@PathVariable int bannerId) {
@@ -36,15 +36,15 @@ public class BannerController {
     }
 
     @PreAuthorize("hasRole('ADMIN')")
-    @Tag(name = "Banner admin")
-    @Operation(summary = "API get banners")
+    @Tag(name = "Banner controller admin")
+    @Operation(summary = "API get all banners")
     @GetMapping(UrlConstant.Banner.GET_ALL_BANNERS)
-    public ResponseEntity<?> getBanners(@ParameterObject @Valid PaginationFullRequestDto requestDto) {
+    public ResponseEntity<?> getBanners(@ParameterObject PaginationFullRequestDto requestDto) {
         return VsResponseUtil.success(bannerService.getBanners(requestDto));
     }
 
     @PreAuthorize("hasRole('ADMIN')")
-    @Tag(name = "Banner admin")
+    @Tag(name = "Banner controller admin")
     @Operation(summary = "API create banner")
     @PostMapping(value = UrlConstant.Banner.CREATE_BANNER)
     public ResponseEntity<?> createBanner(@Valid @RequestBody BannerDto banner) {
@@ -52,15 +52,7 @@ public class BannerController {
     }
 
     @PreAuthorize("hasRole('ADMIN')")
-    @Tag(name = "Banner admin")
-    @Operation(summary = "API update banner")
-    @PutMapping(value = UrlConstant.Banner.UPDATE_BANNER)
-    public ResponseEntity<?> updateBanner(@PathVariable int bannerId, @Valid @RequestBody BannerDto banner) {
-        return VsResponseUtil.success(bannerService.updateBanner(bannerId, banner));
-    }
-
-    @PreAuthorize("hasRole('ADMIN')")
-    @Tag(name = "Banner admin")
+    @Tag(name = "Banner controller admin")
     @Operation(summary = "API delete banner")
     @DeleteMapping(UrlConstant.Banner.DELETE_BANNER)
     public ResponseEntity<?> deleteProductFromCart(@PathVariable int bannerId) {
