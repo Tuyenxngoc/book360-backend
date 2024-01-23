@@ -37,12 +37,12 @@ public class BannerServiceImpl implements BannerService {
     private final BannerMapper bannerMapper;
 
     @Override
-    public List<BannerDto> getBanners() {
+    public List<BannerDto> getAllBanners() {
         return bannerRepository.getBanners();
     }
 
     @Override
-    public PaginationResponseDto<Banner> getBanners(PaginationFullRequestDto requestDto) {
+    public PaginationResponseDto<Banner> getAllBanners(PaginationFullRequestDto requestDto) {
         Pageable pageable = PaginationUtil.buildPageable(requestDto, SortByDataConstant.BANNER);
 
         Page<Banner> page = bannerRepository.findAll(pageable);

@@ -23,6 +23,8 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 @Service
 @RequiredArgsConstructor
 public class CategoryServiceImpl implements CategoryService {
@@ -37,7 +39,7 @@ public class CategoryServiceImpl implements CategoryService {
 
     //Todo remove images
     @Override
-    public CategoryDto createCategory(CategoryDto categoryDto) {
+    public Category createCategory(CategoryDto categoryDto) {
         Category category;
         if (categoryDto.getId() == null) {
             category = categoryMapper.toCategory(categoryDto);
@@ -48,15 +50,13 @@ public class CategoryServiceImpl implements CategoryService {
             category.setName(categoryDto.getName());
             category.setImage(categoryDto.getImage());
         }
-        Category newCategory = categoryRepository.save(category);
-        return categoryMapper.toCategoryDto(newCategory);
+        return categoryRepository.save(category);
     }
 
     @Override
-    public CategoryDto getCategory(int categoryId) {
-        Category newCategory = categoryRepository.findById(categoryId)
+    public Category getCategory(int categoryId) {
+        return categoryRepository.findById(categoryId)
                 .orElseThrow(() -> new NotFoundException(ErrorMessage.Category.ERR_NOT_FOUND_ID, String.valueOf(categoryId)));
-        return categoryMapper.toCategoryDto(newCategory);
     }
 
     @Override
@@ -74,10 +74,16 @@ public class CategoryServiceImpl implements CategoryService {
     }
 
     @Override
-    public PaginationResponseDto<GetCategoriesResponseDto> getAllCategories(PaginationFullRequestDto requestDto) {
+    public List<Category> getAllCategories() {
+        return categoryRepository.findAll();
+    }
+
+    //Todo add search by
+    @Override
+    public PaginationResponseDto<GetCategoriesResponseDto> getCategoriesForAdmin(PaginationFullRequestDto requestDto) {
         Pageable pageable = PaginationUtil.buildPageable(requestDto, SortByDataConstant.CATEGORY);
 
-        Page<GetCategoriesResponseDto> page = categoryRepository.getAllCategories(pageable);
+        Page<GetCategoriesResponseDto> page = categoryRepository.getCategoriesForAdmin(pageable);
         PagingMeta pagingMeta = PaginationUtil.buildPagingMeta(requestDto, SortByDataConstant.PRODUCT, page);
 
         PaginationResponseDto<GetCategoriesResponseDto> responseDto = new PaginationResponseDto<>();

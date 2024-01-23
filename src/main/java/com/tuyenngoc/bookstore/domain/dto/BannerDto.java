@@ -4,7 +4,6 @@ import com.tuyenngoc.bookstore.constant.ErrorMessage;
 import com.tuyenngoc.bookstore.domain.entity.Banner;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
-import jakarta.validation.constraints.Positive;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;

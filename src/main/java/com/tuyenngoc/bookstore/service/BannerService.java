@@ -10,9 +10,9 @@ import java.util.List;
 
 public interface BannerService {
 
-    List<BannerDto> getBanners();
+    List<BannerDto> getAllBanners();
 
-    PaginationResponseDto<Banner> getBanners(PaginationFullRequestDto requestDto);
+    PaginationResponseDto<Banner> getAllBanners(PaginationFullRequestDto requestDto);
 
     Banner getBanner(int bannerId);
 

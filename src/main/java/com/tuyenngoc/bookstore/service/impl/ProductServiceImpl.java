@@ -2,10 +2,13 @@ package com.tuyenngoc.bookstore.service.impl;
 
 import com.tuyenngoc.bookstore.constant.ErrorMessage;
 import com.tuyenngoc.bookstore.constant.SortByDataConstant;
+import com.tuyenngoc.bookstore.constant.SuccessMessage;
 import com.tuyenngoc.bookstore.domain.dto.pagination.PaginationFullRequestDto;
 import com.tuyenngoc.bookstore.domain.dto.pagination.PaginationRequestDto;
 import com.tuyenngoc.bookstore.domain.dto.pagination.PaginationResponseDto;
 import com.tuyenngoc.bookstore.domain.dto.pagination.PagingMeta;
+import com.tuyenngoc.bookstore.domain.dto.request.CreateProductRequestDto;
+import com.tuyenngoc.bookstore.domain.dto.response.CommonResponseDto;
 import com.tuyenngoc.bookstore.domain.dto.response.GetProductDetailResponseDto;
 import com.tuyenngoc.bookstore.domain.dto.response.GetProductsResponseDto;
 import com.tuyenngoc.bookstore.domain.entity.Product;
@@ -15,6 +18,8 @@ import com.tuyenngoc.bookstore.service.ProductRedisService;
 import com.tuyenngoc.bookstore.service.ProductService;
 import com.tuyenngoc.bookstore.util.PaginationUtil;
 import lombok.RequiredArgsConstructor;
+import org.springframework.context.MessageSource;
+import org.springframework.context.i18n.LocaleContextHolder;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -30,8 +35,10 @@ public class ProductServiceImpl implements ProductService {
 
     private final ProductRedisService productRedisService;
 
+    private final MessageSource messageSource;
+
     @Override
-    public PaginationResponseDto<GetProductsResponseDto> findProduct(PaginationFullRequestDto requestDto) {
+    public PaginationResponseDto<GetProductsResponseDto> findProducts(PaginationFullRequestDto requestDto) {
         Pageable pageable = PaginationUtil.buildPageable(requestDto, SortByDataConstant.PRODUCT);
 
         Page<GetProductsResponseDto> page = productRepository.getProducts(requestDto.getKeyword(), pageable);
@@ -112,7 +119,7 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Override
-    public PaginationResponseDto<GetProductsResponseDto> getProductByAuthorId(int authorId, PaginationFullRequestDto requestDto) {
+    public PaginationResponseDto<GetProductsResponseDto> getProductsByAuthorId(int authorId, PaginationFullRequestDto requestDto) {
         Pageable pageable = PaginationUtil.buildPageable(requestDto, SortByDataConstant.PRODUCT);
 
         Page<GetProductsResponseDto> page = productRepository.getProductsByAuthorId(authorId, pageable);
@@ -126,8 +133,8 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Override
-    public int getQuantityProducts() {
-        return productRepository.getQuantityProducts();
+    public int getStockQuantityProducts() {
+        return productRepository.getStockQuantityProducts();
     }
 
     @Override
@@ -142,5 +149,27 @@ public class ProductServiceImpl implements ProductService {
         responseDto.setMeta(pagingMeta);
 
         return responseDto;
+    }
+
+    @Override
+    public Product createProduct(CreateProductRequestDto productDto) {
+        return null;
+    }
+
+    @Override
+    public Product getProduct(int productId) {
+        return productRepository.findById(productId)
+                .orElseThrow(() -> new NotFoundException(ErrorMessage.Product.ERR_NOT_FOUND_ID, String.valueOf(productId)));
+    }
+
+    @Override
+    public CommonResponseDto deleteProduct(int productId) {
+        if (productRepository.existsById(productId)) {
+            productRepository.deleteById(productId);
+            String message = messageSource.getMessage(SuccessMessage.DELETE, null, LocaleContextHolder.getLocale());
+            return new CommonResponseDto(message);
+        } else {
+            throw new NotFoundException(ErrorMessage.Banner.ERR_NOT_FOUND_ID, String.valueOf(productId));
+        }
     }
 }

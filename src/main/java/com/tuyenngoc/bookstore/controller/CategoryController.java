@@ -39,13 +39,21 @@ public class CategoryController {
     @Tag(name = "Category controller admin")
     @Operation(summary = "API get all categories")
     @GetMapping(UrlConstant.Category.GET_ALL_CATEGORIES)
-    public ResponseEntity<?> getAllCategories(@ParameterObject PaginationFullRequestDto requestDto) {
-        return VsResponseUtil.success(categoryService.getAllCategories(requestDto));
+    public ResponseEntity<?> getAllCategories() {
+        return VsResponseUtil.success(categoryService.getAllCategories());
     }
 
     @PreAuthorize("hasRole('ADMIN')")
     @Tag(name = "Category controller admin")
-    @Operation(summary = "API create category")
+    @Operation(summary = "API get categories")
+    @GetMapping(UrlConstant.Category.GET_CATEGORIES_FOR_ADMIN)
+    public ResponseEntity<?> getCategoriesForAdmin(@ParameterObject PaginationFullRequestDto requestDto) {
+        return VsResponseUtil.success(categoryService.getCategoriesForAdmin(requestDto));
+    }
+
+    @PreAuthorize("hasRole('ADMIN')")
+    @Tag(name = "Category controller admin")
+    @Operation(summary = "API create and update category")
     @PostMapping(UrlConstant.Category.CREATE_CATEGORY)
     public ResponseEntity<?> createCategory(@Valid @RequestBody CategoryDto categoryDto) {
         return VsResponseUtil.success(categoryService.createCategory(categoryDto));

@@ -18,7 +18,6 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.core.env.Environment;
-import org.springframework.data.jpa.repository.config.EnableJpaAuditing;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
 @Slf4j
@@ -29,7 +28,6 @@ import org.springframework.security.crypto.password.PasswordEncoder;
         MailConfig.class,
         CloudinaryConfig.class
 })
-@EnableJpaAuditing
 public class BookStoreApplication {
 
     private final RoleRepository roleRepository;

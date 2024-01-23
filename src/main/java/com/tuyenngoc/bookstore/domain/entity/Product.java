@@ -1,7 +1,7 @@
 package com.tuyenngoc.bookstore.domain.entity;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.tuyenngoc.bookstore.domain.entity.common.DateAuditing;
+import com.tuyenngoc.bookstore.domain.entity.common.UserDateAuditing;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -18,7 +18,7 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 @Table(name = "product")
-public class Product extends DateAuditing {
+public class Product extends UserDateAuditing {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -73,7 +73,6 @@ public class Product extends DateAuditing {
     private Integer stockQuantity;// Số lượng sách còn trong kho.
 
     @OneToMany(mappedBy = "product", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-    @JsonIgnore
     private List<ProductImage> images = new ArrayList<>();// Danh sách ảnh
 
     @OneToMany(mappedBy = "product", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
@@ -86,7 +85,6 @@ public class Product extends DateAuditing {
 
     @ManyToOne
     @JoinColumn(name = "category_id", foreignKey = @ForeignKey(name = "FK_PRODUCT_CATE_ID"), referencedColumnName = "category_id")
-    @JsonIgnore
     private Category category;
 
     @ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
@@ -95,7 +93,6 @@ public class Product extends DateAuditing {
             joinColumns = @JoinColumn(name = "product_id", foreignKey = @ForeignKey(name = "FK_PRODUCT_AUTHOR_PRODUCT_ID"), referencedColumnName = "product_id"),
             inverseJoinColumns = @JoinColumn(name = "author_id", foreignKey = @ForeignKey(name = "FK_PRODUCT_AUTHOR_AUTHOR_ID"), referencedColumnName = "author_id")
     )
-    @JsonIgnore
     private List<Author> authors = new ArrayList<>();
 
     @ManyToMany(mappedBy = "favoriteProducts", fetch = FetchType.LAZY)

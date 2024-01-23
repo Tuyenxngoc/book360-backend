@@ -4,7 +4,7 @@ import com.tuyenngoc.bookstore.constant.*;
 import com.tuyenngoc.bookstore.domain.dto.pagination.PaginationFullRequestDto;
 import com.tuyenngoc.bookstore.domain.dto.pagination.PaginationResponseDto;
 import com.tuyenngoc.bookstore.domain.dto.pagination.PagingMeta;
-import com.tuyenngoc.bookstore.domain.dto.request.OrderRequestDto;
+import com.tuyenngoc.bookstore.domain.dto.request.BillRequestDto;
 import com.tuyenngoc.bookstore.domain.dto.response.CommonResponseDto;
 import com.tuyenngoc.bookstore.domain.dto.response.GetBillResponseDto;
 import com.tuyenngoc.bookstore.domain.dto.response.GetCountBillResponseDto;
@@ -45,7 +45,7 @@ public class BillServiceImpl implements BillService {
     private final MessageSource messageSource;
 
     @Override
-    public Bill createNewBill(int customerId, OrderRequestDto requestDto) {
+    public Bill createNewBill(int customerId, BillRequestDto requestDto) {
         Customer customer = new Customer();
         customer.setId(customerId);
 
@@ -67,7 +67,7 @@ public class BillServiceImpl implements BillService {
     }
 
     @Override
-    public CommonResponseDto saveOrder(int customerId, OrderRequestDto requestDto) {
+    public CommonResponseDto saveOrder(int customerId, BillRequestDto requestDto) {
         //Validate
         Cart cart = cartRepository.findByCustomerId(customerId)
                 .orElseThrow(() -> new NotFoundException(ErrorMessage.Cart.ERR_NOT_FOUND_CUSTOMER_ID, String.valueOf(customerId)));

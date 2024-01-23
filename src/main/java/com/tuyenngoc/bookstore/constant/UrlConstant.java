@@ -2,6 +2,8 @@ package com.tuyenngoc.bookstore.constant;
 
 public class UrlConstant {
 
+    public static final String ADMIN_URL = "/admin";
+
     public static class Auth {
         private static final String PRE_FIX = "/auth";
 
@@ -11,7 +13,6 @@ public class UrlConstant {
         public static final String FORGET_PASSWORD = PRE_FIX + "/forget-password";
         public static final String CHANGE_PASSWORD = PRE_FIX + "/change-password";
         public static final String REFRESH_TOKEN = PRE_FIX + "/refresh-token";
-
     }
 
     public static class User {
@@ -36,23 +37,6 @@ public class UrlConstant {
         public static final String GET_TODO = PRE_FIX + "/get-todo";
         public static final String GET_COUNT_CUSTOMER = PRE_FIX + "/get-count-customer";
         public static final String GET_CUSTOMERS = PRE_FIX + "/get-customers";
-    }
-
-    public static class Product {
-        private static final String PRE_FIX = "/product";
-
-        public static final String GET_PRODUCTS = PRE_FIX + "/get-products";
-        public static final String GET_PRODUCTS_ADMIN = PRE_FIX + "/get-all-products";
-        public static final String FIND_PRODUCT = PRE_FIX + "/find-products";
-
-        public static final String GET_PRODUCTS_BY_CATEGORY_ID = PRE_FIX + "/get-products-by-categoryId/{categoryId}";
-        public static final String GET_PRODUCTS_BY_AUTHOR_ID = PRE_FIX + "/get-products-by-authorId/{authorId}";
-
-        public static final String GET_PRODUCT_DETAIL = PRE_FIX + "/get-product-detail/{productId}";
-        public static final String GET_PRODUCTS_SAME_AUTHOR = PRE_FIX + "/get-products-same-author/{productId}";
-
-        public static final String GET_QUANTITY_PRODUCTS = PRE_FIX + "/get-quantity";
-
     }
 
     public static class Cart {
@@ -81,26 +65,48 @@ public class UrlConstant {
     public static class Banner {
         private static final String PRE_FIX = "/banner";
 
-        //User
-        public static final String GET_BANNERS = PRE_FIX + "/get-banners";
+        //Public
+        public static final String GET_ALL_BANNERS = PRE_FIX + "/all";
 
-        //Admin
-        public static final String GET_ALL_BANNERS = PRE_FIX + "/get-all-banners";
-        public static final String GET_BANNER = PRE_FIX + "/get-banner/{bannerId}";
-        public static final String DELETE_BANNER = PRE_FIX + "/delete-banner/{bannerId}";
-        public static final String CREATE_BANNER = PRE_FIX + "/create-banner";
+        //Private
+        public static final String GET_BANNERS_FOR_ADMIN = ADMIN_URL + PRE_FIX + "/get";
+        public static final String GET_BANNER = ADMIN_URL + PRE_FIX + "/{bannerId}";
+        public static final String CREATE_BANNER = ADMIN_URL + PRE_FIX + "/create";
+        public static final String DELETE_BANNER = ADMIN_URL + PRE_FIX + "/delete/{bannerId}";
     }
 
     public static class Category {
         private static final String PRE_FIX = "/category";
 
-        //User
-        public static final String GET_CATEGORIES = PRE_FIX + "/get-categories";
+        //Public
+        public static final String GET_CATEGORIES = PRE_FIX + "/get";
 
-        //admin
-        public static final String GET_ALL_CATEGORIES = PRE_FIX + "/get-all-categories";
-        public static final String GET_CATEGORY = PRE_FIX + "/get-category/{categoryId}";
-        public static final String CREATE_CATEGORY = PRE_FIX + "/create-category";
-        public static final String DELETE_CATEGORY = PRE_FIX + "/delete-category/{categoryId}";
+        //Private
+        public static final String GET_CATEGORY = ADMIN_URL + PRE_FIX + "/{categoryId}";
+        public static final String GET_ALL_CATEGORIES = ADMIN_URL + PRE_FIX + "/all";
+        public static final String GET_CATEGORIES_FOR_ADMIN = ADMIN_URL + PRE_FIX + "/get";
+        public static final String CREATE_CATEGORY = ADMIN_URL + PRE_FIX + "/create";
+        public static final String DELETE_CATEGORY = ADMIN_URL + PRE_FIX + "/delete/{categoryId}";
     }
+
+    public static class Product {
+        private static final String PRE_FIX = "/product";
+
+        //Public
+        public static final String GET_PRODUCTS = PRE_FIX + "/get";
+        public static final String FIND_PRODUCT = PRE_FIX + "/find";
+        public static final String GET_PRODUCTS_BY_CATEGORY_ID = PRE_FIX + "/category/{categoryId}";
+        public static final String GET_PRODUCTS_BY_AUTHOR_ID = PRE_FIX + "/author/{authorId}";
+        public static final String GET_PRODUCTS_SAME_AUTHOR = PRE_FIX + "/same-author/{productId}";
+        public static final String GET_PRODUCT_DETAIL = PRE_FIX + "/detail/{productId}";
+
+        //Private
+        public static final String GET_PRODUCTS_FOR_ADMIN = ADMIN_URL + PRE_FIX + "/get";
+        public static final String GET_STOCK_QUANTITY_PRODUCTS = ADMIN_URL + PRE_FIX + "/stock-quantity";
+        public static final String CREATE_PRODUCTS = ADMIN_URL + PRE_FIX + "/create";
+        public static final String GET_PRODUCT = ADMIN_URL + PRE_FIX + "/{productId}";
+        public static final String DELETE_PRODUCT = ADMIN_URL + PRE_FIX + "/delete/{productId}";
+
+    }
+
 }

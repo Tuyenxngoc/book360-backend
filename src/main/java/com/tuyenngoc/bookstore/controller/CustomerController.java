@@ -97,7 +97,7 @@ public class CustomerController {
     @Tag(name = "Customer admin")
     @Operation(summary = "API get customers")
     @GetMapping(UrlConstant.Customer.GET_CUSTOMERS)
-    public ResponseEntity<?> getCustomers(@Valid @ParameterObject PaginationFullRequestDto requestDto) {
+    public ResponseEntity<?> getCustomers(@ParameterObject PaginationFullRequestDto requestDto) {
         return VsResponseUtil.success(customerService.getCustomers(requestDto));
     }
 }

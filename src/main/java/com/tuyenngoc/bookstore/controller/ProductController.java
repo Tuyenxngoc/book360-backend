@@ -5,6 +5,7 @@ import com.tuyenngoc.bookstore.base.VsResponseUtil;
 import com.tuyenngoc.bookstore.constant.UrlConstant;
 import com.tuyenngoc.bookstore.domain.dto.pagination.PaginationFullRequestDto;
 import com.tuyenngoc.bookstore.domain.dto.pagination.PaginationRequestDto;
+import com.tuyenngoc.bookstore.domain.dto.request.CreateProductRequestDto;
 import com.tuyenngoc.bookstore.service.ProductService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -13,8 +14,7 @@ import lombok.RequiredArgsConstructor;
 import org.springdoc.core.annotations.ParameterObject;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.*;
 
 @RestApiV1
 @RequiredArgsConstructor
@@ -24,26 +24,32 @@ public class ProductController {
 
     @Operation(summary = "API get products")
     @GetMapping(UrlConstant.Product.GET_PRODUCTS)
-    public ResponseEntity<?> getProducts(@Valid @ParameterObject PaginationFullRequestDto requestDto) {
+    public ResponseEntity<?> getProducts(@ParameterObject PaginationFullRequestDto requestDto) {
         return VsResponseUtil.success(productService.getProducts(requestDto));
     }
 
     @Operation(summary = "API find product")
     @GetMapping(UrlConstant.Product.FIND_PRODUCT)
-    public ResponseEntity<?> findProduct(@ParameterObject PaginationFullRequestDto requestDto) {
-        return VsResponseUtil.success(productService.findProduct(requestDto));
+    public ResponseEntity<?> findProducts(@ParameterObject PaginationFullRequestDto requestDto) {
+        return VsResponseUtil.success(productService.findProducts(requestDto));
     }
 
     @Operation(summary = "API get products by category id")
     @GetMapping(UrlConstant.Product.GET_PRODUCTS_BY_CATEGORY_ID)
-    public ResponseEntity<?> getProductByCategoryId(@PathVariable int categoryId, @Valid @ParameterObject PaginationFullRequestDto requestDto) {
+    public ResponseEntity<?> getProductsByCategoryId(@PathVariable int categoryId, @ParameterObject PaginationFullRequestDto requestDto) {
         return VsResponseUtil.success(productService.getProductsByCategoryId(categoryId, requestDto));
     }
 
     @Operation(summary = "API get products by author id")
     @GetMapping(UrlConstant.Product.GET_PRODUCTS_BY_AUTHOR_ID)
-    public ResponseEntity<?> getProductByAuthorId(@PathVariable int authorId, @Valid @ParameterObject PaginationFullRequestDto requestDto) {
-        return VsResponseUtil.success(productService.getProductByAuthorId(authorId, requestDto));
+    public ResponseEntity<?> getProductsByAuthorId(@PathVariable int authorId, @ParameterObject PaginationFullRequestDto requestDto) {
+        return VsResponseUtil.success(productService.getProductsByAuthorId(authorId, requestDto));
+    }
+
+    @Operation(summary = "API get products same author by product id")
+    @GetMapping(UrlConstant.Product.GET_PRODUCTS_SAME_AUTHOR)
+    public ResponseEntity<?> getProductsSameAuthor(@PathVariable int productId, @ParameterObject PaginationRequestDto requestDto) {
+        return VsResponseUtil.success(productService.getProductsSameAuthor(productId, requestDto));
     }
 
     @Operation(summary = "API get product detail")
@@ -52,25 +58,43 @@ public class ProductController {
         return VsResponseUtil.success(productService.getProductDetail(productId));
     }
 
-    @Operation(summary = "API get products same author")
-    @GetMapping(UrlConstant.Product.GET_PRODUCTS_SAME_AUTHOR)
-    public ResponseEntity<?> getProductSameAuthor(@PathVariable int productId, @Valid @ParameterObject PaginationRequestDto requestDto) {
-        return VsResponseUtil.success(productService.getProductsSameAuthor(productId, requestDto));
-    }
-
     @PreAuthorize(value = "hasRole('ADMIN')")
     @Tag(name = "Product controller admin")
-    @Operation(summary = "API get quantity products")
-    @GetMapping(UrlConstant.Product.GET_QUANTITY_PRODUCTS)
-    public ResponseEntity<?> getRevenue() {
-        return VsResponseUtil.success(productService.getQuantityProducts());
+    @Operation(summary = "API get stock quantity products")
+    @GetMapping(UrlConstant.Product.GET_STOCK_QUANTITY_PRODUCTS)
+    public ResponseEntity<?> getStockQuantityProducts() {
+        return VsResponseUtil.success(productService.getStockQuantityProducts());
     }
 
     @PreAuthorize("hasRole('ADMIN')")
     @Tag(name = "Product controller admin")
-    @Operation(summary = "API get all products")
-    @GetMapping(UrlConstant.Product.GET_PRODUCTS_ADMIN)
-    public ResponseEntity<?> getProductsForAdmin(@Valid @ParameterObject PaginationFullRequestDto requestDto) {
+    @Operation(summary = "API get products")
+    @GetMapping(UrlConstant.Product.GET_PRODUCTS_FOR_ADMIN)
+    public ResponseEntity<?> getProductsForAdmin(@ParameterObject PaginationFullRequestDto requestDto) {
         return VsResponseUtil.success(productService.getProductsForAdmin(requestDto));
+    }
+
+    @PreAuthorize("hasRole('ADMIN')")
+    @Tag(name = "Product controller admin")
+    @Operation(summary = "API get product")
+    @GetMapping(UrlConstant.Product.GET_PRODUCT)
+    public ResponseEntity<?> getProduct(@PathVariable int productId) {
+        return VsResponseUtil.success(productService.getProduct(productId));
+    }
+
+    @PreAuthorize("hasRole('ADMIN')")
+    @Tag(name = "Product controller admin")
+    @Operation(summary = "API create and update products")
+    @PostMapping(UrlConstant.Product.CREATE_PRODUCTS)
+    public ResponseEntity<?> createProducts(@Valid @RequestBody CreateProductRequestDto productDto) {
+        return VsResponseUtil.success(productService.createProduct(productDto));
+    }
+
+    @PreAuthorize("hasRole('ADMIN')")
+    @Tag(name = "Product controller admin")
+    @Operation(summary = "API delete product")
+    @DeleteMapping(UrlConstant.Product.DELETE_PRODUCT)
+    public ResponseEntity<?> deleteProduct(@PathVariable int productId) {
+        return VsResponseUtil.success(productService.deleteProduct(productId));
     }
 }

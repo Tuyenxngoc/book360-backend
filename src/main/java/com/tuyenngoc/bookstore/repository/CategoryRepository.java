@@ -16,5 +16,5 @@ public interface CategoryRepository extends JpaRepository<Category, Integer> {
     Page<CategoryDto> getCategories(Pageable pageable);
 
     @Query("SELECT new com.tuyenngoc.bookstore.domain.dto.response.GetCategoriesResponseDto(c) FROM Category c")
-    Page<GetCategoriesResponseDto> getAllCategories(Pageable pageable);
+    Page<GetCategoriesResponseDto> getCategoriesForAdmin(Pageable pageable);
 }

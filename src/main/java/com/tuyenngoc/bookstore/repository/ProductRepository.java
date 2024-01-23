@@ -37,7 +37,7 @@ public interface ProductRepository extends JpaRepository<Product, Integer> {
     Page<GetProductsResponseDto> getProductsByAuthorId(@Param("authorId") int authorId, Pageable pageable);
 
     @Query("SELECT SUM(p.stockQuantity) FROM Product p")
-    int getQuantityProducts();
+    int getStockQuantityProducts();
 
     @Query("SELECT p FROM Product p WHERE (p.name LIKE %:keyword%) OR (p.category.name LIKE %:keyword%)")
     Page<Product> getProductsForAdmin(@Param("keyword") String keyword, Pageable pageable);

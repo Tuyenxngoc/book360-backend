@@ -38,16 +38,16 @@ public class SecurityConfiguration {
             "/api/v1/auth/login",
             "/api/v1/auth/forget-password",
             //product
-            "/api/v1/product/find-products",
-            "/api/v1/product/get-products",
-            "/api/v1/product/get-product-detail/*",
-            "/api/v1/product/get-products-same-author/*",
-            "/api/v1/product/get-products-by-categoryId/*",
-            "/api/v1/product/get-products-by-authorId/*",
+            "/api/v1/product/find",
+            "/api/v1/product/get",
+            "/api/v1/product/detail/*",
+            "/api/v1/product/category/*",
+            "/api/v1/product/author/*",
+            "/api/v1/product/same-author/*",
             //banner
-            "/api/v1/banner/get-banners",
+            "/api/v1/banner/all",
             //category
-            "/api/v1/category/get-categories"
+            "/api/v1/category/get"
     };
 
     private final CustomUserDetailsServiceImpl userDetailsService;

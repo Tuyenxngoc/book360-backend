@@ -5,7 +5,7 @@ import com.tuyenngoc.bookstore.annotation.RestApiV1;
 import com.tuyenngoc.bookstore.base.VsResponseUtil;
 import com.tuyenngoc.bookstore.constant.UrlConstant;
 import com.tuyenngoc.bookstore.domain.dto.pagination.PaginationFullRequestDto;
-import com.tuyenngoc.bookstore.domain.dto.request.OrderRequestDto;
+import com.tuyenngoc.bookstore.domain.dto.request.BillRequestDto;
 import com.tuyenngoc.bookstore.security.CustomUserDetails;
 import com.tuyenngoc.bookstore.service.BillService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -26,7 +26,7 @@ public class BillController {
 
     @Operation(summary = "API order from cart")
     @PostMapping(UrlConstant.Bill.SAVE_ORDER)
-    public ResponseEntity<?> saveOrder(@Valid @RequestBody OrderRequestDto requestDto,
+    public ResponseEntity<?> saveOrder(@Valid @RequestBody BillRequestDto requestDto,
                                        @CurrentUser CustomUserDetails userDetails) {
         return VsResponseUtil.success(billService.saveOrder(userDetails.getCustomerId(), requestDto));
     }

@@ -83,7 +83,7 @@ public class ErrorMessage {
 
     public static class Bill {
         public static final String ERR_NOT_FOUND_ID = "exception.bill.not.found.id";
-        public static final String ERR_NOT_ALLOW_CANCEL = "exception.order.not.allow.cancel";
+        public static final String ERR_NOT_ALLOW_CANCEL = "exception.bill.not.allow.cancel";
     }
 
     public static class Banner {

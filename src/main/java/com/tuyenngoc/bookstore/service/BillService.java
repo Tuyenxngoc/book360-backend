@@ -2,7 +2,7 @@ package com.tuyenngoc.bookstore.service;
 
 import com.tuyenngoc.bookstore.domain.dto.pagination.PaginationFullRequestDto;
 import com.tuyenngoc.bookstore.domain.dto.pagination.PaginationResponseDto;
-import com.tuyenngoc.bookstore.domain.dto.request.OrderRequestDto;
+import com.tuyenngoc.bookstore.domain.dto.request.BillRequestDto;
 import com.tuyenngoc.bookstore.domain.dto.response.CommonResponseDto;
 import com.tuyenngoc.bookstore.domain.dto.response.GetBillResponseDto;
 import com.tuyenngoc.bookstore.domain.dto.response.GetCountBillResponseDto;
@@ -12,11 +12,11 @@ import com.tuyenngoc.bookstore.domain.entity.Product;
 
 public interface BillService {
 
-    Bill createNewBill(int customerId, OrderRequestDto requestDto);
+    Bill createNewBill(int customerId, BillRequestDto requestDto);
 
     BillDetail createNewBillDetail(int customerId, Product product, int quantity, Bill bill);
 
-    CommonResponseDto saveOrder(int customerId, OrderRequestDto requestDto);
+    CommonResponseDto saveOrder(int customerId, BillRequestDto requestDto);
 
     PaginationResponseDto<GetBillResponseDto> getBills(int customerId, PaginationFullRequestDto requestDto, String billStatus);
 

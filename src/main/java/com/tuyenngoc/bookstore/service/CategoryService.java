@@ -5,6 +5,9 @@ import com.tuyenngoc.bookstore.domain.dto.pagination.PaginationFullRequestDto;
 import com.tuyenngoc.bookstore.domain.dto.pagination.PaginationResponseDto;
 import com.tuyenngoc.bookstore.domain.dto.response.CommonResponseDto;
 import com.tuyenngoc.bookstore.domain.dto.response.GetCategoriesResponseDto;
+import com.tuyenngoc.bookstore.domain.entity.Category;
+
+import java.util.List;
 
 public interface CategoryService {
 
@@ -12,11 +15,13 @@ public interface CategoryService {
     PaginationResponseDto<CategoryDto> getCategories(PaginationFullRequestDto requestDto);
 
     //Admin
-    CategoryDto getCategory(int categoryId);
+    Category getCategory(int categoryId);
 
-    PaginationResponseDto<GetCategoriesResponseDto> getAllCategories(PaginationFullRequestDto requestDto);
+    List<Category> getAllCategories();
 
-    CategoryDto createCategory(CategoryDto categoryDto);
+    PaginationResponseDto<GetCategoriesResponseDto> getCategoriesForAdmin(PaginationFullRequestDto requestDto);
+
+    Category createCategory(CategoryDto categoryDto);
 
     CommonResponseDto deleteCategory(int categoryId);
 

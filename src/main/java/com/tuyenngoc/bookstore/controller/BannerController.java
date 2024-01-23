@@ -21,10 +21,10 @@ public class BannerController {
 
     private final BannerService bannerService;
 
-    @Operation(summary = "API get banners")
-    @GetMapping(UrlConstant.Banner.GET_BANNERS)
+    @Operation(summary = "API get all banners")
+    @GetMapping(UrlConstant.Banner.GET_ALL_BANNERS)
     public ResponseEntity<?> getBanners() {
-        return VsResponseUtil.success(bannerService.getBanners());
+        return VsResponseUtil.success(bannerService.getAllBanners());
     }
 
     @PreAuthorize("hasRole('ADMIN')")
@@ -37,15 +37,15 @@ public class BannerController {
 
     @PreAuthorize("hasRole('ADMIN')")
     @Tag(name = "Banner controller admin")
-    @Operation(summary = "API get all banners")
-    @GetMapping(UrlConstant.Banner.GET_ALL_BANNERS)
+    @Operation(summary = "API get banners")
+    @GetMapping(UrlConstant.Banner.GET_BANNERS_FOR_ADMIN)
     public ResponseEntity<?> getBanners(@ParameterObject PaginationFullRequestDto requestDto) {
-        return VsResponseUtil.success(bannerService.getBanners(requestDto));
+        return VsResponseUtil.success(bannerService.getAllBanners(requestDto));
     }
 
     @PreAuthorize("hasRole('ADMIN')")
     @Tag(name = "Banner controller admin")
-    @Operation(summary = "API create banner")
+    @Operation(summary = "API create and update banner")
     @PostMapping(value = UrlConstant.Banner.CREATE_BANNER)
     public ResponseEntity<?> createBanner(@Valid @RequestBody BannerDto banner) {
         return VsResponseUtil.success(bannerService.createBanner(banner));
