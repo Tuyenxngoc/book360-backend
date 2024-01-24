@@ -8,6 +8,7 @@ import com.tuyenngoc.bookstore.domain.dto.pagination.PaginationRequestDto;
 import com.tuyenngoc.bookstore.domain.dto.request.CreateProductRequestDto;
 import com.tuyenngoc.bookstore.service.ProductService;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -70,8 +71,24 @@ public class ProductController {
     @Tag(name = "Product controller admin")
     @Operation(summary = "API get products")
     @GetMapping(UrlConstant.Product.GET_PRODUCTS_FOR_ADMIN)
-    public ResponseEntity<?> getProductsForAdmin(@ParameterObject PaginationFullRequestDto requestDto) {
-        return VsResponseUtil.success(productService.getProductsForAdmin(requestDto));
+    public ResponseEntity<?> getProductsForAdmin(@ParameterObject PaginationFullRequestDto requestDto,
+                                                 @RequestParam(name = "sellerStockMax", required = false, defaultValue = "0")
+                                                 @Parameter(description = "Maximum seller stock quantity")
+                                                         int sellerStockMax,
+                                                 @RequestParam(name = "sellerStockMin", required = false, defaultValue = "0")
+                                                 @Parameter(description = "Minimum seller stock quantity")
+                                                         int sellerStockMin,
+                                                 @RequestParam(name = "soldMax", required = false, defaultValue = "0")
+                                                 @Parameter(description = "Maximum quantity sold")
+                                                         int soldMax,
+                                                 @RequestParam(name = "soldMin", required = false, defaultValue = "0")
+                                                 @Parameter(description = "Minimum quantity sold")
+                                                         int soldMin,
+                                                 @RequestParam(name = "categoryId", required = false, defaultValue = "0")
+                                                 @Parameter(description = "Filter by category ID")
+                                                         int categoryId
+    ) {
+        return VsResponseUtil.success(productService.getProductsForAdmin(requestDto, sellerStockMax, sellerStockMin, soldMax, soldMin, categoryId));
     }
 
     @PreAuthorize("hasRole('ADMIN')")

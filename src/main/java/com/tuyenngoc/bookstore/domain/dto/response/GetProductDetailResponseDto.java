@@ -10,8 +10,9 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 @Getter
 @Setter
@@ -47,7 +48,7 @@ public class GetProductDetailResponseDto {
 
     private List<ProductImage> images;
 
-    private List<AuthorDto> authors;
+    private Set<AuthorDto> authors;
 
     public GetProductDetailResponseDto(Product product) {
         this.productId = product.getId();
@@ -68,8 +69,8 @@ public class GetProductDetailResponseDto {
         this.authors = getAuthorDto(product.getAuthors());
     }
 
-    private List<AuthorDto> getAuthorDto(List<Author> authors) {
-        List<AuthorDto> result = new ArrayList<>();
+    private Set<AuthorDto> getAuthorDto(Set<Author> authors) {
+        Set<AuthorDto> result = new HashSet<>();
         for (Author author : authors) {
             AuthorDto authorDto = new AuthorDto(author);
             result.add(authorDto);

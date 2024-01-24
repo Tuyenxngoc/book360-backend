@@ -11,8 +11,14 @@ import com.tuyenngoc.bookstore.domain.dto.request.CreateProductRequestDto;
 import com.tuyenngoc.bookstore.domain.dto.response.CommonResponseDto;
 import com.tuyenngoc.bookstore.domain.dto.response.GetProductDetailResponseDto;
 import com.tuyenngoc.bookstore.domain.dto.response.GetProductsResponseDto;
+import com.tuyenngoc.bookstore.domain.entity.Author;
+import com.tuyenngoc.bookstore.domain.entity.Category;
 import com.tuyenngoc.bookstore.domain.entity.Product;
+import com.tuyenngoc.bookstore.domain.entity.ProductImage;
+import com.tuyenngoc.bookstore.domain.mapper.ProductMapper;
 import com.tuyenngoc.bookstore.exception.NotFoundException;
+import com.tuyenngoc.bookstore.repository.AuthorRepository;
+import com.tuyenngoc.bookstore.repository.CategoryRepository;
 import com.tuyenngoc.bookstore.repository.ProductRepository;
 import com.tuyenngoc.bookstore.service.ProductRedisService;
 import com.tuyenngoc.bookstore.service.ProductService;
@@ -24,8 +30,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 
 @Service
 @RequiredArgsConstructor
@@ -33,9 +38,15 @@ public class ProductServiceImpl implements ProductService {
 
     private final ProductRepository productRepository;
 
+    private final CategoryRepository categoryRepository;
+
+    private final AuthorRepository authorRepository;
+
     private final ProductRedisService productRedisService;
 
     private final MessageSource messageSource;
+
+    private final ProductMapper productMapper;
 
     @Override
     public PaginationResponseDto<GetProductsResponseDto> findProducts(PaginationFullRequestDto requestDto) {
@@ -138,7 +149,14 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Override
-    public PaginationResponseDto<Product> getProductsForAdmin(PaginationFullRequestDto requestDto) {
+    public PaginationResponseDto<Product> getProductsForAdmin(
+            PaginationFullRequestDto requestDto,
+            int sellerStockMax,
+            int sellerStockMin,
+            int soldMax,
+            int soldMin,
+            int categoryId
+    ) {
         Pageable pageable = PaginationUtil.buildPageable(requestDto, SortByDataConstant.PRODUCT);
 
         Page<Product> page = productRepository.getProductsForAdmin(requestDto.getKeyword(), pageable);
@@ -152,8 +170,38 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Override
+    public ProductImage createProductImage(String image, Product product) {
+        ProductImage productImage = new ProductImage();
+        productImage.setImage(image);
+        productImage.setProduct(product);
+        return productImage;
+    }
+
+    @Override
     public Product createProduct(CreateProductRequestDto productDto) {
-        return null;
+        Category category = categoryRepository.findById(productDto.getCategoryId())
+                .orElseThrow(() -> new NotFoundException(ErrorMessage.Category.ERR_NOT_FOUND_ID, String.valueOf(productDto.getCategoryId())));
+
+        Set<Author> authors = new HashSet<>();
+        for (Integer authorId : productDto.getAuthorIds()) {
+            Author author = authorRepository.findById(authorId)
+                    .orElseThrow(() -> new NotFoundException(ErrorMessage.Author.ERR_NOT_FOUND_ID, String.valueOf(authorId)));
+            authors.add(author);
+        }
+
+        Product product = productMapper.toProduct(productDto);
+
+        List<ProductImage> images = new ArrayList<>();
+        for (String image : productDto.getImageURLs()) {
+            images.add(createProductImage(image, product));
+        }
+
+        product.setImages(images);
+        product.setFeaturedImage(images.get(0).getImage());
+        product.setAuthors(authors);
+        product.setCategory(category);
+
+        return productRepository.save(product);
     }
 
     @Override

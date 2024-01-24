@@ -18,6 +18,8 @@ public class ErrorMessage {
     public static final String INVALID_SOME_THING_FIELD = "invalid.general";
     public static final String INVALID_FORMAT_SOME_THING_FIELD = "invalid.general.format";
     public static final String INVALID_SOME_THING_FIELD_IS_REQUIRED = "invalid.general.required";
+    public static final String INVALID_ARRAY_IS_REQUIRED = "invalid.array.required";
+    public static final String INVALID_ARRAY_NOT_EMPTY = "invalid.array.not.empty";
     public static final String INVALID_NOT_BLANK_FIELD = "invalid.general.not-blank";
     public static final String INVALID_FORMAT_USERNAME = "invalid.username-format";
     public static final String INVALID_FORMAT_PASSWORD = "invalid.password-format";
@@ -52,6 +54,10 @@ public class ErrorMessage {
         public static final String ERR_ACCOUNT_LOCKED = "exception.auth.account.locked";
         public static final String ERR_INVALID_REFRESH_TOKEN = "exception.auth.invalid.refresh.token";
         public static final String EXPIRED_REFRESH_TOKEN = "exception.auth.expired.refresh.token";
+    }
+
+    public static class Author {
+        public static final String ERR_NOT_FOUND_ID = "exception.author.not.found.id";
     }
 
     public static class User {

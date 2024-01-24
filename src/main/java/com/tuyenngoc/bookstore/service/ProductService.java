@@ -8,6 +8,7 @@ import com.tuyenngoc.bookstore.domain.dto.response.CommonResponseDto;
 import com.tuyenngoc.bookstore.domain.dto.response.GetProductDetailResponseDto;
 import com.tuyenngoc.bookstore.domain.dto.response.GetProductsResponseDto;
 import com.tuyenngoc.bookstore.domain.entity.Product;
+import com.tuyenngoc.bookstore.domain.entity.ProductImage;
 
 import java.util.List;
 
@@ -27,7 +28,9 @@ public interface ProductService {
 
     int getStockQuantityProducts();
 
-    PaginationResponseDto<Product> getProductsForAdmin(PaginationFullRequestDto requestDto);
+    PaginationResponseDto<Product> getProductsForAdmin(PaginationFullRequestDto requestDto, int sellerStockMax, int sellerStockMin, int soldMax, int soldMin, int categoryId);
+
+    ProductImage createProductImage(String image, Product product);
 
     Product createProduct(CreateProductRequestDto productDto);
 

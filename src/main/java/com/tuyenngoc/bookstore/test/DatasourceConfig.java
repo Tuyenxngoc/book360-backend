@@ -9,6 +9,7 @@ import org.springframework.context.annotation.Configuration;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
@@ -37,7 +38,7 @@ public class DatasourceConfig {
 
         final List<Category> categories = new ArrayList<>();
         if (categoryRepository.count() == 0) {
-            categories.addAll(categoryRepository.saveAll(IntStream.range(0, 8).mapToObj(i ->
+            categories.addAll(categoryRepository.saveAll(IntStream.range(0, 20).mapToObj(i ->
                             new Category(i, "category" + i, "https://res.cloudinary.com/dkegqlchp/image/upload/v1705837691/banner_home_pro_4_fs4kao.webp", null))
                     .collect(Collectors.toList())));
         }
@@ -82,7 +83,7 @@ public class DatasourceConfig {
                                     null,
                                     null,
                                     categories.get((int) (Math.random() * categories.size())),
-                                    List.of(authors.get((int) (Math.random() * authors.size()))),
+                                    Set.of(authors.get((int) (Math.random() * authors.size()))),
                                     null
                             ))
                     .collect(Collectors.toList())
