@@ -296,4 +296,18 @@ public class GlobalExceptionHandle {
         return VsResponseUtil.error(HttpStatus.INTERNAL_SERVER_ERROR, errorMessage);
     }
 
+    /**
+     * Xử lý ngoại lệ khi có lỗi do đối số không hợp lệ.
+     *
+     * @param ex Ngoại lệ IllegalArgumentException
+     * @return ResponseEntity chứa thông tin lỗi và mã HTTP 400 Bad Request
+     */
+    @ExceptionHandler(IllegalArgumentException.class)
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    public ResponseEntity<RestData<?>> handleIllegalArgumentException(IllegalArgumentException ex) {
+        log.error("Illegal Argument Exception: {}", ex.getMessage(), ex);
+        String errorMessage = messageSource.getMessage(ErrorMessage.ERR_ILLEGAL_ARGUMENT, null, LocaleContextHolder.getLocale());
+        return VsResponseUtil.error(HttpStatus.BAD_REQUEST, errorMessage);
+    }
+
 }

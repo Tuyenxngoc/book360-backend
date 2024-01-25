@@ -17,4 +17,8 @@ public interface BannerRepository extends JpaRepository<Banner, Integer> {
 
     @Query("SELECT new com.tuyenngoc.bookstore.domain.dto.BannerDto(b) FROM Banner b")
     List<BannerDto> getBanners();
+
+    void deleteById(Integer id);
+
+    boolean existsById(Integer id);
 }

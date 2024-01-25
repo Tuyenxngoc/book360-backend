@@ -79,7 +79,7 @@ public class DatasourceConfig {
                                     0,
                                     i + 1,
                                     i + 1,
-                                    List.of(productImages.get((int) (Math.random() * productImages.size()))),
+                                    List.of(productImages.get(0)),
                                     null,
                                     null,
                                     categories.get((int) (Math.random() * categories.size())),

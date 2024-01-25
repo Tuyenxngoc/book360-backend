@@ -14,6 +14,7 @@ public class ErrorMessage {
     public static final String ERR_MISSING_SERVLET_REQUEST_PART = "exception.request.part.missing";
     public static final String ERR_UNSUPPORTED_MEDIA_TYPE = "exception.unsupported.media.type";
     public static final String ERR_MULTIPART_EXCEPTION = "exception.multipart";
+    public static final String ERR_ILLEGAL_ARGUMENT = "exception.illegal-arguments";
 
     public static final String INVALID_SOME_THING_FIELD = "invalid.general";
     public static final String INVALID_FORMAT_SOME_THING_FIELD = "invalid.general.format";

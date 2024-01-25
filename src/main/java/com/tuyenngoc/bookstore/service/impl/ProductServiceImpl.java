@@ -19,10 +19,13 @@ import com.tuyenngoc.bookstore.domain.mapper.ProductMapper;
 import com.tuyenngoc.bookstore.exception.NotFoundException;
 import com.tuyenngoc.bookstore.repository.AuthorRepository;
 import com.tuyenngoc.bookstore.repository.CategoryRepository;
+import com.tuyenngoc.bookstore.repository.ProductImageRepository;
 import com.tuyenngoc.bookstore.repository.ProductRepository;
 import com.tuyenngoc.bookstore.service.ProductRedisService;
 import com.tuyenngoc.bookstore.service.ProductService;
+import com.tuyenngoc.bookstore.specifications.ProductSpecifications;
 import com.tuyenngoc.bookstore.util.PaginationUtil;
+import com.tuyenngoc.bookstore.util.UploadFileUtil;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.MessageSource;
 import org.springframework.context.i18n.LocaleContextHolder;
@@ -38,6 +41,8 @@ public class ProductServiceImpl implements ProductService {
 
     private final ProductRepository productRepository;
 
+    private final ProductImageRepository productImageRepository;
+
     private final CategoryRepository categoryRepository;
 
     private final AuthorRepository authorRepository;
@@ -48,11 +53,13 @@ public class ProductServiceImpl implements ProductService {
 
     private final ProductMapper productMapper;
 
+    private final UploadFileUtil uploadFileUtil;
+
     @Override
     public PaginationResponseDto<GetProductsResponseDto> findProducts(PaginationFullRequestDto requestDto) {
         Pageable pageable = PaginationUtil.buildPageable(requestDto, SortByDataConstant.PRODUCT);
 
-        Page<GetProductsResponseDto> page = productRepository.getProducts(requestDto.getKeyword(), pageable);
+        Page<GetProductsResponseDto> page = productRepository.findProducts(requestDto.getKeyword(), pageable);
         PagingMeta pagingMeta = PaginationUtil.buildPagingMeta(requestDto, SortByDataConstant.PRODUCT, page);
 
         PaginationResponseDto<GetProductsResponseDto> responseDto = new PaginationResponseDto<>();
@@ -68,7 +75,7 @@ public class ProductServiceImpl implements ProductService {
 
         return Optional.ofNullable(productRedisService.getProducts(-1, pageable))
                 .orElseGet(() -> {
-                    Page<GetProductsResponseDto> page = productRepository.getProducts(pageable);
+                    Page<GetProductsResponseDto> page = productRepository.findProducts(pageable);
                     PagingMeta pagingMeta = PaginationUtil.buildPagingMeta(requestDto, SortByDataConstant.PRODUCT, page);
 
                     PaginationResponseDto<GetProductsResponseDto> responseDto = new PaginationResponseDto<>();
@@ -159,7 +166,15 @@ public class ProductServiceImpl implements ProductService {
     ) {
         Pageable pageable = PaginationUtil.buildPageable(requestDto, SortByDataConstant.PRODUCT);
 
-        Page<Product> page = productRepository.getProductsForAdmin(requestDto.getKeyword(), pageable);
+        Page<Product> page = productRepository.findAll(ProductSpecifications.filterProducts(
+                requestDto.getKeyword(),
+                sellerStockMax,
+                sellerStockMin,
+                soldMax,
+                soldMin,
+                categoryId
+        ), pageable);
+
         PagingMeta pagingMeta = PaginationUtil.buildPagingMeta(requestDto, SortByDataConstant.PRODUCT, page);
 
         PaginationResponseDto<Product> responseDto = new PaginationResponseDto<>();
@@ -179,6 +194,62 @@ public class ProductServiceImpl implements ProductService {
 
     @Override
     public Product createProduct(CreateProductRequestDto productDto) {
+        Product product;
+        if (productDto.getId() == null) {//create product
+            product = productMapper.toProduct(productDto);
+        } else {//update product
+            product = productRepository.findById(productDto.getId())
+                    .orElseThrow(() -> new NotFoundException(ErrorMessage.Product.ERR_NOT_FOUND_ID, String.valueOf(productDto.getId())));
+            //Destroy ULR and remove product images
+            for (ProductImage productImage : product.getImages()) {
+                uploadFileUtil.destroyFileWithUrl(productImage.getImage());
+            }
+            productImageRepository.deleteAllByProductId(productDto.getId());
+            //Set new values
+            product.setName(productDto.getName());
+            product.setDescription(productDto.getDescription());
+            product.setStockQuantity(productDto.getStockQuantity());
+            product.setPrice(productDto.getPrice());
+            product.setDiscount(productDto.getDiscount());
+
+            if (productDto.getPublicationDate() != null) {
+                product.setIsbn(productDto.getPublicationDate());
+            }
+            if (productDto.getIsbn() != null) {
+                product.setIsbn(productDto.getIsbn());
+            }
+            if (productDto.getPublisher() != null) {
+                product.setIsbn(productDto.getPublisher());
+            }
+            if (productDto.getLanguage() != null) {
+                product.setIsbn(productDto.getLanguage());
+            }
+            if (productDto.getFormat() != null) {
+                product.setIsbn(productDto.getFormat());
+            }
+            if (productDto.getSize() != null) {
+                product.setIsbn(productDto.getSize());
+            }
+            if (productDto.getCoverType() != null) {
+                product.setIsbn(productDto.getCoverType());
+            }
+            if (productDto.getAgeClassification() != null) {
+                product.setIsbn(productDto.getAgeClassification());
+            }
+            if (productDto.getIssuingUnit() != null) {
+                product.setIsbn(productDto.getIssuingUnit());
+            }
+            if (productDto.getWeight() != null) {
+                product.setWeight(productDto.getWeight());
+            }
+            if (productDto.getPageCount() != null) {
+                product.setWeight(productDto.getPageCount());
+            }
+            if (productDto.getSoldQuantity() != null) {
+                product.setWeight(productDto.getSoldQuantity());
+            }
+        }
+
         Category category = categoryRepository.findById(productDto.getCategoryId())
                 .orElseThrow(() -> new NotFoundException(ErrorMessage.Category.ERR_NOT_FOUND_ID, String.valueOf(productDto.getCategoryId())));
 
@@ -188,8 +259,6 @@ public class ProductServiceImpl implements ProductService {
                     .orElseThrow(() -> new NotFoundException(ErrorMessage.Author.ERR_NOT_FOUND_ID, String.valueOf(authorId)));
             authors.add(author);
         }
-
-        Product product = productMapper.toProduct(productDto);
 
         List<ProductImage> images = new ArrayList<>();
         for (String image : productDto.getImageURLs()) {

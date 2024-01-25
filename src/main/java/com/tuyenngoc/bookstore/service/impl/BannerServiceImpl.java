@@ -30,8 +30,6 @@ public class BannerServiceImpl implements BannerService {
 
     private final BannerRepository bannerRepository;
 
-    private final UploadFileUtil uploadFileUtil;
-
     private final MessageSource messageSource;
 
     private final BannerMapper bannerMapper;

@@ -8,7 +8,9 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 @Getter
 @Setter
@@ -73,6 +75,6 @@ public class CreateProductRequestDto {
 
     @NotNull(message = ErrorMessage.INVALID_ARRAY_IS_REQUIRED)
     @NotEmpty(message = ErrorMessage.INVALID_ARRAY_NOT_EMPTY)
-    private List<Integer> authorIds = new ArrayList<>();
+    private Set<Integer> authorIds = new HashSet<>();
 
 }
