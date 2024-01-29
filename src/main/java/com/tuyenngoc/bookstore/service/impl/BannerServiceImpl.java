@@ -14,7 +14,6 @@ import com.tuyenngoc.bookstore.exception.NotFoundException;
 import com.tuyenngoc.bookstore.repository.BannerRepository;
 import com.tuyenngoc.bookstore.service.BannerService;
 import com.tuyenngoc.bookstore.util.PaginationUtil;
-import com.tuyenngoc.bookstore.util.UploadFileUtil;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.MessageSource;
 import org.springframework.context.i18n.LocaleContextHolder;

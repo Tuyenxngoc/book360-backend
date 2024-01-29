@@ -1,5 +1,6 @@
 package com.tuyenngoc.bookstore.test;
 
+import com.tuyenngoc.bookstore.constant.AgeGroup;
 import com.tuyenngoc.bookstore.domain.entity.*;
 import com.tuyenngoc.bookstore.repository.*;
 import jakarta.annotation.PostConstruct;
@@ -74,7 +75,7 @@ public class DatasourceConfig {
                                     10 * i,
                                     LocalDate.now(),
                                     "cover" + i,
-                                    "",
+                                    Set.of(AgeGroup.CHILD),
                                     "",
                                     0,
                                     i + 1,

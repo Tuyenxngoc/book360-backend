@@ -1,7 +1,8 @@
 package com.tuyenngoc.bookstore.domain.entity;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.tuyenngoc.bookstore.domain.entity.common.UserDateAuditing;
+import com.tuyenngoc.bookstore.constant.AgeGroup;
+import com.tuyenngoc.bookstore.domain.entity.common.FlagUserDateAuditing;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -20,7 +21,7 @@ import java.util.Set;
 @NoArgsConstructor
 @AllArgsConstructor
 @Table(name = "product")
-public class Product extends UserDateAuditing {
+public class Product extends FlagUserDateAuditing {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -59,8 +60,14 @@ public class Product extends UserDateAuditing {
     @Column(name = "cover_type")
     private String coverType;// Loại bìa của sách.
 
+    @ElementCollection(targetClass = AgeGroup.class)
+    @Enumerated(EnumType.STRING)
+    @CollectionTable(
+            name = "product_age_classifications",
+            joinColumns = @JoinColumn(name = "product_id", foreignKey = @ForeignKey(name = "FK_PRODUCT_AGE_CLASSIFICATIONS_PRODUCT_ID"), referencedColumnName = "product_id")
+    )
     @Column(name = "age_classification")
-    private String ageClassification; // Phân loại theo độ tuổi
+    private Set<AgeGroup> ageClassifications = new HashSet<>();// Phân loại theo độ tuổi
 
     @Column(name = "issuing_unit")
     private String issuingUnit;// Đơn vị phát hành của sách.
@@ -75,7 +82,7 @@ public class Product extends UserDateAuditing {
     private Integer stockQuantity;// Số lượng sách còn trong kho.
 
     @OneToMany(mappedBy = "product", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-    private List<ProductImage> images = new ArrayList<>();// Danh sách ảnh
+    private List<ProductImage> images = new ArrayList<>();
 
     @OneToMany(mappedBy = "product", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     @JsonIgnore
@@ -89,7 +96,7 @@ public class Product extends UserDateAuditing {
     @JoinColumn(name = "category_id", foreignKey = @ForeignKey(name = "FK_PRODUCT_CATE_ID"), referencedColumnName = "category_id")
     private Category category;
 
-    @ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @ManyToMany(fetch = FetchType.LAZY)
     @JoinTable(
             name = "product_author",
             joinColumns = @JoinColumn(name = "product_id", foreignKey = @ForeignKey(name = "FK_PRODUCT_AUTHOR_PRODUCT_ID"), referencedColumnName = "product_id"),
@@ -97,7 +104,7 @@ public class Product extends UserDateAuditing {
     )
     private Set<Author> authors = new HashSet<>();
 
-    @ManyToMany(mappedBy = "favoriteProducts", fetch = FetchType.LAZY)
+    @ManyToMany(mappedBy = "favoriteProducts", cascade = CascadeType.MERGE, fetch = FetchType.LAZY)
     @JsonIgnore
     private List<Customer> customers = new ArrayList<>();
 }

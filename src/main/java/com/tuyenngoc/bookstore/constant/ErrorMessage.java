@@ -18,6 +18,7 @@ public class ErrorMessage {
 
     public static final String INVALID_SOME_THING_FIELD = "invalid.general";
     public static final String INVALID_FORMAT_SOME_THING_FIELD = "invalid.general.format";
+    public static final String INVALID_NUMBER_FORMAT = "invalid.general.number-format";
     public static final String INVALID_SOME_THING_FIELD_IS_REQUIRED = "invalid.general.required";
     public static final String INVALID_ARRAY_IS_REQUIRED = "invalid.array.required";
     public static final String INVALID_ARRAY_NOT_EMPTY = "invalid.array.not.empty";

@@ -62,6 +62,13 @@ public class UrlConstant {
         public static final String GET_ALL_BILLS = PRE_FIX + "/get-all-bills";
     }
 
+    public static class Author {
+        private static final String PRE_FIX = "/author";
+
+        //Private
+        public static final String GET_ALL_AUTHORS = ADMIN_URL + PRE_FIX + "/all";
+    }
+
     public static class Banner {
         private static final String PRE_FIX = "/banner";
 

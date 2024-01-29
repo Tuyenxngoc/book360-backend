@@ -33,6 +33,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
 import java.util.*;
 
 @Service
@@ -168,6 +169,7 @@ public class ProductServiceImpl implements ProductService {
 
         Page<Product> page = productRepository.findAll(ProductSpecifications.filterProducts(
                 requestDto.getKeyword(),
+                requestDto.getSearchBy(),
                 sellerStockMax,
                 sellerStockMin,
                 soldMax,
@@ -187,7 +189,7 @@ public class ProductServiceImpl implements ProductService {
     @Override
     public ProductImage createProductImage(String image, Product product) {
         ProductImage productImage = new ProductImage();
-        productImage.setImage(image);
+        productImage.setUrl(image);
         productImage.setProduct(product);
         return productImage;
     }
@@ -197,12 +199,14 @@ public class ProductServiceImpl implements ProductService {
         Product product;
         if (productDto.getId() == null) {//create product
             product = productMapper.toProduct(productDto);
+
+            product.setSoldQuantity(0);
         } else {//update product
             product = productRepository.findById(productDto.getId())
                     .orElseThrow(() -> new NotFoundException(ErrorMessage.Product.ERR_NOT_FOUND_ID, String.valueOf(productDto.getId())));
             //Destroy ULR and remove product images
             for (ProductImage productImage : product.getImages()) {
-                uploadFileUtil.destroyFileWithUrl(productImage.getImage());
+                uploadFileUtil.destroyFileWithUrl(productImage.getUrl());
             }
             productImageRepository.deleteAllByProductId(productDto.getId());
             //Set new values
@@ -213,40 +217,37 @@ public class ProductServiceImpl implements ProductService {
             product.setDiscount(productDto.getDiscount());
 
             if (productDto.getPublicationDate() != null) {
-                product.setIsbn(productDto.getPublicationDate());
+                product.setPublicationDate(LocalDate.parse(productDto.getPublicationDate()));
             }
             if (productDto.getIsbn() != null) {
                 product.setIsbn(productDto.getIsbn());
             }
             if (productDto.getPublisher() != null) {
-                product.setIsbn(productDto.getPublisher());
+                product.setPublisher(productDto.getPublisher());
             }
             if (productDto.getLanguage() != null) {
-                product.setIsbn(productDto.getLanguage());
+                product.setLanguage(productDto.getLanguage());
             }
             if (productDto.getFormat() != null) {
-                product.setIsbn(productDto.getFormat());
+                product.setFormat(productDto.getFormat());
             }
             if (productDto.getSize() != null) {
-                product.setIsbn(productDto.getSize());
+                product.setSize(productDto.getSize());
             }
             if (productDto.getCoverType() != null) {
-                product.setIsbn(productDto.getCoverType());
+                product.setCoverType(productDto.getCoverType());
             }
-            if (productDto.getAgeClassification() != null) {
-                product.setIsbn(productDto.getAgeClassification());
+            if (productDto.getAgeClassifications() != null) {
+                product.setAgeClassifications(productDto.getAgeClassifications());
             }
             if (productDto.getIssuingUnit() != null) {
-                product.setIsbn(productDto.getIssuingUnit());
+                product.setIssuingUnit(productDto.getIssuingUnit());
             }
             if (productDto.getWeight() != null) {
                 product.setWeight(productDto.getWeight());
             }
             if (productDto.getPageCount() != null) {
-                product.setWeight(productDto.getPageCount());
-            }
-            if (productDto.getSoldQuantity() != null) {
-                product.setWeight(productDto.getSoldQuantity());
+                product.setPageCount(productDto.getPageCount());
             }
         }
 
@@ -266,7 +267,7 @@ public class ProductServiceImpl implements ProductService {
         }
 
         product.setImages(images);
-        product.setFeaturedImage(images.get(0).getImage());
+        product.setFeaturedImage(images.get(0).getUrl());
         product.setAuthors(authors);
         product.setCategory(category);
 

@@ -21,7 +21,7 @@ public class ProductImage {
     private Integer id;
 
     @Column(nullable = false)
-    private String image;
+    private String url;
 
     @ManyToOne
     @JoinColumn(name = "product_id", foreignKey = @ForeignKey(name = "FK_PRODUCT_IMAGE_PRODUCT_ID"), referencedColumnName = "product_id")
