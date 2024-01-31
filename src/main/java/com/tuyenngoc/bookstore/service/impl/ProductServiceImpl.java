@@ -55,7 +55,7 @@ public class ProductServiceImpl implements ProductService {
     public PaginationResponseDto<GetProductsResponseDto> findProducts(PaginationFullRequestDto requestDto) {
         Pageable pageable = PaginationUtil.buildPageable(requestDto, SortByDataConstant.PRODUCT);
 
-        Page<GetProductsResponseDto> page = productRepository.findProducts(requestDto.getKeyword(), pageable);
+        Page<GetProductsResponseDto> page = productRepository.getProducts(ProductSpecifications.nameLikeAndNotDeleted(requestDto.getKeyword()), pageable);
         PagingMeta pagingMeta = PaginationUtil.buildPagingMeta(requestDto, SortByDataConstant.PRODUCT, page);
 
         PaginationResponseDto<GetProductsResponseDto> responseDto = new PaginationResponseDto<>();
@@ -71,7 +71,7 @@ public class ProductServiceImpl implements ProductService {
 
         return Optional.ofNullable(productRedisService.getProducts(-1, pageable))
                 .orElseGet(() -> {
-                    Page<GetProductsResponseDto> page = productRepository.findProducts(pageable);
+                    Page<GetProductsResponseDto> page = productRepository.getProducts(ProductSpecifications.isNotDeleted(), pageable);
                     PagingMeta pagingMeta = PaginationUtil.buildPagingMeta(requestDto, SortByDataConstant.PRODUCT, page);
 
                     PaginationResponseDto<GetProductsResponseDto> responseDto = new PaginationResponseDto<>();

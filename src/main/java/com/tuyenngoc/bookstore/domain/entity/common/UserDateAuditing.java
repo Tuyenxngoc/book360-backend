@@ -9,17 +9,18 @@ import org.springframework.data.annotation.CreatedBy;
 import org.springframework.data.annotation.LastModifiedBy;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
-@MappedSuperclass
-@EntityListeners(AuditingEntityListener.class)
 @Setter
 @Getter
+@MappedSuperclass
+@EntityListeners(AuditingEntityListener.class)
 public abstract class UserDateAuditing extends DateAuditing {
 
     @CreatedBy
-    @Column(updatable = false)
+    @Column(name = "created_by", updatable = false)
     private String createdBy;
 
     @LastModifiedBy
+    @Column(name = "last_modified_by", nullable = true)//todo update nullable false
     private String lastModifiedBy;
 
 }

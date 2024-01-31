@@ -12,8 +12,18 @@ import org.springframework.data.jpa.domain.Specification;
 public class ProductSpecifications {
 
     public static Specification<Product> nameLike(String name) {
-        return (root, query, builder) ->
-                builder.like(root.get(Product_.name), "%" + name + "%");
+        return (root, query, criteriaBuilder) -> criteriaBuilder.like(root.get(Product_.name), "%" + name + "%");
+    }
+
+    public static Specification<Product> isNotDeleted() {
+        return (root, query, criteriaBuilder) -> criteriaBuilder.isFalse(root.get(Product_.deleteFlag));
+    }
+
+    public static Specification<Product> nameLikeAndNotDeleted(String name) {
+        Specification<Product> nameLikeSpec = nameLike(name);
+        Specification<Product> notDeletedSpec = isNotDeleted();
+
+        return nameLikeSpec.and(notDeletedSpec);
     }
 
     private static Object castToRequiredType(Class<?> fieldType, String value) {
