@@ -25,22 +25,22 @@ public interface ProductRepository extends JpaRepository<Product, Integer>, JpaS
     @Query("SELECT new com.tuyenngoc.bookstore.domain.dto.response.GetProductsResponseDto(p) FROM Product p WHERE p.category.id= :categoryId")
     Page<GetProductsResponseDto> getProductsByCategoryId(@Param("categoryId") int categoryId, Pageable pageable);
 
-    @Query("SELECT new com.tuyenngoc.bookstore.domain.dto.response.GetProductDetailResponseDto(p) FROM  Product p WHERE  p.id= :productId")
-    Optional<GetProductDetailResponseDto> getProductDetail(@Param("productId") Integer productId);
-
     @Query("SELECT new com.tuyenngoc.bookstore.domain.dto.response.GetProductsResponseDto(p) FROM Product p JOIN p.authors a WHERE a IN (SELECT a FROM Product p2 JOIN p2.authors a WHERE p2.id = :productId) AND p.id <> :productId")
     Page<GetProductsResponseDto> getProductsSameAuthor(@Param("productId") Integer productId, Pageable pageable);
-
-    @Query("SELECT COUNT(p) FROM Product p WHERE p.stockQuantity = 0")
-    int getCountProductSoldOut();
 
     @Query("SELECT new com.tuyenngoc.bookstore.domain.dto.response.GetProductsResponseDto(p) FROM Product p JOIN p.authors a WHERE a.id = :authorId")
     Page<GetProductsResponseDto> getProductsByAuthorId(@Param("authorId") int authorId, Pageable pageable);
 
+    @Query("SELECT new com.tuyenngoc.bookstore.domain.dto.response.GetProductDetailResponseDto(p) FROM  Product p WHERE  p.id= :productId")
+    Optional<GetProductDetailResponseDto> getProductDetail(@Param("productId") Integer productId);
+
+    @Query("SELECT COUNT(p) FROM Product p WHERE p.stockQuantity = 0")
+    int getCountProductSoldOut();
+
     @Query("SELECT SUM(p.stockQuantity) FROM Product p")
     int getStockQuantityProducts();
 
-    void deleteById(Integer id);
 
-    boolean existsById(Integer id);
+    @Query("SELECT p FROM Product p WHERE p.createdDate = ?1")
+    Optional<Product> findById(int id);
 }

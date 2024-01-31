@@ -11,16 +11,10 @@ import com.tuyenngoc.bookstore.domain.dto.request.CreateProductRequestDto;
 import com.tuyenngoc.bookstore.domain.dto.response.CommonResponseDto;
 import com.tuyenngoc.bookstore.domain.dto.response.GetProductDetailResponseDto;
 import com.tuyenngoc.bookstore.domain.dto.response.GetProductsResponseDto;
-import com.tuyenngoc.bookstore.domain.entity.Author;
-import com.tuyenngoc.bookstore.domain.entity.Category;
-import com.tuyenngoc.bookstore.domain.entity.Product;
-import com.tuyenngoc.bookstore.domain.entity.ProductImage;
+import com.tuyenngoc.bookstore.domain.entity.*;
 import com.tuyenngoc.bookstore.domain.mapper.ProductMapper;
 import com.tuyenngoc.bookstore.exception.NotFoundException;
-import com.tuyenngoc.bookstore.repository.AuthorRepository;
-import com.tuyenngoc.bookstore.repository.CategoryRepository;
-import com.tuyenngoc.bookstore.repository.ProductImageRepository;
-import com.tuyenngoc.bookstore.repository.ProductRepository;
+import com.tuyenngoc.bookstore.repository.*;
 import com.tuyenngoc.bookstore.service.ProductRedisService;
 import com.tuyenngoc.bookstore.service.ProductService;
 import com.tuyenngoc.bookstore.specifications.ProductSpecifications;
@@ -33,7 +27,6 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
-import java.time.LocalDate;
 import java.util.*;
 
 @Service
@@ -45,6 +38,8 @@ public class ProductServiceImpl implements ProductService {
     private final ProductImageRepository productImageRepository;
 
     private final CategoryRepository categoryRepository;
+
+    private final BookSetRepository bookSetRepository;
 
     private final AuthorRepository authorRepository;
 
@@ -202,8 +197,7 @@ public class ProductServiceImpl implements ProductService {
 
             product.setSoldQuantity(0);
         } else {//update product
-            product = productRepository.findById(productDto.getId())
-                    .orElseThrow(() -> new NotFoundException(ErrorMessage.Product.ERR_NOT_FOUND_ID, String.valueOf(productDto.getId())));
+            product = getProduct(productDto.getId());
             //Destroy ULR and remove product images
             for (ProductImage productImage : product.getImages()) {
                 uploadFileUtil.destroyFileWithUrl(productImage.getUrl());
@@ -215,21 +209,11 @@ public class ProductServiceImpl implements ProductService {
             product.setStockQuantity(productDto.getStockQuantity());
             product.setPrice(productDto.getPrice());
             product.setDiscount(productDto.getDiscount());
-
-            if (productDto.getPublicationDate() != null) {
-                product.setPublicationDate(LocalDate.parse(productDto.getPublicationDate()));
-            }
             if (productDto.getIsbn() != null) {
                 product.setIsbn(productDto.getIsbn());
             }
             if (productDto.getPublisher() != null) {
                 product.setPublisher(productDto.getPublisher());
-            }
-            if (productDto.getLanguage() != null) {
-                product.setLanguage(productDto.getLanguage());
-            }
-            if (productDto.getFormat() != null) {
-                product.setFormat(productDto.getFormat());
             }
             if (productDto.getSize() != null) {
                 product.setSize(productDto.getSize());
@@ -239,9 +223,6 @@ public class ProductServiceImpl implements ProductService {
             }
             if (productDto.getAgeClassifications() != null) {
                 product.setAgeClassifications(productDto.getAgeClassifications());
-            }
-            if (productDto.getIssuingUnit() != null) {
-                product.setIssuingUnit(productDto.getIssuingUnit());
             }
             if (productDto.getWeight() != null) {
                 product.setWeight(productDto.getWeight());
@@ -253,6 +234,12 @@ public class ProductServiceImpl implements ProductService {
 
         Category category = categoryRepository.findById(productDto.getCategoryId())
                 .orElseThrow(() -> new NotFoundException(ErrorMessage.Category.ERR_NOT_FOUND_ID, String.valueOf(productDto.getCategoryId())));
+
+        if (productDto.getBookSetId() != null) {
+            BookSet bookSet = bookSetRepository.findById(productDto.getBookSetId())
+                    .orElseThrow(() -> new NotFoundException(ErrorMessage.BookSet.ERR_NOT_FOUND_ID, String.valueOf(productDto.getBookSetId())));
+            product.setBookSet(bookSet);
+        }
 
         Set<Author> authors = new HashSet<>();
         for (Integer authorId : productDto.getAuthorIds()) {
@@ -282,12 +269,12 @@ public class ProductServiceImpl implements ProductService {
 
     @Override
     public CommonResponseDto deleteProduct(int productId) {
-        if (productRepository.existsById(productId)) {
-            productRepository.deleteById(productId);
-            String message = messageSource.getMessage(SuccessMessage.DELETE, null, LocaleContextHolder.getLocale());
-            return new CommonResponseDto(message);
-        } else {
-            throw new NotFoundException(ErrorMessage.Banner.ERR_NOT_FOUND_ID, String.valueOf(productId));
-        }
+        Product product = getProduct(productId);
+
+        product.setDeleteFlag(Boolean.TRUE);
+        productRepository.save(product);
+
+        String message = messageSource.getMessage(SuccessMessage.DELETE, null, LocaleContextHolder.getLocale());
+        return new CommonResponseDto(message);
     }
 }

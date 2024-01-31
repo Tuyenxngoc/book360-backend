@@ -7,7 +7,6 @@ import jakarta.annotation.PostConstruct;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Configuration;
 
-import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
@@ -27,6 +26,8 @@ public class DatasourceConfig {
     private final AuthorRepository authorRepository;
 
     private final ProductImageRepository productImageRepository;
+
+    private final BookSetRepository bookSetRepository;
 
     @PostConstruct
     public void initData() {
@@ -58,6 +59,13 @@ public class DatasourceConfig {
                     .collect(Collectors.toList())));
         }
 
+        final List<BookSet> bookSets = new ArrayList<>();
+        if (bookSetRepository.count() == 0) {
+            bookSets.addAll(bookSetRepository.saveAll(IntStream.range(0, 10).mapToObj(i ->
+                            new BookSet(i, "bookset" + i, null))
+                    .collect(Collectors.toList())));
+        }
+
         if (productRepository.count() == 0) {
             productRepository.saveAll(IntStream.range(0, 100)
                     .mapToObj(i ->
@@ -69,21 +77,18 @@ public class DatasourceConfig {
                                     10,
                                     "isbn" + i,
                                     "publisher" + i,
-                                    "lang" + i,
-                                    "format" + i,
                                     "12x12",
                                     10 * i,
-                                    LocalDate.now(),
                                     "cover" + i,
+                                    i + 1,
+                                    i + 2,
+                                    i + 3,
                                     Set.of(AgeGroup.CHILD),
-                                    "",
-                                    0,
-                                    i + 1,
-                                    i + 1,
-                                    List.of(productImages.get(0)),
+                                    productImages,
                                     null,
                                     null,
                                     categories.get((int) (Math.random() * categories.size())),
+                                    bookSets.get((int) (Math.random() * bookSets.size())),
                                     Set.of(authors.get((int) (Math.random() * authors.size()))),
                                     null
                             ))

@@ -32,6 +32,7 @@ public class ErrorMessage {
     public static final String INVALID_MINIMUM_ONE = "invalid.minimum-one";
     public static final String INVALID_MINIMUM_ZERO = "invalid.minimum-zero";
     public static final String INVALID_MAXIMUM_ONE_HUNDRED = "invalid.maximum-one-hundred";
+    public static final String INVALID_TEXT_LENGTH = "invalid.text.length";
     //Date
     public static final String INVALID_DATE = "invalid.date-format";
     public static final String INVALID_DATE_FEATURE = "invalid.date-future";
@@ -81,6 +82,10 @@ public class ErrorMessage {
 
     public static class Category {
         public static final String ERR_NOT_FOUND_ID = "exception.category.not.found.id";
+    }
+
+    public static class BookSet {
+        public static final String ERR_NOT_FOUND_ID = "exception.book-set.not.found.id";
     }
 
     public static class Cart {

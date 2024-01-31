@@ -82,6 +82,15 @@ public class UrlConstant {
         public static final String DELETE_BANNER = ADMIN_URL + PRE_FIX + "/delete/{bannerId}";
     }
 
+    public static class BookSet {
+        private static final String PRE_FIX = "/book-set";
+
+        //Public
+
+        //Private
+        public static final String GET_ALL_BOOK_SETS = ADMIN_URL + PRE_FIX + "/all";
+    }
+
     public static class Category {
         private static final String PRE_FIX = "/category";
 

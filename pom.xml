@@ -16,6 +16,7 @@
     <properties>
         <java.version>17</java.version>
         <mapstruct.version>1.6.0.Beta1</mapstruct.version>
+        <lombok.version>1.18.22</lombok.version>
         <hibernate.jpamodelgen.version>6.4.2.Final</hibernate.jpamodelgen.version>
     </properties>
     <dependencies>

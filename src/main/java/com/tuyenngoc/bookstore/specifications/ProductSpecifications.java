@@ -64,10 +64,6 @@ public class ProductSpecifications {
 
                     case Product_.PUBLISHER -> predicate = builder.and(predicate, builder.like(root.get(Product_.PUBLISHER), "%" + keyword + "%"));
 
-                    case Product_.LANGUAGE -> predicate = builder.and(predicate, builder.like(root.get(Product_.LANGUAGE), "%" + keyword + "%"));
-
-                    case Product_.FORMAT -> predicate = builder.and(predicate, builder.like(root.get(Product_.FORMAT), "%" + keyword + "%"));
-
                     case Product_.SIZE -> predicate = builder.and(predicate, builder.like(root.get(Product_.SIZE), "%" + keyword + "%"));
                 }
             }

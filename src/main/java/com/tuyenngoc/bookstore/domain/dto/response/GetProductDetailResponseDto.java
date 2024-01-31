@@ -62,7 +62,6 @@ public class GetProductDetailResponseDto {
         this.stockQuantity = product.getStockQuantity();
         this.description = product.getDescription();
         this.pageCount = product.getPageCount();
-        this.format = product.getFormat();
         this.weight = product.getWeight();
 
         this.category = new CategoryDto(product.getCategory());

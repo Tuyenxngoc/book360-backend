@@ -9,7 +9,6 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
@@ -31,7 +30,7 @@ public class Product extends FlagUserDateAuditing {
     @Column(nullable = false)
     private String name;
 
-    @Column(nullable = false)
+    @Column(nullable = false, length = 3000)
     private String description;
 
     @Column(nullable = false)
@@ -46,31 +45,12 @@ public class Product extends FlagUserDateAuditing {
 
     private String publisher;// Nhà xuất bản của sách.
 
-    private String language;// Ngôn ngữ của sách.
-
-    private String format;// Định dạng của sách (ví dụ: bìa mềm, bìa cứng, ebook, audiobook, v.v.).
-
     private String size;// Kích thước của sách (ví dụ: chiều cao, chiều rộng).
 
-    private double weight;
-
-    @Temporal(TemporalType.DATE)
-    private LocalDate publicationDate;// Ngày xuất bản của sách.
+    private double weight;// Trọng lượng của sách
 
     @Column(name = "cover_type")
     private String coverType;// Loại bìa của sách.
-
-    @ElementCollection(targetClass = AgeGroup.class)
-    @Enumerated(EnumType.STRING)
-    @CollectionTable(
-            name = "product_age_classifications",
-            joinColumns = @JoinColumn(name = "product_id", foreignKey = @ForeignKey(name = "FK_PRODUCT_AGE_CLASSIFICATIONS_PRODUCT_ID"), referencedColumnName = "product_id")
-    )
-    @Column(name = "age_classification")
-    private Set<AgeGroup> ageClassifications = new HashSet<>();// Phân loại theo độ tuổi
-
-    @Column(name = "issuing_unit")
-    private String issuingUnit;// Đơn vị phát hành của sách.
 
     @Column(name = "page_count")
     private Integer pageCount;// Số trang của sách.
@@ -80,6 +60,15 @@ public class Product extends FlagUserDateAuditing {
 
     @Column(name = "stock_quantity")
     private Integer stockQuantity;// Số lượng sách còn trong kho.
+
+    @ElementCollection(targetClass = AgeGroup.class)
+    @Enumerated(EnumType.STRING)
+    @CollectionTable(
+            name = "product_age_classifications",
+            joinColumns = @JoinColumn(name = "product_id", foreignKey = @ForeignKey(name = "FK_PRODUCT_AGE_CLASSIFICATIONS_PRODUCT_ID"), referencedColumnName = "product_id")
+    )
+    @Column(name = "age_classification")
+    private Set<AgeGroup> ageClassifications = new HashSet<>();// Phân loại theo độ tuổi
 
     @OneToMany(mappedBy = "product", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private List<ProductImage> images = new ArrayList<>();
@@ -93,8 +82,12 @@ public class Product extends FlagUserDateAuditing {
     private List<CartDetail> cartDetails = new ArrayList<>();
 
     @ManyToOne
-    @JoinColumn(name = "category_id", foreignKey = @ForeignKey(name = "FK_PRODUCT_CATE_ID"), referencedColumnName = "category_id")
+    @JoinColumn(name = "category_id", foreignKey = @ForeignKey(name = "FK_PRODUCT_CATEGORY_ID"), referencedColumnName = "category_id")
     private Category category;
+
+    @ManyToOne
+    @JoinColumn(name = "book_set_id", foreignKey = @ForeignKey(name = "FK_PRODUCT_BOOK_SET_ID"), referencedColumnName = "book_set_id")
+    private BookSet bookSet;
 
     @ManyToMany(fetch = FetchType.LAZY)
     @JoinTable(
