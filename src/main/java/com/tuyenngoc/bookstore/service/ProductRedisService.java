@@ -9,7 +9,7 @@ import java.util.List;
 
 public interface ProductRedisService {
 
-    PaginationResponseDto<GetProductsResponseDto> getProducts(int categoryId, Pageable pageable);
+    PaginationResponseDto<GetProductsResponseDto> getProducts(Integer categoryId, Pageable pageable);
 
     void saveProducts(int categoryId, PaginationResponseDto<GetProductsResponseDto> responseDto, Pageable pageable);
 

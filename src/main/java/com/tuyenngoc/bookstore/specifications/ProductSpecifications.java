@@ -19,13 +19,6 @@ public class ProductSpecifications {
         return (root, query, criteriaBuilder) -> criteriaBuilder.isFalse(root.get(Product_.deleteFlag));
     }
 
-    public static Specification<Product> nameLikeAndNotDeleted(String name) {
-        Specification<Product> nameLikeSpec = nameLike(name);
-        Specification<Product> notDeletedSpec = isNotDeleted();
-
-        return nameLikeSpec.and(notDeletedSpec);
-    }
-
     private static Object castToRequiredType(Class<?> fieldType, String value) {
         try {
             if (fieldType.isAssignableFrom(Double.class)) {

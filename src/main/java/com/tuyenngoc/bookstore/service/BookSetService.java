@@ -8,4 +8,5 @@ public interface BookSetService {
 
     List<BookSet> getAllBookSets();
 
+    BookSet getBookSet(int bookSetId);
 }

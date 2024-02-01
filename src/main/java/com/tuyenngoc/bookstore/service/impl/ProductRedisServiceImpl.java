@@ -37,7 +37,7 @@ public class ProductRedisServiceImpl implements ProductRedisService {
             new TypeReference<>() {
             };
 
-    public String getKeyFrom(int categoryId, Pageable pageable) {
+    public String getKeyFrom(Integer categoryId, Pageable pageable) {
         int pageNumber = pageable.getPageNumber();
         int pageSize = pageable.getPageSize();
         Sort sort = pageable.getSort();
@@ -55,7 +55,7 @@ public class ProductRedisServiceImpl implements ProductRedisService {
     }
 
     @Override
-    public PaginationResponseDto<GetProductsResponseDto> getProducts(int categoryId, Pageable pageable) {
+    public PaginationResponseDto<GetProductsResponseDto> getProducts(Integer categoryId, Pageable pageable) {
         try {
             String key = getKeyFrom(categoryId, pageable);
             String json = (String) redisTemplate.opsForValue().get(key);

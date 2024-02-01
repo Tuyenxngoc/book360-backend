@@ -5,7 +5,6 @@ import com.tuyenngoc.bookstore.domain.dto.response.GetProductsResponseDto;
 import com.tuyenngoc.bookstore.domain.entity.Product;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.jpa.domain.Specification;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import org.springframework.data.jpa.repository.Query;
@@ -17,25 +16,65 @@ import java.util.Optional;
 @Repository
 public interface ProductRepository extends JpaRepository<Product, Integer>, JpaSpecificationExecutor<Product> {
 
-    @Query("SELECT new com.tuyenngoc.bookstore.domain.dto.response.GetProductsResponseDto(p) FROM Product p")
-    Page<GetProductsResponseDto> getProducts(Specification<Product> specification, Pageable pageable);
+    @Query("SELECT new com.tuyenngoc.bookstore.domain.dto.response.GetProductsResponseDto(p) " +
+            "FROM Product p WHERE " +
+            "LOWER(p.name) LIKE %:keyword% AND " +
+            "p.deleteFlag = false")
+    Page<GetProductsResponseDto> findProducts(
+            @Param("keyword") String keyword,
+            Pageable pageable
+    );
 
-    @Query("SELECT new com.tuyenngoc.bookstore.domain.dto.response.GetProductsResponseDto(p) FROM Product p WHERE p.category.id= :categoryId")
-    Page<GetProductsResponseDto> getProductsByCategoryId(@Param("categoryId") int categoryId, Pageable pageable);
+    @Query("SELECT new com.tuyenngoc.bookstore.domain.dto.response.GetProductsResponseDto(p) " +
+            "FROM Product p WHERE " +
+            "p.deleteFlag = false")
+    Page<GetProductsResponseDto> getProducts(Pageable pageable);
 
-    @Query("SELECT new com.tuyenngoc.bookstore.domain.dto.response.GetProductsResponseDto(p) FROM Product p JOIN p.authors a WHERE a IN (SELECT a FROM Product p2 JOIN p2.authors a WHERE p2.id = :productId) AND p.id <> :productId")
-    Page<GetProductsResponseDto> getProductsSameAuthor(@Param("productId") Integer productId, Pageable pageable);
+    @Query("SELECT new com.tuyenngoc.bookstore.domain.dto.response.GetProductsResponseDto(p) " +
+            "FROM Product p WHERE" +
+            " p.category.id= :categoryId AND " +
+            "p.deleteFlag = false")
+    Page<GetProductsResponseDto> getProductsByCategoryId(
+            @Param("categoryId") int categoryId,
+            Pageable pageable
+    );
 
-    @Query("SELECT new com.tuyenngoc.bookstore.domain.dto.response.GetProductsResponseDto(p) FROM Product p JOIN p.authors a WHERE a.id = :authorId")
-    Page<GetProductsResponseDto> getProductsByAuthorId(@Param("authorId") int authorId, Pageable pageable);
+    @Query("SELECT new com.tuyenngoc.bookstore.domain.dto.response.GetProductsResponseDto(p) " +
+            "FROM Product p JOIN p.authors a WHERE " +
+            "p.deleteFlag = false AND " +
+            "a IN (SELECT a2 FROM Product p2 JOIN p2.authors a2 WHERE p2.id = :productId) AND " +
+            "p.id <> :productId")
+    Page<GetProductsResponseDto> getProductsSameAuthor(
+            @Param("productId") int productId,
+            Pageable pageable
+    );
 
-    @Query("SELECT new com.tuyenngoc.bookstore.domain.dto.response.GetProductDetailResponseDto(p) FROM  Product p WHERE  p.id= :productId")
-    Optional<GetProductDetailResponseDto> getProductDetail(@Param("productId") Integer productId);
+    @Query("SELECT new com.tuyenngoc.bookstore.domain.dto.response.GetProductsResponseDto(p) " +
+            "FROM Product p JOIN p.authors a WHERE " +
+            "a.id = :authorId AND " +
+            "p.deleteFlag = false")
+    Page<GetProductsResponseDto> getProductsByAuthorId(
+            @Param("authorId") int authorId,
+            Pageable pageable
+    );
 
-    @Query("SELECT COUNT(p) FROM Product p WHERE p.stockQuantity = 0")
+    @Query("SELECT new com.tuyenngoc.bookstore.domain.dto.response.GetProductDetailResponseDto(p) " +
+            "FROM Product p WHERE " +
+            "p.id= :productId AND " +
+            "p.deleteFlag = false")
+    Optional<GetProductDetailResponseDto> getProductDetail(
+            @Param("productId") int productId
+    );
+
+    @Query("SELECT COUNT(p) " +
+            "FROM Product p WHERE " +
+            "p.stockQuantity = 0 AND " +
+            "p.deleteFlag = false")
     int getCountProductSoldOut();
 
-    @Query("SELECT SUM(p.stockQuantity) FROM Product p")
+    @Query("SELECT SUM(p.stockQuantity) " +
+            "FROM Product p WHERE " +
+            "p.deleteFlag = false")
     int getStockQuantityProducts();
 
 }

@@ -11,13 +11,15 @@ import com.tuyenngoc.bookstore.domain.dto.request.CreateProductRequestDto;
 import com.tuyenngoc.bookstore.domain.dto.response.CommonResponseDto;
 import com.tuyenngoc.bookstore.domain.dto.response.GetProductDetailResponseDto;
 import com.tuyenngoc.bookstore.domain.dto.response.GetProductsResponseDto;
-import com.tuyenngoc.bookstore.domain.entity.*;
+import com.tuyenngoc.bookstore.domain.entity.Author;
+import com.tuyenngoc.bookstore.domain.entity.Category;
+import com.tuyenngoc.bookstore.domain.entity.Product;
+import com.tuyenngoc.bookstore.domain.entity.ProductImage;
 import com.tuyenngoc.bookstore.domain.mapper.ProductMapper;
 import com.tuyenngoc.bookstore.exception.NotFoundException;
-import com.tuyenngoc.bookstore.repository.*;
-import com.tuyenngoc.bookstore.service.ProductRedisService;
-import com.tuyenngoc.bookstore.service.ProductService;
-import com.tuyenngoc.bookstore.specifications.ProductSpecifications;
+import com.tuyenngoc.bookstore.repository.ProductImageRepository;
+import com.tuyenngoc.bookstore.repository.ProductRepository;
+import com.tuyenngoc.bookstore.service.*;
 import com.tuyenngoc.bookstore.util.PaginationUtil;
 import com.tuyenngoc.bookstore.util.UploadFileUtil;
 import lombok.RequiredArgsConstructor;
@@ -29,6 +31,9 @@ import org.springframework.stereotype.Service;
 
 import java.util.*;
 
+import static com.tuyenngoc.bookstore.specifications.ProductSpecifications.filterProducts;
+import static com.tuyenngoc.bookstore.specifications.ProductSpecifications.isNotDeleted;
+
 @Service
 @RequiredArgsConstructor
 public class ProductServiceImpl implements ProductService {
@@ -37,13 +42,13 @@ public class ProductServiceImpl implements ProductService {
 
     private final ProductImageRepository productImageRepository;
 
-    private final CategoryRepository categoryRepository;
-
-    private final BookSetRepository bookSetRepository;
-
-    private final AuthorRepository authorRepository;
+    private final AuthorService authorService;
 
     private final ProductRedisService productRedisService;
+
+    private final CategoryService categoryService;
+
+    private final BookSetService bookSetService;
 
     private final MessageSource messageSource;
 
@@ -55,7 +60,7 @@ public class ProductServiceImpl implements ProductService {
     public PaginationResponseDto<GetProductsResponseDto> findProducts(PaginationFullRequestDto requestDto) {
         Pageable pageable = PaginationUtil.buildPageable(requestDto, SortByDataConstant.PRODUCT);
 
-        Page<GetProductsResponseDto> page = productRepository.getProducts(ProductSpecifications.nameLikeAndNotDeleted(requestDto.getKeyword()), pageable);
+        Page<GetProductsResponseDto> page = productRepository.findProducts(requestDto.getKeyword(), pageable);
         PagingMeta pagingMeta = PaginationUtil.buildPagingMeta(requestDto, SortByDataConstant.PRODUCT, page);
 
         PaginationResponseDto<GetProductsResponseDto> responseDto = new PaginationResponseDto<>();
@@ -71,7 +76,7 @@ public class ProductServiceImpl implements ProductService {
 
         return Optional.ofNullable(productRedisService.getProducts(-1, pageable))
                 .orElseGet(() -> {
-                    Page<GetProductsResponseDto> page = productRepository.getProducts(ProductSpecifications.isNotDeleted(), pageable);
+                    Page<GetProductsResponseDto> page = productRepository.getProducts(pageable);
                     PagingMeta pagingMeta = PaginationUtil.buildPagingMeta(requestDto, SortByDataConstant.PRODUCT, page);
 
                     PaginationResponseDto<GetProductsResponseDto> responseDto = new PaginationResponseDto<>();
@@ -162,15 +167,17 @@ public class ProductServiceImpl implements ProductService {
     ) {
         Pageable pageable = PaginationUtil.buildPageable(requestDto, SortByDataConstant.PRODUCT);
 
-        Page<Product> page = productRepository.findAll(ProductSpecifications.filterProducts(
-                requestDto.getKeyword(),
-                requestDto.getSearchBy(),
-                sellerStockMax,
-                sellerStockMin,
-                soldMax,
-                soldMin,
-                categoryId
-        ), pageable);
+        Page<Product> page = productRepository.findAll(filterProducts(
+                        requestDto.getKeyword(),
+                        requestDto.getSearchBy(),
+                        sellerStockMax,
+                        sellerStockMin,
+                        soldMax,
+                        soldMin,
+                        categoryId)
+                        .and(isNotDeleted())
+                , pageable
+        );
 
         PagingMeta pagingMeta = PaginationUtil.buildPagingMeta(requestDto, SortByDataConstant.PRODUCT, page);
 
@@ -232,20 +239,15 @@ public class ProductServiceImpl implements ProductService {
             }
         }
 
-        Category category = categoryRepository.findById(productDto.getCategoryId())
-                .orElseThrow(() -> new NotFoundException(ErrorMessage.Category.ERR_NOT_FOUND_ID, String.valueOf(productDto.getCategoryId())));
+        Category category = categoryService.getCategory(productDto.getCategoryId());
 
         if (productDto.getBookSetId() != null) {
-            BookSet bookSet = bookSetRepository.findById(productDto.getBookSetId())
-                    .orElseThrow(() -> new NotFoundException(ErrorMessage.BookSet.ERR_NOT_FOUND_ID, String.valueOf(productDto.getBookSetId())));
-            product.setBookSet(bookSet);
+            product.setBookSet(bookSetService.getBookSet(productDto.getBookSetId()));
         }
 
         Set<Author> authors = new HashSet<>();
         for (Integer authorId : productDto.getAuthorIds()) {
-            Author author = authorRepository.findById(authorId)
-                    .orElseThrow(() -> new NotFoundException(ErrorMessage.Author.ERR_NOT_FOUND_ID, String.valueOf(authorId)));
-            authors.add(author);
+            authors.add(authorService.getAuthor(authorId));
         }
 
         List<ProductImage> images = new ArrayList<>();
