@@ -9,7 +9,7 @@ import com.tuyenngoc.bookstore.domain.dto.pagination.PaginationResponseDto;
 import com.tuyenngoc.bookstore.domain.dto.pagination.PagingMeta;
 import com.tuyenngoc.bookstore.domain.dto.request.UpdateCustomerRequestDto;
 import com.tuyenngoc.bookstore.domain.dto.response.CommonResponseDto;
-import com.tuyenngoc.bookstore.domain.dto.response.GetProductsResponseDto;
+import com.tuyenngoc.bookstore.domain.dto.response.GetProductResponseDto;
 import com.tuyenngoc.bookstore.domain.dto.response.GetTodoResponseDto;
 import com.tuyenngoc.bookstore.domain.entity.Address;
 import com.tuyenngoc.bookstore.domain.entity.Customer;
@@ -20,6 +20,7 @@ import com.tuyenngoc.bookstore.repository.BillRepository;
 import com.tuyenngoc.bookstore.repository.CustomerRepository;
 import com.tuyenngoc.bookstore.repository.ProductRepository;
 import com.tuyenngoc.bookstore.service.CustomerService;
+import com.tuyenngoc.bookstore.service.ProductService;
 import com.tuyenngoc.bookstore.service.UploadRedisService;
 import com.tuyenngoc.bookstore.util.PaginationUtil;
 import com.tuyenngoc.bookstore.util.UploadFileUtil;
@@ -32,8 +33,6 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.time.LocalDate;
-import java.time.format.DateTimeParseException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -43,9 +42,11 @@ public class CustomerServiceImpl implements CustomerService {
 
     private final CustomerRepository customerRepository;
 
-    private final ProductRepository productRepository;
+    private final ProductService productService;
 
     private final BillRepository billRepository;
+
+    private final ProductRepository productRepository;
 
     private final UploadFileUtil uploadFileUtil;
 
@@ -57,13 +58,13 @@ public class CustomerServiceImpl implements CustomerService {
     private String fileSizeLimit;
 
     @Override
-    public PaginationResponseDto<GetProductsResponseDto> getFavoriteProducts(int customerId, PaginationFullRequestDto request) {
+    public PaginationResponseDto<GetProductResponseDto> getFavoriteProducts(int customerId, PaginationFullRequestDto request) {
         Pageable pageable = PaginationUtil.buildPageable(request, SortByDataConstant.PRODUCT);
 
-        Page<GetProductsResponseDto> page = customerRepository.getFavoriteProducts(customerId, pageable);
+        Page<GetProductResponseDto> page = customerRepository.getFavoriteProducts(customerId, pageable);
         PagingMeta pagingMeta = PaginationUtil.buildPagingMeta(request, SortByDataConstant.PRODUCT, page);
 
-        PaginationResponseDto<GetProductsResponseDto> responseDto = new PaginationResponseDto<>();
+        PaginationResponseDto<GetProductResponseDto> responseDto = new PaginationResponseDto<>();
         responseDto.setItems(page.getContent());
         responseDto.setMeta(pagingMeta);
 
@@ -77,10 +78,8 @@ public class CustomerServiceImpl implements CustomerService {
 
     @Override
     public CommonResponseDto addFavoriteProduct(int customerId, int productId) {
-        Customer customer = customerRepository.findById(customerId)
-                .orElseThrow(() -> new NotFoundException(ErrorMessage.Customer.ERR_NOT_FOUND_ID, String.valueOf(customerId)));
-        Product product = productRepository.findById(productId)
-                .orElseThrow(() -> new NotFoundException(ErrorMessage.Product.ERR_NOT_FOUND_ID, String.valueOf(productId)));
+        Customer customer = getCustomer(customerId);
+        Product product = productService.getProduct(productId);
         customer.getFavoriteProducts().add(product);
         customerRepository.save(customer);
 
@@ -90,10 +89,8 @@ public class CustomerServiceImpl implements CustomerService {
 
     @Override
     public CommonResponseDto removeFavoriteProduct(int customerId, int productId) {
-        Customer customer = customerRepository.findById(customerId)
-                .orElseThrow(() -> new NotFoundException(ErrorMessage.Customer.ERR_NOT_FOUND_ID, String.valueOf(customerId)));
-        Product product = productRepository.findById(productId)
-                .orElseThrow(() -> new NotFoundException(ErrorMessage.Product.ERR_NOT_FOUND_ID, String.valueOf(productId)));
+        Customer customer = getCustomer(customerId);
+        Product product = productService.getProduct(productId);
         customer.getFavoriteProducts().remove(product);
         customerRepository.save(customer);
 
@@ -162,17 +159,7 @@ public class CustomerServiceImpl implements CustomerService {
 
     @Override
     public CommonResponseDto updateCustomer(int customerId, UpdateCustomerRequestDto updateCustomerRequestDto) {
-        LocalDate dob;
-        try {
-            dob = LocalDate.parse(updateCustomerRequestDto.getDob());
-            if (dob.isAfter(LocalDate.now())) {
-                throw new InvalidException(ErrorMessage.INVALID_DATE_PAST);
-            }
-        } catch (DateTimeParseException e) {
-            throw new InvalidException(ErrorMessage.INVALID_DATE, updateCustomerRequestDto.getDob());
-        }
-        Customer customer = customerRepository.findById(customerId)
-                .orElseThrow(() -> new NotFoundException(ErrorMessage.Customer.ERR_NOT_FOUND_ID, String.valueOf(customerId)));
+        Customer customer = getCustomer(customerId);
 
         Address address = new Address();
         address.setAddressName(updateCustomerRequestDto.getAddress());
@@ -180,7 +167,7 @@ public class CustomerServiceImpl implements CustomerService {
         customer.setFullName(updateCustomerRequestDto.getFullName());
         customer.setPhoneNumber(updateCustomerRequestDto.getPhoneNumber());
         customer.setAvatar(updateCustomerRequestDto.getAvatar());
-        customer.setDob(dob);
+        customer.setDob(updateCustomerRequestDto.getDob());
         customer.setAddress(address);
         customer.setGender(updateCustomerRequestDto.getGender());
 
@@ -217,5 +204,11 @@ public class CustomerServiceImpl implements CustomerService {
         responseDto.setMeta(meta);
 
         return responseDto;
+    }
+
+    @Override
+    public Customer getCustomer(int customerId) {
+        return customerRepository.findById(customerId)
+                .orElseThrow(() -> new NotFoundException(ErrorMessage.Customer.ERR_NOT_FOUND_ID, String.valueOf(customerId)));
     }
 }

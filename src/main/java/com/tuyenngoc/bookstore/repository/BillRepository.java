@@ -1,36 +1,44 @@
 package com.tuyenngoc.bookstore.repository;
 
+import com.tuyenngoc.bookstore.constant.BillStatus;
 import com.tuyenngoc.bookstore.domain.dto.response.GetBillResponseDto;
 import com.tuyenngoc.bookstore.domain.entity.Bill;
 import jakarta.transaction.Transactional;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
-@Repository
-public interface BillRepository extends JpaRepository<Bill, Integer> {
+import java.util.List;
+import java.util.Optional;
 
-    @Query("SELECT b.billStatus FROM Bill b WHERE b.id =:billId AND b.customer.id =:customerId")
-    String getBillStatusByIdAndCustomerId(
-            @Param("billId") int billId,
+@Repository
+public interface BillRepository extends JpaRepository<Bill, Integer>, JpaSpecificationExecutor<Bill> {
+
+    @Query("SELECT new com.tuyenngoc.bookstore.domain.dto.response.GetBillResponseDto(b) " +
+            "FROM Bill b WHERE " +
+            "b.customer.id=:customerId ")
+    List<GetBillResponseDto> getBills(
             @Param("customerId") int customerId
     );
 
-    @Query("SELECT new com.tuyenngoc.bookstore.domain.dto.response.GetBillResponseDto(b) FROM Bill b WHERE b.customer.id=:customerId")
-    Page<GetBillResponseDto> getBills(
+    @Query("SELECT new com.tuyenngoc.bookstore.domain.dto.response.GetBillResponseDto(b) " +
+            "FROM Bill b WHERE " +
+            "b.customer.id=:customerId AND " +
+            "b.billStatus= :billStatus")
+    List<GetBillResponseDto> getBills(
             @Param("customerId") int customerId,
-            Pageable pageable
-    );
+            @Param("billStatus") BillStatus billStatus);
 
-    @Query("SELECT new com.tuyenngoc.bookstore.domain.dto.response.GetBillResponseDto(b) FROM Bill b WHERE b.customer.id=:customerId AND b.billStatus= :billStatus")
-    Page<GetBillResponseDto> getBills(
-            @Param("customerId") int customerId,
-            @Param("billStatus") String billStatus,
-            Pageable pageable
+    @Query("SELECT b.billStatus" +
+            " FROM Bill b WHERE " +
+            "b.id =:billId AND " +
+            "b.customer.id =:customerId")
+    BillStatus getBillStatus(
+            @Param("billId") int billId,
+            @Param("customerId") int customerId
     );
 
     @Modifying
@@ -38,44 +46,22 @@ public interface BillRepository extends JpaRepository<Bill, Integer> {
     @Query("UPDATE Bill b SET b.billStatus=:billStatus WHERE b.id =:billId")
     void updateBillStatus(
             @Param("billId") int billId,
-            @Param("billStatus") String billStatus
+            @Param("billStatus") BillStatus billStatus
     );
 
     @Query("SELECT count(b) FROM Bill b WHERE b.billStatus=:status")
     int getCountBillByStatus(@Param("status") String status);
 
     @Query("SELECT count(b) FROM Bill b WHERE b.billStatus=:status AND b.customer.id =:customerId")
-    int getCountBillByStatusAndCustomerId(@Param("status") String status,
-                                          @Param("customerId") int customerId
+    int getCountBillByStatusAndCustomerId(
+            @Param("customerId") int customerId,
+            @Param("status") BillStatus status
     );
 
     @Query("SELECT count(b) FROM Bill b")
     int getCountBills();
 
-    @Query("SELECT b FROM Bill b JOIN b.billDetails bd WHERE bd.product.name LIKE %:keyword% AND b.billStatus=:status")
-    Page<Bill> getBillsByProductName(
-            @Param("status") String status,
-            @Param("keyword") String keyword,
-            Pageable pageable
-    );
+    boolean existsById(int billId);
 
-    @Query("SELECT b FROM Bill b WHERE b.consigneeName LIKE %:keyword% AND b.billStatus=:status")
-    Page<Bill> getBillsByConsigneeName(
-            @Param("status") String status,
-            @Param("keyword") String keyword,
-            Pageable pageable
-    );
-
-    @Query("SELECT b FROM Bill b WHERE b.id =:billId AND b.billStatus=:status")
-    Page<Bill> getBillsById(
-            @Param("status") String status,
-            @Param("billId") Integer billId,
-            Pageable pageable
-    );
-
-    @Query("SELECT b FROM Bill b WHERE b.billStatus=:status")
-    Page<Bill> getBills(
-            @Param("status") String status,
-            Pageable pageable
-    );
+    Optional<Bill> getBillByIdAndCustomerId(int customerId, int billId);
 }

@@ -12,7 +12,7 @@ import java.time.LocalDateTime;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class GetCategoriesResponseDto {
+public class GetCategoryResponseDto {
 
     private LocalDateTime createdDate;
 
@@ -26,7 +26,7 @@ public class GetCategoriesResponseDto {
 
     private Integer totalProducts;
 
-    public GetCategoriesResponseDto(Category category) {
+    public GetCategoryResponseDto(Category category) {
         this.createdDate = category.getCreatedDate();
         this.lastModifiedDate = category.getLastModifiedDate();
         this.id = category.getId();

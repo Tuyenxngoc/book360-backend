@@ -8,7 +8,7 @@ import com.tuyenngoc.bookstore.domain.dto.pagination.PaginationFullRequestDto;
 import com.tuyenngoc.bookstore.domain.dto.pagination.PaginationResponseDto;
 import com.tuyenngoc.bookstore.domain.dto.pagination.PagingMeta;
 import com.tuyenngoc.bookstore.domain.dto.response.CommonResponseDto;
-import com.tuyenngoc.bookstore.domain.dto.response.GetCategoriesResponseDto;
+import com.tuyenngoc.bookstore.domain.dto.response.GetCategoryResponseDto;
 import com.tuyenngoc.bookstore.domain.entity.Category;
 import com.tuyenngoc.bookstore.domain.mapper.CategoryMapper;
 import com.tuyenngoc.bookstore.exception.NotFoundException;
@@ -80,13 +80,13 @@ public class CategoryServiceImpl implements CategoryService {
 
     //Todo add search by
     @Override
-    public PaginationResponseDto<GetCategoriesResponseDto> getCategoriesForAdmin(PaginationFullRequestDto requestDto) {
+    public PaginationResponseDto<GetCategoryResponseDto> getCategoriesForAdmin(PaginationFullRequestDto requestDto) {
         Pageable pageable = PaginationUtil.buildPageable(requestDto, SortByDataConstant.CATEGORY);
 
-        Page<GetCategoriesResponseDto> page = categoryRepository.getCategoriesForAdmin(pageable);
+        Page<GetCategoryResponseDto> page = categoryRepository.getCategoriesForAdmin(pageable);
         PagingMeta pagingMeta = PaginationUtil.buildPagingMeta(requestDto, SortByDataConstant.PRODUCT, page);
 
-        PaginationResponseDto<GetCategoriesResponseDto> responseDto = new PaginationResponseDto<>();
+        PaginationResponseDto<GetCategoryResponseDto> responseDto = new PaginationResponseDto<>();
         responseDto.setItems(page.getContent());
         responseDto.setMeta(pagingMeta);
 

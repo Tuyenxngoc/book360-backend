@@ -1,6 +1,6 @@
 package com.tuyenngoc.bookstore.domain.dto;
 
-import com.tuyenngoc.bookstore.domain.dto.response.GetProductsResponseDto;
+import com.tuyenngoc.bookstore.domain.dto.response.GetProductResponseDto;
 import com.tuyenngoc.bookstore.domain.entity.BillDetail;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -13,15 +13,18 @@ import lombok.Setter;
 @AllArgsConstructor
 public class BillDetailDto {
 
+    private int id;
+
     private int quantity;
 
     private double price;
 
-    private GetProductsResponseDto product;
+    private GetProductResponseDto product;
 
     public BillDetailDto(BillDetail billDetail) {
+        this.id = billDetail.getId();
         this.price = billDetail.getPrice();
         this.quantity = billDetail.getQuantity();
-        this.product = new GetProductsResponseDto(billDetail.getProduct());
+        this.product = new GetProductResponseDto(billDetail.getProduct());
     }
 }

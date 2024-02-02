@@ -6,6 +6,7 @@ import com.tuyenngoc.bookstore.base.VsResponseUtil;
 import com.tuyenngoc.bookstore.constant.UrlConstant;
 import com.tuyenngoc.bookstore.domain.dto.CartDetailDto;
 import com.tuyenngoc.bookstore.security.CustomUserDetails;
+import com.tuyenngoc.bookstore.service.CartService;
 import com.tuyenngoc.bookstore.service.impl.CartServiceImpl;
 import io.swagger.v3.oas.annotations.Operation;
 import jakarta.validation.Valid;
@@ -17,7 +18,7 @@ import org.springframework.web.bind.annotation.*;
 @RequiredArgsConstructor
 public class CartController {
 
-    private final CartServiceImpl cartService;
+    private final CartService cartService;
 
     @Operation(summary = "API get total products from cart")
     @GetMapping(UrlConstant.Cart.GET_TOTAL_PRODUCTS)

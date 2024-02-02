@@ -11,7 +11,7 @@ import lombok.Setter;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class GetProductsResponseDto {
+public class GetProductResponseDto {
 
     private int productId;
 
@@ -27,7 +27,7 @@ public class GetProductsResponseDto {
 
     private CategoryDto category;
 
-    public GetProductsResponseDto(Product product) {
+    public GetProductResponseDto(Product product) {
         this.productId = product.getId();
         this.name = product.getName();
         this.image = product.getFeaturedImage();

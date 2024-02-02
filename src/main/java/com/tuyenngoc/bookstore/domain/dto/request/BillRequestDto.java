@@ -1,10 +1,8 @@
 package com.tuyenngoc.bookstore.domain.dto.request;
 
 import com.tuyenngoc.bookstore.constant.ErrorMessage;
-import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.NotEmpty;
-import jakarta.validation.constraints.NotNull;
-import jakarta.validation.constraints.Pattern;
+import com.tuyenngoc.bookstore.constant.PaymentMethod;
+import jakarta.validation.constraints.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -32,9 +30,10 @@ public class BillRequestDto {
     @NotBlank(message = ErrorMessage.INVALID_NOT_BLANK_FIELD)
     private String shippingAddress;
 
-    @NotBlank(message = ErrorMessage.INVALID_NOT_BLANK_FIELD)
-    private String paymentMethod;
+    @NotNull(message = ErrorMessage.INVALID_SOME_THING_FIELD_IS_REQUIRED)
+    private PaymentMethod paymentMethod;
 
+    @Size(max = 120, message = ErrorMessage.INVALID_TEXT_LENGTH)
     private String note;
 
     @NotEmpty(message = ErrorMessage.INVALID_NOT_BLANK_FIELD)

@@ -10,7 +10,7 @@ import com.tuyenngoc.bookstore.domain.dto.pagination.PagingMeta;
 import com.tuyenngoc.bookstore.domain.dto.request.CreateProductRequestDto;
 import com.tuyenngoc.bookstore.domain.dto.response.CommonResponseDto;
 import com.tuyenngoc.bookstore.domain.dto.response.GetProductDetailResponseDto;
-import com.tuyenngoc.bookstore.domain.dto.response.GetProductsResponseDto;
+import com.tuyenngoc.bookstore.domain.dto.response.GetProductResponseDto;
 import com.tuyenngoc.bookstore.domain.entity.Author;
 import com.tuyenngoc.bookstore.domain.entity.Category;
 import com.tuyenngoc.bookstore.domain.entity.Product;
@@ -57,13 +57,13 @@ public class ProductServiceImpl implements ProductService {
     private final UploadFileUtil uploadFileUtil;
 
     @Override
-    public PaginationResponseDto<GetProductsResponseDto> findProducts(PaginationFullRequestDto requestDto) {
+    public PaginationResponseDto<GetProductResponseDto> findProducts(PaginationFullRequestDto requestDto) {
         Pageable pageable = PaginationUtil.buildPageable(requestDto, SortByDataConstant.PRODUCT);
 
-        Page<GetProductsResponseDto> page = productRepository.findProducts(requestDto.getKeyword(), pageable);
+        Page<GetProductResponseDto> page = productRepository.findProducts(requestDto.getKeyword(), pageable);
         PagingMeta pagingMeta = PaginationUtil.buildPagingMeta(requestDto, SortByDataConstant.PRODUCT, page);
 
-        PaginationResponseDto<GetProductsResponseDto> responseDto = new PaginationResponseDto<>();
+        PaginationResponseDto<GetProductResponseDto> responseDto = new PaginationResponseDto<>();
         responseDto.setItems(page.getContent());
         responseDto.setMeta(pagingMeta);
 
@@ -71,15 +71,15 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Override
-    public PaginationResponseDto<GetProductsResponseDto> getProducts(PaginationFullRequestDto requestDto) {
+    public PaginationResponseDto<GetProductResponseDto> getProducts(PaginationFullRequestDto requestDto) {
         Pageable pageable = PaginationUtil.buildPageable(requestDto, SortByDataConstant.PRODUCT);
 
         return Optional.ofNullable(productRedisService.getProducts(-1, pageable))
                 .orElseGet(() -> {
-                    Page<GetProductsResponseDto> page = productRepository.getProducts(pageable);
+                    Page<GetProductResponseDto> page = productRepository.getProducts(pageable);
                     PagingMeta pagingMeta = PaginationUtil.buildPagingMeta(requestDto, SortByDataConstant.PRODUCT, page);
 
-                    PaginationResponseDto<GetProductsResponseDto> responseDto = new PaginationResponseDto<>();
+                    PaginationResponseDto<GetProductResponseDto> responseDto = new PaginationResponseDto<>();
                     responseDto.setItems(page.getContent());
                     responseDto.setMeta(pagingMeta);
 
@@ -90,16 +90,16 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Override
-    public PaginationResponseDto<GetProductsResponseDto> getProductsByCategoryId(int categoryId, PaginationFullRequestDto requestDto) {
+    public PaginationResponseDto<GetProductResponseDto> getProductsByCategoryId(int categoryId, PaginationFullRequestDto requestDto) {
 
         Pageable pageable = PaginationUtil.buildPageable(requestDto, SortByDataConstant.PRODUCT);
 
         return Optional.ofNullable(productRedisService.getProducts(categoryId, pageable))
                 .orElseGet(() -> {
-                    Page<GetProductsResponseDto> page = productRepository.getProductsByCategoryId(categoryId, pageable);
+                    Page<GetProductResponseDto> page = productRepository.getProductsByCategoryId(categoryId, pageable);
                     PagingMeta pagingMeta = PaginationUtil.buildPagingMeta(requestDto, SortByDataConstant.PRODUCT, page);
 
-                    PaginationResponseDto<GetProductsResponseDto> responseDto = new PaginationResponseDto<>();
+                    PaginationResponseDto<GetProductResponseDto> responseDto = new PaginationResponseDto<>();
                     responseDto.setItems(page.getContent());
                     responseDto.setMeta(pagingMeta);
 
@@ -123,13 +123,13 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Override
-    public List<GetProductsResponseDto> getProductsSameAuthor(int productId, PaginationRequestDto request) {
+    public List<GetProductResponseDto> getProductsSameAuthor(int productId, PaginationRequestDto request) {
 
         Pageable pageable = PaginationUtil.buildPageable(request);
 
         return Optional.ofNullable(productRedisService.getProductsSameAuthor(productId, pageable))
                 .orElseGet(() -> {
-                    Page<GetProductsResponseDto> page = productRepository.getProductsSameAuthor(productId, pageable);
+                    Page<GetProductResponseDto> page = productRepository.getProductsSameAuthor(productId, pageable);
 
                     productRedisService.saveProductsSameAuthor(productId, page.getContent(), pageable);
 
@@ -138,13 +138,13 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Override
-    public PaginationResponseDto<GetProductsResponseDto> getProductsByAuthorId(int authorId, PaginationFullRequestDto requestDto) {
+    public PaginationResponseDto<GetProductResponseDto> getProductsByAuthorId(int authorId, PaginationFullRequestDto requestDto) {
         Pageable pageable = PaginationUtil.buildPageable(requestDto, SortByDataConstant.PRODUCT);
 
-        Page<GetProductsResponseDto> page = productRepository.getProductsByAuthorId(authorId, pageable);
+        Page<GetProductResponseDto> page = productRepository.getProductsByAuthorId(authorId, pageable);
         PagingMeta pagingMeta = PaginationUtil.buildPagingMeta(requestDto, SortByDataConstant.PRODUCT, page);
 
-        PaginationResponseDto<GetProductsResponseDto> responseDto = new PaginationResponseDto<>();
+        PaginationResponseDto<GetProductResponseDto> responseDto = new PaginationResponseDto<>();
         responseDto.setItems(page.getContent());
         responseDto.setMeta(pagingMeta);
 

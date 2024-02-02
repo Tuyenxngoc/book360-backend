@@ -1,7 +1,7 @@
 package com.tuyenngoc.bookstore.repository;
 
 import com.tuyenngoc.bookstore.domain.dto.response.GetProductDetailResponseDto;
-import com.tuyenngoc.bookstore.domain.dto.response.GetProductsResponseDto;
+import com.tuyenngoc.bookstore.domain.dto.response.GetProductResponseDto;
 import com.tuyenngoc.bookstore.domain.entity.Product;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -16,44 +16,44 @@ import java.util.Optional;
 @Repository
 public interface ProductRepository extends JpaRepository<Product, Integer>, JpaSpecificationExecutor<Product> {
 
-    @Query("SELECT new com.tuyenngoc.bookstore.domain.dto.response.GetProductsResponseDto(p) " +
+    @Query("SELECT new com.tuyenngoc.bookstore.domain.dto.response.GetProductResponseDto(p) " +
             "FROM Product p WHERE " +
             "LOWER(p.name) LIKE %:keyword% AND " +
             "p.deleteFlag = false")
-    Page<GetProductsResponseDto> findProducts(
+    Page<GetProductResponseDto> findProducts(
             @Param("keyword") String keyword,
             Pageable pageable
     );
 
-    @Query("SELECT new com.tuyenngoc.bookstore.domain.dto.response.GetProductsResponseDto(p) " +
+    @Query("SELECT new com.tuyenngoc.bookstore.domain.dto.response.GetProductResponseDto(p) " +
             "FROM Product p WHERE " +
             "p.deleteFlag = false")
-    Page<GetProductsResponseDto> getProducts(Pageable pageable);
+    Page<GetProductResponseDto> getProducts(Pageable pageable);
 
-    @Query("SELECT new com.tuyenngoc.bookstore.domain.dto.response.GetProductsResponseDto(p) " +
+    @Query("SELECT new com.tuyenngoc.bookstore.domain.dto.response.GetProductResponseDto(p) " +
             "FROM Product p WHERE" +
             " p.category.id= :categoryId AND " +
             "p.deleteFlag = false")
-    Page<GetProductsResponseDto> getProductsByCategoryId(
+    Page<GetProductResponseDto> getProductsByCategoryId(
             @Param("categoryId") int categoryId,
             Pageable pageable
     );
 
-    @Query("SELECT new com.tuyenngoc.bookstore.domain.dto.response.GetProductsResponseDto(p) " +
+    @Query("SELECT new com.tuyenngoc.bookstore.domain.dto.response.GetProductResponseDto(p) " +
             "FROM Product p JOIN p.authors a WHERE " +
             "p.deleteFlag = false AND " +
             "a IN (SELECT a2 FROM Product p2 JOIN p2.authors a2 WHERE p2.id = :productId) AND " +
             "p.id <> :productId")
-    Page<GetProductsResponseDto> getProductsSameAuthor(
+    Page<GetProductResponseDto> getProductsSameAuthor(
             @Param("productId") int productId,
             Pageable pageable
     );
 
-    @Query("SELECT new com.tuyenngoc.bookstore.domain.dto.response.GetProductsResponseDto(p) " +
+    @Query("SELECT new com.tuyenngoc.bookstore.domain.dto.response.GetProductResponseDto(p) " +
             "FROM Product p JOIN p.authors a WHERE " +
             "a.id = :authorId AND " +
             "p.deleteFlag = false")
-    Page<GetProductsResponseDto> getProductsByAuthorId(
+    Page<GetProductResponseDto> getProductsByAuthorId(
             @Param("authorId") int authorId,
             Pageable pageable
     );

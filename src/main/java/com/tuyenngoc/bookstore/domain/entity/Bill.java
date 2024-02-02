@@ -1,6 +1,8 @@
 package com.tuyenngoc.bookstore.domain.entity;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.tuyenngoc.bookstore.constant.BillStatus;
+import com.tuyenngoc.bookstore.constant.PaymentMethod;
 import com.tuyenngoc.bookstore.domain.entity.common.DateAuditing;
 import jakarta.persistence.*;
 import lombok.*;
@@ -40,11 +42,13 @@ public class Bill extends DateAuditing {
     @Column(name = "total_amount")
     private double totalAmount;
 
+    @Enumerated(EnumType.STRING)
     @Column(name = "payment_method")
-    private String paymentMethod;
+    private PaymentMethod paymentMethod;
 
+    @Enumerated(EnumType.STRING)
     @Column(name = "bill_status")
-    private String billStatus;
+    private BillStatus billStatus;
 
     private String note;
 

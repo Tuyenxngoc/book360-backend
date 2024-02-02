@@ -46,7 +46,7 @@ public class BannerController {
     @PreAuthorize("hasRole('ADMIN')")
     @Tag(name = "Banner controller admin")
     @Operation(summary = "API create and update banner")
-    @PostMapping(value = UrlConstant.Banner.CREATE_BANNER)
+    @PutMapping(value = UrlConstant.Banner.CREATE_BANNER)
     public ResponseEntity<?> createBanner(@Valid @RequestBody BannerDto banner) {
         return VsResponseUtil.success(bannerService.createBanner(banner));
     }

@@ -11,6 +11,8 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.time.LocalDate;
+
 @NoArgsConstructor
 @AllArgsConstructor
 @Getter
@@ -30,9 +32,8 @@ public class UpdateCustomerRequestDto {
     @NotBlank(message = ErrorMessage.INVALID_NOT_BLANK_FIELD)
     private String avatar;
 
-    @NotBlank(message = ErrorMessage.INVALID_NOT_BLANK_FIELD)
-    @Pattern(regexp = "^(?:19|20)\\d\\d-(0[1-9]|1[0-2])-(0[1-9]|[12][0-9]|3[01])$", message = ErrorMessage.INVALID_LOCAL_DATE_FORMAT)
-    private String dob;
+    @NotNull(message = ErrorMessage.INVALID_NOT_BLANK_FIELD)
+    private LocalDate dob;
 
     @NotNull(message = ErrorMessage.INVALID_NOT_BLANK_FIELD)
     private Gender gender;

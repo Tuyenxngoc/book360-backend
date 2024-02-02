@@ -13,9 +13,9 @@ import com.tuyenngoc.bookstore.exception.InvalidException;
 import com.tuyenngoc.bookstore.exception.NotFoundException;
 import com.tuyenngoc.bookstore.repository.CartDetailRepository;
 import com.tuyenngoc.bookstore.repository.CartRepository;
-import com.tuyenngoc.bookstore.repository.CustomerRepository;
-import com.tuyenngoc.bookstore.repository.ProductRepository;
 import com.tuyenngoc.bookstore.service.CartService;
+import com.tuyenngoc.bookstore.service.CustomerService;
+import com.tuyenngoc.bookstore.service.ProductService;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.MessageSource;
@@ -32,16 +32,14 @@ public class CartServiceImpl implements CartService {
 
     private final CartDetailRepository cartDetailRepository;
 
-    private final CustomerRepository customerRepository;
-
-    private final ProductRepository productRepository;
+    private final ProductService productService;
 
     private final MessageSource messageSource;
 
     @Override
     public Cart createNewCart(int customerId) {
-        Customer customer = customerRepository.findById(customerId)
-                .orElseThrow(() -> new NotFoundException(ErrorMessage.Customer.ERR_NOT_FOUND_ID, String.valueOf(customerId)));
+        Customer customer = new Customer();
+        customer.setId(customerId);
 
         Cart newCart = new Cart();
         newCart.setCustomer(customer);
@@ -58,6 +56,12 @@ public class CartServiceImpl implements CartService {
     }
 
     @Override
+    public Cart getCartByCustomerId(int customerId) {
+        return cartRepository.findByCustomerId(customerId)
+                .orElseThrow(() -> new NotFoundException(ErrorMessage.Cart.ERR_NOT_FOUND_CUSTOMER_ID, String.valueOf(customerId)));
+    }
+
+    @Override
     public int getTotalProducts(int customerId) {
         return cartRepository.getTotalProductQuantityByCustomerId(customerId);
     }
@@ -65,8 +69,7 @@ public class CartServiceImpl implements CartService {
     @Override
     @Transactional
     public CommonResponseDto addProductToCart(int customerId, CartDetailDto responseDto) {
-        Product product = productRepository.findById(responseDto.getProductId())
-                .orElseThrow(() -> new NotFoundException(ErrorMessage.Product.ERR_NOT_FOUND_ID, String.valueOf(responseDto.getProductId())));
+        Product product = productService.getProduct(responseDto.getProductId());
 
         if (responseDto.getQuantity() > product.getStockQuantity()) {
             throw new InvalidException(ErrorMessage.Product.ERR_INSUFFICIENT_STOCK);
@@ -106,7 +109,6 @@ public class CartServiceImpl implements CartService {
 
     @Override
     public CommonResponseDto deleteProductFromCart(int customerId, int productId) {
-
         int cartId = cartRepository.getCartIdByCustomerId(customerId)
                 .orElseThrow(() -> new NotFoundException(ErrorMessage.Cart.ERR_NOT_FOUND_CUSTOMER_ID, String.valueOf(customerId)));
 

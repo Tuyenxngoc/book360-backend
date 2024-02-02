@@ -3,13 +3,13 @@ package com.tuyenngoc.bookstore.controller;
 import com.tuyenngoc.bookstore.annotation.CurrentUser;
 import com.tuyenngoc.bookstore.annotation.RestApiV1;
 import com.tuyenngoc.bookstore.base.VsResponseUtil;
+import com.tuyenngoc.bookstore.constant.BillStatus;
 import com.tuyenngoc.bookstore.constant.UrlConstant;
 import com.tuyenngoc.bookstore.domain.dto.pagination.PaginationFullRequestDto;
 import com.tuyenngoc.bookstore.domain.dto.request.BillRequestDto;
 import com.tuyenngoc.bookstore.security.CustomUserDetails;
 import com.tuyenngoc.bookstore.service.BillService;
 import io.swagger.v3.oas.annotations.Operation;
-import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -24,34 +24,57 @@ public class BillController {
 
     private final BillService billService;
 
-    @Operation(summary = "API order from cart")
-    @PostMapping(UrlConstant.Bill.SAVE_ORDER)
-    public ResponseEntity<?> saveOrder(@Valid @RequestBody BillRequestDto requestDto,
-                                       @CurrentUser CustomUserDetails userDetails) {
-        return VsResponseUtil.success(billService.saveOrder(userDetails.getCustomerId(), requestDto));
-    }
-
     @Operation(summary = "API get bills")
     @GetMapping(UrlConstant.Bill.GET_BILLS)
-    public ResponseEntity<?> getBills(@ParameterObject PaginationFullRequestDto requestDto,
-                                      @RequestParam(name = "billStatus", required = false, defaultValue = "")
-                                      @Parameter(description = "The name of bill status (unpaid, to_ship, shipping, completed, cancelled, refund, delivery_failed)")
-                                              String billStatus,
-                                      @CurrentUser CustomUserDetails userDetails) {
-        return VsResponseUtil.success(billService.getBills(userDetails.getCustomerId(), requestDto, billStatus));
+    public ResponseEntity<?> getBills(
+            @RequestParam(name = "billStatus", required = false) BillStatus billStatus,
+            @CurrentUser CustomUserDetails userDetails
+    ) {
+        return VsResponseUtil.success(billService.getBills(userDetails.getCustomerId(), billStatus));
     }
 
-    @Operation(summary = "API get count bills by status")
-    @GetMapping(UrlConstant.Bill.GET_COUNT_BILLS_BY_STATUS)
-    public ResponseEntity<?> getCountBillsByStatus(@CurrentUser CustomUserDetails userDetails) {
-        return VsResponseUtil.success(billService.getCountBillsByStatus(userDetails.getCustomerId()));
+    @Operation(summary = "API save order from cart")
+    @PostMapping(UrlConstant.Bill.SAVE_ORDER)
+    public ResponseEntity<?> saveOrder(
+            @Valid @RequestBody BillRequestDto requestDto,
+            @CurrentUser CustomUserDetails userDetails
+    ) {
+        return VsResponseUtil.success(billService.saveOrder(userDetails.getCustomerId(), requestDto));
     }
 
     @Operation(summary = "API cancel order")
     @PatchMapping(UrlConstant.Bill.CANCEL_ORDER)
-    public ResponseEntity<?> cancelOrder(@PathVariable int billId,
-                                         @CurrentUser CustomUserDetails userDetails) {
+    public ResponseEntity<?> cancelOrder(
+            @PathVariable int billId,
+            @CurrentUser CustomUserDetails userDetails
+    ) {
         return VsResponseUtil.success(billService.cancelOrder(userDetails.getCustomerId(), billId));
+    }
+
+    @Operation(summary = "API get count bills by status")
+    @GetMapping(UrlConstant.Bill.GET_COUNT_BILLS_BY_STATUS)
+    public ResponseEntity<?> getCountBillsByStatus(
+            @RequestParam(name = "billStatus", required = false) BillStatus billStatus,
+            @CurrentUser CustomUserDetails userDetails
+    ) {
+        return VsResponseUtil.success(billService.getCountBillByStatus(userDetails.getCustomerId(), billStatus));
+    }
+
+    @Operation(summary = "API get bill detail")
+    @GetMapping(UrlConstant.Bill.GET_BILL_DETAIL)
+    public ResponseEntity<?> getBillDetails(
+            @PathVariable int billId,
+            @CurrentUser CustomUserDetails userDetails
+    ) {
+        return VsResponseUtil.success(billService.getBillDetail(userDetails.getCustomerId(), billId));
+    }
+
+    @PreAuthorize("hasRole('ADMIN')")
+    @Tag(name = "Bill controller admin")
+    @Operation(summary = "API get bill")
+    @GetMapping(UrlConstant.Bill.GET_BILL)
+    public ResponseEntity<?> getBill(@PathVariable int billId) {
+        return VsResponseUtil.success(billService.getBill(billId));
     }
 
     @PreAuthorize("hasRole('ADMIN')")
@@ -64,15 +87,23 @@ public class BillController {
 
     @PreAuthorize(value = "hasRole('ADMIN')")
     @Tag(name = "Bill controller admin")
-    @Operation(summary = "API get all bills")
-    @GetMapping(UrlConstant.Bill.GET_ALL_BILLS)
-    public ResponseEntity<?> getAllBills(
-            @RequestParam(name = "billStatus", required = false, defaultValue = "")
-            @Parameter(description = "The status of the bill (unpaid, to_ship, shipping, completed, cancelled, refund, delivery_failed)")
-                    String billStatus,
+    @Operation(summary = "API get bills")
+    @GetMapping(UrlConstant.Bill.GET_BILLS_FOR_ADMIN)
+    public ResponseEntity<?> getBillsForAdmin(
+            @RequestParam(name = "billStatus", required = false) BillStatus billStatus,
             @ParameterObject PaginationFullRequestDto requestDto
     ) {
-        return VsResponseUtil.success(billService.getAllBills(requestDto, billStatus));
+        return VsResponseUtil.success(billService.getBillsForAdmin(requestDto, billStatus));
     }
 
+    @PreAuthorize("hasRole('ADMIN')")
+    @Tag(name = "Bill controller admin")
+    @Operation(summary = "API get update bill status")
+    @PatchMapping(UrlConstant.Bill.UPDATE_BILL_STATUS)
+    public ResponseEntity<?> updateBillStatus(
+            @PathVariable int billId,
+            @RequestParam(name = "billStatus") BillStatus newStatus
+    ) {
+        return VsResponseUtil.success(billService.updateBillStatus(billId, newStatus));
+    }
 }

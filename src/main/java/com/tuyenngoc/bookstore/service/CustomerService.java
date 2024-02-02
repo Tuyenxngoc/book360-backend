@@ -4,7 +4,7 @@ import com.tuyenngoc.bookstore.domain.dto.pagination.PaginationFullRequestDto;
 import com.tuyenngoc.bookstore.domain.dto.pagination.PaginationResponseDto;
 import com.tuyenngoc.bookstore.domain.dto.request.UpdateCustomerRequestDto;
 import com.tuyenngoc.bookstore.domain.dto.response.CommonResponseDto;
-import com.tuyenngoc.bookstore.domain.dto.response.GetProductsResponseDto;
+import com.tuyenngoc.bookstore.domain.dto.response.GetProductResponseDto;
 import com.tuyenngoc.bookstore.domain.dto.response.GetTodoResponseDto;
 import com.tuyenngoc.bookstore.domain.entity.Customer;
 import org.springframework.web.multipart.MultipartFile;
@@ -13,7 +13,7 @@ import java.util.List;
 
 public interface CustomerService {
 
-    PaginationResponseDto<GetProductsResponseDto> getFavoriteProducts(int customerId, PaginationFullRequestDto request);
+    PaginationResponseDto<GetProductResponseDto> getFavoriteProducts(int customerId, PaginationFullRequestDto request);
 
     boolean checkFavoriteProduct(int customerId, int productId);
 
@@ -32,5 +32,7 @@ public interface CustomerService {
     int getCountCustomer();
 
     PaginationResponseDto<Customer> getCustomers(PaginationFullRequestDto requestDto);
+
+    Customer getCustomer(int customerId);
 
 }

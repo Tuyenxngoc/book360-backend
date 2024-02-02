@@ -102,7 +102,7 @@ public class ProductController {
     @PreAuthorize("hasRole('ADMIN')")
     @Tag(name = "Product controller admin")
     @Operation(summary = "API create and update products")
-    @PostMapping(UrlConstant.Product.CREATE_PRODUCTS)
+    @PutMapping(UrlConstant.Product.CREATE_PRODUCTS)
     public ResponseEntity<?> createProducts(@Valid @RequestBody CreateProductRequestDto productDto) {
         return VsResponseUtil.success(productService.createProduct(productDto));
     }

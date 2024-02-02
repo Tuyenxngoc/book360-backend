@@ -15,6 +15,8 @@ public interface CartService {
 
     CartDetail createNewCartDetail(Cart cart, Product product);
 
+    Cart getCartByCustomerId(int customerId);
+
     int getTotalProducts(int customerId);
 
     CommonResponseDto addProductToCart(int customerId, CartDetailDto responseDto);

@@ -4,7 +4,7 @@ import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.tuyenngoc.bookstore.domain.dto.pagination.PaginationResponseDto;
 import com.tuyenngoc.bookstore.domain.dto.response.GetProductDetailResponseDto;
-import com.tuyenngoc.bookstore.domain.dto.response.GetProductsResponseDto;
+import com.tuyenngoc.bookstore.domain.dto.response.GetProductResponseDto;
 import com.tuyenngoc.bookstore.service.ProductRedisService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -25,7 +25,7 @@ public class ProductRedisServiceImpl implements ProductRedisService {
 
     private final ObjectMapper objectMapper;
 
-    private static final TypeReference<PaginationResponseDto<GetProductsResponseDto>> PRODUCTS_LIST_RESPONSE_TYPE =
+    private static final TypeReference<PaginationResponseDto<GetProductResponseDto>> PRODUCTS_LIST_RESPONSE_TYPE =
             new TypeReference<>() {
             };
 
@@ -33,7 +33,7 @@ public class ProductRedisServiceImpl implements ProductRedisService {
             new TypeReference<>() {
             };
 
-    private static final TypeReference<List<GetProductsResponseDto>> PRODUCT_SAME_AUTHOR_RESPONSE_DTO_TYPE =
+    private static final TypeReference<List<GetProductResponseDto>> PRODUCT_SAME_AUTHOR_RESPONSE_DTO_TYPE =
             new TypeReference<>() {
             };
 
@@ -55,7 +55,7 @@ public class ProductRedisServiceImpl implements ProductRedisService {
     }
 
     @Override
-    public PaginationResponseDto<GetProductsResponseDto> getProducts(Integer categoryId, Pageable pageable) {
+    public PaginationResponseDto<GetProductResponseDto> getProducts(Integer categoryId, Pageable pageable) {
         try {
             String key = getKeyFrom(categoryId, pageable);
             String json = (String) redisTemplate.opsForValue().get(key);
@@ -72,7 +72,7 @@ public class ProductRedisServiceImpl implements ProductRedisService {
     }
 
     @Override
-    public void saveProducts(int categoryId, PaginationResponseDto<GetProductsResponseDto> responseDto, Pageable pageable) {
+    public void saveProducts(int categoryId, PaginationResponseDto<GetProductResponseDto> responseDto, Pageable pageable) {
         try {
             String key = getKeyFrom(categoryId, pageable);
             String json = objectMapper.writeValueAsString(responseDto);
@@ -111,7 +111,7 @@ public class ProductRedisServiceImpl implements ProductRedisService {
     }
 
     @Override
-    public List<GetProductsResponseDto> getProductsSameAuthor(int productId, Pageable pageable) {
+    public List<GetProductResponseDto> getProductsSameAuthor(int productId, Pageable pageable) {
         try {
             String key = getKeyFromProductSameAuthor(productId, pageable);
             String json = (String) redisTemplate.opsForValue().get(key);
@@ -128,7 +128,7 @@ public class ProductRedisServiceImpl implements ProductRedisService {
     }
 
     @Override
-    public void saveProductsSameAuthor(int productId, List<GetProductsResponseDto> responseDto, Pageable pageable) {
+    public void saveProductsSameAuthor(int productId, List<GetProductResponseDto> responseDto, Pageable pageable) {
         try {
             String key = getKeyFromProductSameAuthor(productId, pageable);
             String json = objectMapper.writeValueAsString(responseDto);
