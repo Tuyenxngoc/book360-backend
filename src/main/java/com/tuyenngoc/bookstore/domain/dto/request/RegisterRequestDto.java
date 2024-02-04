@@ -1,6 +1,7 @@
 package com.tuyenngoc.bookstore.domain.dto.request;
 
 import com.tuyenngoc.bookstore.constant.ErrorMessage;
+import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Pattern;
 import lombok.AllArgsConstructor;
@@ -26,7 +27,7 @@ public class RegisterRequestDto {
     private String repeatPassword;
 
     @NotBlank(message = ErrorMessage.INVALID_NOT_BLANK_FIELD)
-    @Pattern(regexp = "^[a-zA-Z0-9_!#$%&'*+/=?`{|}~^.-]+@[a-zA-Z0-9.-]+$", message = ErrorMessage.INVALID_FORMAT_EMAIL)
+    @Email(message = ErrorMessage.INVALID_FORMAT_EMAIL)
     private String email;
 
 }

@@ -24,7 +24,7 @@ public class BillRequestDto {
     private String phoneNumber;
 
     @NotBlank(message = ErrorMessage.INVALID_NOT_BLANK_FIELD)
-    @Pattern(regexp = "^[a-zA-Z0-9_!#$%&'*+/=?`{|}~^.-]+@[a-zA-Z0-9.-]+$", message = ErrorMessage.INVALID_FORMAT_EMAIL)
+    @Email(message = ErrorMessage.INVALID_FORMAT_EMAIL)
     private String email;
 
     @NotBlank(message = ErrorMessage.INVALID_NOT_BLANK_FIELD)
@@ -38,6 +38,9 @@ public class BillRequestDto {
 
     @NotEmpty(message = ErrorMessage.INVALID_NOT_BLANK_FIELD)
     @NotNull(message = ErrorMessage.INVALID_SOME_THING_FIELD_IS_REQUIRED)
-    private List<Integer> listProductId;
+    private List<
+            @NotNull(message = ErrorMessage.INVALID_SOME_THING_FIELD_IS_REQUIRED)
+                    Integer
+            > listProductId;
 
 }

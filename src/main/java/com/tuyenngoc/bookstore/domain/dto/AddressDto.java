@@ -1,8 +1,9 @@
 package com.tuyenngoc.bookstore.domain.dto;
 
 import com.tuyenngoc.bookstore.constant.ErrorMessage;
-import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.Size;
+import jakarta.validation.constraints.Max;
+import jakarta.validation.constraints.Min;
+import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -15,18 +16,16 @@ import lombok.Setter;
 @AllArgsConstructor
 public class AddressDto {
 
-    @NotBlank(message = ErrorMessage.INVALID_NOT_BLANK_FIELD)
-    @Size(min = -90, max = 90, message = ErrorMessage.INVALID_COORDINATES)
-    private double latitude;
+    @NotNull(message = ErrorMessage.INVALID_SOME_THING_FIELD_IS_REQUIRED)
+    @Max(value = 90, message = ErrorMessage.INVALID_COORDINATES)
+    @Min(value = -90, message = ErrorMessage.INVALID_COORDINATES)
+    private Double latitude;
 
-    @NotBlank(message = ErrorMessage.INVALID_NOT_BLANK_FIELD)
-    @Size(min = -180, max = 180, message = ErrorMessage.INVALID_COORDINATES)
-    private double longitude;
+    @NotNull(message = ErrorMessage.INVALID_SOME_THING_FIELD_IS_REQUIRED)
+    @Max(value = 180, message = ErrorMessage.INVALID_COORDINATES)
+    @Min(value = -180, message = ErrorMessage.INVALID_COORDINATES)
+    private Double longitude;
 
     private String addressName;
 
-    public AddressDto(double latitude, double longitude) {
-        this.latitude = latitude;
-        this.longitude = longitude;
-    }
 }

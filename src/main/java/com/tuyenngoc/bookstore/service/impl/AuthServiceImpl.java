@@ -9,21 +9,24 @@ import com.tuyenngoc.bookstore.domain.dto.request.*;
 import com.tuyenngoc.bookstore.domain.dto.response.CommonResponseDto;
 import com.tuyenngoc.bookstore.domain.dto.response.LoginResponseDto;
 import com.tuyenngoc.bookstore.domain.dto.response.TokenRefreshResponseDto;
+import com.tuyenngoc.bookstore.domain.entity.Address;
 import com.tuyenngoc.bookstore.domain.entity.Cart;
 import com.tuyenngoc.bookstore.domain.entity.Customer;
 import com.tuyenngoc.bookstore.domain.entity.User;
+import com.tuyenngoc.bookstore.domain.mapper.AddressMapper;
 import com.tuyenngoc.bookstore.domain.mapper.UserMapper;
 import com.tuyenngoc.bookstore.exception.DataIntegrityViolationException;
 import com.tuyenngoc.bookstore.exception.InvalidException;
 import com.tuyenngoc.bookstore.exception.NotFoundException;
 import com.tuyenngoc.bookstore.exception.UnauthorizedException;
+import com.tuyenngoc.bookstore.repository.AddressRepository;
 import com.tuyenngoc.bookstore.repository.CartRepository;
 import com.tuyenngoc.bookstore.repository.CustomerRepository;
-import com.tuyenngoc.bookstore.repository.RoleRepository;
 import com.tuyenngoc.bookstore.repository.UserRepository;
 import com.tuyenngoc.bookstore.security.CustomUserDetails;
 import com.tuyenngoc.bookstore.security.jwt.JwtTokenProvider;
 import com.tuyenngoc.bookstore.service.AuthService;
+import com.tuyenngoc.bookstore.service.RoleService;
 import com.tuyenngoc.bookstore.util.RandomPasswordUtil;
 import com.tuyenngoc.bookstore.util.SendMailUtil;
 import jakarta.mail.MessagingException;
@@ -66,13 +69,17 @@ public class AuthServiceImpl implements AuthService {
 
     private final PasswordEncoder passwordEncoder;
 
-    private final RoleRepository roleRepository;
+    private final RoleService roleService;
 
     private final SendMailUtil sendMailUtil;
 
     private final CustomerRepository customerRepository;
 
     private final CartRepository cartRepository;
+
+    private final AddressMapper addressMapper;
+
+    private final AddressRepository addressRepository;
 
     @Override
     public LoginResponseDto login(LoginRequestDto request) {
@@ -175,19 +182,25 @@ public class AuthServiceImpl implements AuthService {
                 e.printStackTrace();
             }
         });
+        //Create new address
+        Address address = addressMapper.toAddress(addressDto);
+        addressRepository.save(address);
 
+        //Create new Customer
         Customer customer = new Customer();
         customer.setFullName(requestDto.getUsername());
+        customer.setAddress(address);
         customerRepository.save(customer);
 
+        //Create new Cart
         Cart cart = new Cart();
         cart.setCustomer(customer);
         cartRepository.save(cart);
 
-        //Create a new user
+        //Create new user
         User user = userMapper.toUser(requestDto);
         user.setPassword(passwordEncoder.encode(requestDto.getPassword()));
-        user.setRole(roleRepository.findByName(RoleConstant.CUSTOMER.getRoleName()));
+        user.setRole(roleService.getRole(RoleConstant.CUSTOMER));
         user.setCustomer(customer);
         return userRepository.save(user);
     }

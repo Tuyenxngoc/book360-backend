@@ -20,6 +20,7 @@ import org.springframework.web.bind.annotation.*;
 
 @RestApiV1
 @RequiredArgsConstructor
+@Tag(name = "Bill")
 public class BillController {
 
     private final BillService billService;
@@ -54,7 +55,7 @@ public class BillController {
     @Operation(summary = "API get count bills by status")
     @GetMapping(UrlConstant.Bill.GET_COUNT_BILLS_BY_STATUS)
     public ResponseEntity<?> getCountBillsByStatus(
-            @RequestParam(name = "billStatus", required = false) BillStatus billStatus,
+            @RequestParam(name = "billStatus") BillStatus billStatus,
             @CurrentUser CustomUserDetails userDetails
     ) {
         return VsResponseUtil.success(billService.getCountBillByStatus(userDetails.getCustomerId(), billStatus));
@@ -70,7 +71,6 @@ public class BillController {
     }
 
     @PreAuthorize("hasRole('ADMIN')")
-    @Tag(name = "Bill controller admin")
     @Operation(summary = "API get bill")
     @GetMapping(UrlConstant.Bill.GET_BILL)
     public ResponseEntity<?> getBill(@PathVariable int billId) {
@@ -78,7 +78,6 @@ public class BillController {
     }
 
     @PreAuthorize("hasRole('ADMIN')")
-    @Tag(name = "Bill controller admin")
     @Operation(summary = "API get count bills")
     @GetMapping(UrlConstant.Bill.GET_COUNT_BILLS)
     public ResponseEntity<?> getCountBills() {
@@ -86,7 +85,6 @@ public class BillController {
     }
 
     @PreAuthorize(value = "hasRole('ADMIN')")
-    @Tag(name = "Bill controller admin")
     @Operation(summary = "API get bills")
     @GetMapping(UrlConstant.Bill.GET_BILLS_FOR_ADMIN)
     public ResponseEntity<?> getBillsForAdmin(
@@ -97,8 +95,7 @@ public class BillController {
     }
 
     @PreAuthorize("hasRole('ADMIN')")
-    @Tag(name = "Bill controller admin")
-    @Operation(summary = "API get update bill status")
+    @Operation(summary = "API update bill status")
     @PatchMapping(UrlConstant.Bill.UPDATE_BILL_STATUS)
     public ResponseEntity<?> updateBillStatus(
             @PathVariable int billId,

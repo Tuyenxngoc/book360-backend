@@ -12,11 +12,12 @@ public interface BannerService {
 
     List<BannerDto> getAllBanners();
 
-    PaginationResponseDto<Banner> getAllBanners(PaginationFullRequestDto requestDto);
+    PaginationResponseDto<Banner> getBanners(PaginationFullRequestDto requestDto);
 
     Banner getBanner(int bannerId);
 
+    Banner createBanner(BannerDto bannerDto, String username);
+
     CommonResponseDto deleteBanner(int bannerId);
 
-    Banner createBanner(BannerDto bannerDto);
 }

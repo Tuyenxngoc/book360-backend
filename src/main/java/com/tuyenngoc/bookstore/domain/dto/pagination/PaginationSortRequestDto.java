@@ -8,10 +8,10 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+@Setter
+@Getter
 @AllArgsConstructor
 @NoArgsConstructor
-@Getter
-@Setter
 public class PaginationSortRequestDto extends PaginationRequestDto {
 
     @Parameter(description = "The name of property want to sort")

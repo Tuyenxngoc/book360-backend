@@ -6,4 +6,9 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public interface BookSetRepository extends JpaRepository<BookSet, Integer> {
+
+    boolean existsById(int bookSetId);
+
+    void deleteById(int bookSetId);
+
 }

@@ -23,11 +23,11 @@ public class ProductSpecifications {
     public static Specification<Product> filterProducts(
             String keyword,
             String searchBy,
-            int sellerStockMax,
-            int sellerStockMin,
-            int soldMax,
-            int soldMin,
-            int categoryId
+            Integer sellerStockMax,
+            Integer sellerStockMin,
+            Integer soldMax,
+            Integer soldMin,
+            Integer categoryId
     ) {
         return (root, query, builder) -> {
             query.distinct(true);
@@ -51,19 +51,19 @@ public class ProductSpecifications {
                     case Product_.SIZE -> predicate = builder.and(predicate, builder.like(root.get(Product_.size), "%" + keyword + "%"));
                 }
             }
-            if (sellerStockMax > 0) {
+            if (sellerStockMax != null) {
                 predicate = builder.and(predicate, builder.lessThanOrEqualTo(root.get(Product_.stockQuantity), sellerStockMax));
             }
-            if (sellerStockMin > 0) {
+            if (sellerStockMin != null) {
                 predicate = builder.and(predicate, builder.greaterThanOrEqualTo(root.get(Product_.stockQuantity), sellerStockMin));
             }
-            if (soldMax > 0) {
+            if (soldMax != null) {
                 predicate = builder.and(predicate, builder.lessThanOrEqualTo(root.get(Product_.soldQuantity), soldMax));
             }
-            if (soldMin > 0) {
+            if (soldMin != null) {
                 predicate = builder.and(predicate, builder.greaterThanOrEqualTo(root.get(Product_.soldQuantity), soldMin));
             }
-            if (categoryId > 0) {
+            if (categoryId != null) {
                 predicate = builder.and(predicate, builder.equal(root.get(Product_.category).get(Category_.id), categoryId));
             }
             return predicate;

@@ -29,9 +29,6 @@ public class UpdateCustomerRequestDto {
     @NotBlank(message = ErrorMessage.INVALID_NOT_BLANK_FIELD)
     private String address;
 
-    @NotBlank(message = ErrorMessage.INVALID_NOT_BLANK_FIELD)
-    private String avatar;
-
     @NotNull(message = ErrorMessage.INVALID_NOT_BLANK_FIELD)
     private LocalDate dob;
 

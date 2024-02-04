@@ -1,7 +1,6 @@
-package com.tuyenngoc.bookstore.domain.dto.request;
+package com.tuyenngoc.bookstore.domain.dto;
 
 import com.tuyenngoc.bookstore.constant.ErrorMessage;
-import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -12,13 +11,11 @@ import lombok.Setter;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class ForgetPasswordRequestDto {
+public class BookSetDto {
+
+    private Integer id;
 
     @NotBlank(message = ErrorMessage.INVALID_NOT_BLANK_FIELD)
-    private String username;
-
-    @NotBlank(message = ErrorMessage.INVALID_NOT_BLANK_FIELD)
-    @Email(message = ErrorMessage.INVALID_FORMAT_EMAIL)
-    private String email;
+    private String name;
 
 }

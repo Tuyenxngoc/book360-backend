@@ -1,6 +1,7 @@
 package com.tuyenngoc.bookstore.domain.mapper;
 
 import com.tuyenngoc.bookstore.domain.dto.UserDto;
+import com.tuyenngoc.bookstore.domain.dto.request.CreateCustomerRequestDto;
 import com.tuyenngoc.bookstore.domain.dto.request.RegisterRequestDto;
 import com.tuyenngoc.bookstore.domain.entity.User;
 import org.mapstruct.Mapper;
@@ -11,6 +12,8 @@ import org.mapstruct.Mappings;
 public interface UserMapper {
 
     User toUser(RegisterRequestDto requestDto);
+
+    User toUser(CreateCustomerRequestDto requestDto);
 
     @Mappings({
             @Mapping(target = "roleName", source = "role.name"),

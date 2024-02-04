@@ -14,9 +14,7 @@ import com.tuyenngoc.bookstore.exception.NotFoundException;
 import com.tuyenngoc.bookstore.repository.CartDetailRepository;
 import com.tuyenngoc.bookstore.repository.CartRepository;
 import com.tuyenngoc.bookstore.service.CartService;
-import com.tuyenngoc.bookstore.service.CustomerService;
 import com.tuyenngoc.bookstore.service.ProductService;
-import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.MessageSource;
 import org.springframework.context.i18n.LocaleContextHolder;
@@ -40,7 +38,11 @@ public class CartServiceImpl implements CartService {
     public Cart createNewCart(int customerId) {
         Customer customer = new Customer();
         customer.setId(customerId);
+        return createNewCart(customer);
+    }
 
+    @Override
+    public Cart createNewCart(Customer customer) {
         Cart newCart = new Cart();
         newCart.setCustomer(customer);
         return cartRepository.save(newCart);
@@ -67,11 +69,10 @@ public class CartServiceImpl implements CartService {
     }
 
     @Override
-    @Transactional
-    public CommonResponseDto addProductToCart(int customerId, CartDetailDto responseDto) {
-        Product product = productService.getProduct(responseDto.getProductId());
+    public CommonResponseDto addProductToCart(int customerId, CartDetailDto requestDto) {
+        Product product = productService.getProduct(requestDto.getProductId());
 
-        if (responseDto.getQuantity() > product.getStockQuantity()) {
+        if (requestDto.getQuantity() > product.getStockQuantity()) {
             throw new InvalidException(ErrorMessage.Product.ERR_INSUFFICIENT_STOCK);
         }
 
@@ -84,7 +85,13 @@ public class CartServiceImpl implements CartService {
                 .findFirst()
                 .orElseGet(() -> createNewCartDetail(cart, product));
 
-        cartDetail.setQuantity(cartDetail.getQuantity() + responseDto.getQuantity());
+        int totalProduct = cartDetail.getQuantity() + requestDto.getQuantity();
+
+        if (totalProduct > product.getStockQuantity()) {
+            throw new InvalidException(ErrorMessage.Product.ERR_INSUFFICIENT_STOCK);
+        }
+
+        cartDetail.setQuantity(totalProduct);
         cartDetailRepository.save(cartDetail);
 
         String message = messageSource.getMessage(SuccessMessage.Cart.ADD_PRODUCT, null, LocaleContextHolder.getLocale());
@@ -97,11 +104,20 @@ public class CartServiceImpl implements CartService {
     }
 
     @Override
-    public CommonResponseDto updateCartDetail(int customerId, CartDetailDto cartDetailDto) {
-        int cartId = cartRepository.getCartIdByCustomerId(customerId)
-                .orElseThrow(() -> new NotFoundException(ErrorMessage.Cart.ERR_NOT_FOUND_CUSTOMER_ID, String.valueOf(customerId)));
+    public CommonResponseDto updateCartDetail(int customerId, CartDetailDto requestDto) {
+        Product product = productService.getProduct(requestDto.getProductId());
 
-        cartDetailRepository.updateCartDetail(cartId, cartDetailDto.getProductId(), cartDetailDto.getQuantity());
+        CartDetail cartDetail = cartDetailRepository.getCartDetail(customerId, requestDto.getProductId())
+                .orElseThrow(() -> new NotFoundException(ErrorMessage.Cart.ERR_NOT_FOUND_PRODUCT_ID, String.valueOf(requestDto.getProductId())));
+
+        if (requestDto.getQuantity() > product.getStockQuantity()) {
+            throw new InvalidException(ErrorMessage.Product.ERR_INSUFFICIENT_STOCK);
+        }
+
+        if (cartDetail.getQuantity() != requestDto.getQuantity()) {
+            cartDetail.setQuantity(requestDto.getQuantity());
+            cartDetailRepository.save(cartDetail);
+        }
 
         String message = messageSource.getMessage(SuccessMessage.UPDATE, null, LocaleContextHolder.getLocale());
         return new CommonResponseDto(message);
@@ -109,11 +125,7 @@ public class CartServiceImpl implements CartService {
 
     @Override
     public CommonResponseDto deleteProductFromCart(int customerId, int productId) {
-        int cartId = cartRepository.getCartIdByCustomerId(customerId)
-                .orElseThrow(() -> new NotFoundException(ErrorMessage.Cart.ERR_NOT_FOUND_CUSTOMER_ID, String.valueOf(customerId)));
-
-        cartDetailRepository.deleteCartDetail(cartId, productId);
-
+        cartDetailRepository.deleteCartDetail(customerId, productId);
         String message = messageSource.getMessage(SuccessMessage.DELETE, null, LocaleContextHolder.getLocale());
         return new CommonResponseDto(message);
     }

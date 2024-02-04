@@ -23,6 +23,7 @@ public class ErrorMessage {
     public static final String INVALID_ARRAY_IS_REQUIRED = "invalid.array.required";
     public static final String INVALID_ARRAY_NOT_EMPTY = "invalid.array.not.empty";
     public static final String INVALID_NOT_BLANK_FIELD = "invalid.general.not-blank";
+    public static final String INVALID_NOT_NULL_FIELD = "invalid.general.not-null";
     public static final String INVALID_FORMAT_USERNAME = "invalid.username-format";
     public static final String INVALID_FORMAT_PASSWORD = "invalid.password-format";
     public static final String INVALID_REPEAT_PASSWORD = "invalid.password-repeat";
@@ -33,6 +34,8 @@ public class ErrorMessage {
     public static final String INVALID_MINIMUM_ZERO = "invalid.minimum-zero";
     public static final String INVALID_MAXIMUM_ONE_HUNDRED = "invalid.maximum-one-hundred";
     public static final String INVALID_TEXT_LENGTH = "invalid.text.length";
+    public static final String INVALID_KEYWORD_LENGTH = "invalid.keyword.length";
+
     //Date
     public static final String INVALID_DATE = "invalid.date-format";
     public static final String INVALID_DATE_FEATURE = "invalid.date-future";
@@ -45,6 +48,7 @@ public class ErrorMessage {
     public static final String INVALID_FILE_REQUIRED = "invalid.file.required";
     public static final String INVALID_FILE_SIZE = "invalid.file.size";
     public static final String INVALID_FILE_TYPE = "invalid.file.type";
+    public static final String INVALID_URL_FORMAT = "invalid.url-format";
 
     public static class Auth {
         public static final String ERR_INCORRECT_USERNAME_PASSWORD = "exception.auth.incorrect.username-password";
@@ -61,6 +65,11 @@ public class ErrorMessage {
 
     public static class Author {
         public static final String ERR_NOT_FOUND_ID = "exception.author.not.found.id";
+    }
+
+    public static class Role {
+        public static final String ERR_NOT_FOUND_ID = "exception.role.not.found.id";
+        public static final String ERR_NOT_FOUND_NAME = "exception.role.not.found.name";
     }
 
     public static class User {
@@ -91,6 +100,7 @@ public class ErrorMessage {
     public static class Cart {
         public static final String ERR_NOT_FOUND_ID = "exception.cart.not.found.id";
         public static final String ERR_NOT_FOUND_CUSTOMER_ID = "exception.cart.not.found.customer-id";
+        public static final String ERR_NOT_FOUND_PRODUCT_IDS = "exception.cart.not.found.product-ids";
         public static final String ERR_NOT_FOUND_PRODUCT_ID = "exception.cart.not.found.product-id";
     }
 

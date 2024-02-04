@@ -14,8 +14,8 @@ import com.tuyenngoc.bookstore.domain.mapper.CategoryMapper;
 import com.tuyenngoc.bookstore.exception.NotFoundException;
 import com.tuyenngoc.bookstore.repository.CategoryRepository;
 import com.tuyenngoc.bookstore.service.CategoryService;
+import com.tuyenngoc.bookstore.service.UploadRedisService;
 import com.tuyenngoc.bookstore.util.PaginationUtil;
-import com.tuyenngoc.bookstore.util.UploadFileUtil;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.MessageSource;
 import org.springframework.context.i18n.LocaleContextHolder;
@@ -35,21 +35,22 @@ public class CategoryServiceImpl implements CategoryService {
 
     private final MessageSource messageSource;
 
-    private final UploadFileUtil uploadFileUtil;
+    private final UploadRedisService uploadRedisService;
 
-    //Todo remove images
     @Override
-    public Category createCategory(CategoryDto categoryDto) {
+    public Category createCategory(CategoryDto categoryDto, String username) {
         Category category;
         if (categoryDto.getId() == null) {
             category = categoryMapper.toCategory(categoryDto);
         } else {
-            category = categoryRepository.findById(categoryDto.getId())
-                    .orElseThrow(() -> new NotFoundException(ErrorMessage.Category.ERR_NOT_FOUND_ID, String.valueOf(categoryDto.getId())));
+            category = getCategory(categoryDto.getId());
 
             category.setName(categoryDto.getName());
             category.setImage(categoryDto.getImage());
         }
+        //Delete image urls from redis cache
+        uploadRedisService.deleteUrls(username, List.of(categoryDto.getImage()));
+
         return categoryRepository.save(category);
     }
 
@@ -64,7 +65,7 @@ public class CategoryServiceImpl implements CategoryService {
         Pageable pageable = PaginationUtil.buildPageable(requestDto, SortByDataConstant.CATEGORY);
 
         Page<CategoryDto> page = categoryRepository.getCategories(pageable);
-        PagingMeta pagingMeta = PaginationUtil.buildPagingMeta(requestDto, SortByDataConstant.PRODUCT, page);
+        PagingMeta pagingMeta = PaginationUtil.buildPagingMeta(requestDto, SortByDataConstant.CATEGORY, page);
 
         PaginationResponseDto<CategoryDto> responseDto = new PaginationResponseDto<>();
         responseDto.setItems(page.getContent());
@@ -78,13 +79,12 @@ public class CategoryServiceImpl implements CategoryService {
         return categoryRepository.findAll();
     }
 
-    //Todo add search by
     @Override
     public PaginationResponseDto<GetCategoryResponseDto> getCategoriesForAdmin(PaginationFullRequestDto requestDto) {
         Pageable pageable = PaginationUtil.buildPageable(requestDto, SortByDataConstant.CATEGORY);
 
         Page<GetCategoryResponseDto> page = categoryRepository.getCategoriesForAdmin(pageable);
-        PagingMeta pagingMeta = PaginationUtil.buildPagingMeta(requestDto, SortByDataConstant.PRODUCT, page);
+        PagingMeta pagingMeta = PaginationUtil.buildPagingMeta(requestDto, SortByDataConstant.CATEGORY, page);
 
         PaginationResponseDto<GetCategoryResponseDto> responseDto = new PaginationResponseDto<>();
         responseDto.setItems(page.getContent());

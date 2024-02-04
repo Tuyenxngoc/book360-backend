@@ -15,12 +15,20 @@ public interface CartRepository extends JpaRepository<Cart, Integer> {
 
     Optional<Cart> findByCustomerId(int customerId);
 
-    @Query("SELECT c.id FROM Cart c WHERE c.customer.id = :customerId")
+    @Query("SELECT c.id " +
+            "FROM Cart c WHERE " +
+            "c.customer.id = :customerId")
     Optional<Integer> getCartIdByCustomerId(int customerId);
 
-    @Query("SELECT COALESCE(SUM(cd.quantity), 0) FROM CartDetail cd WHERE cd.cart.customer.id = :customerId")
+    @Query("SELECT COALESCE(SUM(cd.quantity), 0) " +
+            "FROM CartDetail cd WHERE " +
+            "cd.cart.customer.id = :customerId AND " +
+            "cd.product.deleteFlag = false")
     int getTotalProductQuantityByCustomerId(@Param("customerId") int customerId);
 
-    @Query("SELECT new com.tuyenngoc.bookstore.domain.dto.response.ProductFromCartResponseDto(cd) FROM CartDetail cd WHERE cd.cart.customer.id = :customerId")
+    @Query("SELECT new com.tuyenngoc.bookstore.domain.dto.response.ProductFromCartResponseDto(cd) " +
+            "FROM CartDetail cd WHERE " +
+            "cd.cart.customer.id = :customerId AND " +
+            "cd.product.deleteFlag = false ")
     List<ProductFromCartResponseDto> getProductFromCart(@Param("customerId") int customerId);
 }

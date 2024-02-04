@@ -18,6 +18,7 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.core.env.Environment;
+import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
 @Slf4j
@@ -28,6 +29,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
         MailConfig.class,
         CloudinaryConfig.class
 })
+@EnableScheduling
 public class BookStoreApplication {
 
     private final RoleRepository roleRepository;
@@ -55,9 +57,9 @@ public class BookStoreApplication {
         return args -> {
             //init role
             if (roleRepository.count() == 0) {
-                roleRepository.save(new Role(1, RoleConstant.ADMINISTRATOR.getRoleName(), null));
-                roleRepository.save(new Role(2, RoleConstant.CUSTOMER.getRoleName(), null));
-                roleRepository.save(new Role(3, RoleConstant.SALES_STAFF.getRoleName(), null));
+                roleRepository.save(new Role(1, RoleConstant.ADMINISTRATOR, null));
+                roleRepository.save(new Role(2, RoleConstant.CUSTOMER, null));
+                roleRepository.save(new Role(3, RoleConstant.SALES_STAFF, null));
             }
             //init admin
             if (userRepository.count() == 0) {
@@ -66,7 +68,7 @@ public class BookStoreApplication {
                             .username(adminInfo.getUsername())
                             .password(passwordEncoder.encode(adminInfo.getPassword()))
                             .email(adminInfo.getEmail())
-                            .role(roleRepository.findByName(RoleConstant.ADMINISTRATOR.getRoleName()))
+                            .role(roleRepository.findByName(RoleConstant.ADMINISTRATOR).orElse(null))
                             .customer(customerRepository.save(new Customer(adminInfo.getName(), adminInfo.getPhoneNumber())))
                             .build();
                     userRepository.save(admin);

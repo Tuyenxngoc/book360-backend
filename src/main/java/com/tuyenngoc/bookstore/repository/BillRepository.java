@@ -30,7 +30,8 @@ public interface BillRepository extends JpaRepository<Bill, Integer>, JpaSpecifi
             "b.billStatus= :billStatus")
     List<GetBillResponseDto> getBills(
             @Param("customerId") int customerId,
-            @Param("billStatus") BillStatus billStatus);
+            @Param("billStatus") BillStatus billStatus
+    );
 
     @Query("SELECT b.billStatus" +
             " FROM Bill b WHERE " +
@@ -41,27 +42,34 @@ public interface BillRepository extends JpaRepository<Bill, Integer>, JpaSpecifi
             @Param("customerId") int customerId
     );
 
+    @Query("SELECT b.billStatus" +
+            " FROM Bill b WHERE " +
+            "b.id =:billId ")
+    BillStatus getBillStatus(@Param("billId") int billId);
+
     @Modifying
     @Transactional
-    @Query("UPDATE Bill b SET b.billStatus=:billStatus WHERE b.id =:billId")
+    @Query("UPDATE Bill b " +
+            "SET b.billStatus=:billStatus WHERE " +
+            "b.id =:billId")
     void updateBillStatus(
             @Param("billId") int billId,
             @Param("billStatus") BillStatus billStatus
     );
 
-    @Query("SELECT count(b) FROM Bill b WHERE b.billStatus=:status")
-    int getCountBillByStatus(@Param("status") String status);
+    @Query("SELECT count(b) " +
+            "FROM Bill b WHERE " +
+            "b.billStatus=:status")
+    int getCountBillByStatus(@Param("status") BillStatus status);
 
-    @Query("SELECT count(b) FROM Bill b WHERE b.billStatus=:status AND b.customer.id =:customerId")
+    @Query("SELECT count(b) " +
+            "FROM Bill b WHERE " +
+            "b.billStatus=:status AND " +
+            "b.customer.id =:customerId")
     int getCountBillByStatusAndCustomerId(
             @Param("customerId") int customerId,
             @Param("status") BillStatus status
     );
-
-    @Query("SELECT count(b) FROM Bill b")
-    int getCountBills();
-
-    boolean existsById(int billId);
 
     Optional<Bill> getBillByIdAndCustomerId(int customerId, int billId);
 }

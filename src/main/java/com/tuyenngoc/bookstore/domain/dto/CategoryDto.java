@@ -7,6 +7,7 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.hibernate.validator.constraints.URL;
 
 @Getter
 @Setter
@@ -20,6 +21,7 @@ public class CategoryDto {
     private String name;
 
     @NotBlank(message = ErrorMessage.INVALID_NOT_BLANK_FIELD)
+    @URL(message = ErrorMessage.INVALID_URL_FORMAT)
     private String image;
 
     public CategoryDto(Category category) {

@@ -8,24 +8,27 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
+import java.util.Optional;
+
 @Repository
 public interface CartDetailRepository extends JpaRepository<CartDetail, Integer> {
 
-    @Modifying
-    @Transactional
-    @Query("UPDATE CartDetail cd " +
-            "SET cd.quantity=:quantity WHERE " +
-            "cd.cart.id=:cartId AND " +
-            "cd.product.id=:productId")
-    void updateCartDetail(@Param("cartId") int cartId,
-                          @Param("productId") int productId,
-                          @Param("quantity") int quantity);
+    @Query("SELECT cd " +
+            "FROM CartDetail cd WHERE " +
+            "cd.product.id = :productId AND " +
+            "cd.cart.customer.id = :customerId")
+    Optional<CartDetail> getCartDetail(int customerId, int productId);
 
     @Modifying
     @Transactional
-    @Query("DELETE FROM CartDetail cd WHERE cd.cart.id=:cartId AND cd.product.id=:productId")
-    void deleteCartDetail(@Param("cartId") int cartId,
-                          @Param("productId") int productId);
+    @Query("DELETE " +
+            "FROM CartDetail cd WHERE " +
+            "cd.cart.customer.id=:customerId AND " +
+            "cd.product.id=:productId")
+    void deleteCartDetail(
+            @Param("customerId") int customerId,
+            @Param("productId") int productId
+    );
 
     @Modifying
     @Transactional

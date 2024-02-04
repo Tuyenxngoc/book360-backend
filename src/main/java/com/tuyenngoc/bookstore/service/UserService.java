@@ -6,4 +6,5 @@ import com.tuyenngoc.bookstore.security.CustomUserDetails;
 public interface UserService {
 
     UserDto getCurrentUser(CustomUserDetails userDetails);
+
 }

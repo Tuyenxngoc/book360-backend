@@ -2,6 +2,17 @@ package com.tuyenngoc.bookstore.constant;
 
 public enum SortByDataConstant implements SortByInterface {
 
+    AUTHOR {
+        @Override
+        public String getSortBy(String sortBy) {
+            return switch (sortBy) {
+                case "id" -> "id";
+                case "fullName" -> "fullName";
+                case "lastModifiedDate" -> "lastModifiedDate";
+                default -> "createdDate";
+            };
+        }
+    },
 
     PRODUCT {
         @Override
@@ -33,6 +44,18 @@ public enum SortByDataConstant implements SortByInterface {
         }
     },
 
+    BOOK_SET {
+        @Override
+        public String getSortBy(String sortBy) {
+            return switch (sortBy) {
+                case "id" -> "id";
+                case "name" -> "name";
+                case "lastModifiedDate" -> "lastModifiedDate";
+                default -> "createdDate";
+            };
+        }
+    },
+
     BILL {
         @Override
         public String getSortBy(String sortBy) {
@@ -60,6 +83,7 @@ public enum SortByDataConstant implements SortByInterface {
             };
         }
     },
+
     CATEGORY {
         @Override
         public String getSortBy(String sortBy) {

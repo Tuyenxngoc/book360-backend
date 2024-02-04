@@ -3,6 +3,7 @@ package com.tuyenngoc.bookstore.service.impl;
 import com.tuyenngoc.bookstore.constant.ErrorMessage;
 import com.tuyenngoc.bookstore.constant.SortByDataConstant;
 import com.tuyenngoc.bookstore.constant.SuccessMessage;
+import com.tuyenngoc.bookstore.domain.dto.filter.FilterProduct;
 import com.tuyenngoc.bookstore.domain.dto.pagination.PaginationFullRequestDto;
 import com.tuyenngoc.bookstore.domain.dto.pagination.PaginationRequestDto;
 import com.tuyenngoc.bookstore.domain.dto.pagination.PaginationResponseDto;
@@ -55,6 +56,8 @@ public class ProductServiceImpl implements ProductService {
     private final ProductMapper productMapper;
 
     private final UploadFileUtil uploadFileUtil;
+
+    private final UploadRedisService uploadRedisService;
 
     @Override
     public PaginationResponseDto<GetProductResponseDto> findProducts(PaginationFullRequestDto requestDto) {
@@ -157,26 +160,19 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Override
-    public PaginationResponseDto<Product> getProductsForAdmin(
-            PaginationFullRequestDto requestDto,
-            int sellerStockMax,
-            int sellerStockMin,
-            int soldMax,
-            int soldMin,
-            int categoryId
-    ) {
+    public PaginationResponseDto<Product> getProductsForAdmin(PaginationFullRequestDto requestDto, FilterProduct filter) {
         Pageable pageable = PaginationUtil.buildPageable(requestDto, SortByDataConstant.PRODUCT);
 
-        Page<Product> page = productRepository.findAll(filterProducts(
-                        requestDto.getKeyword(),
+        Page<Product> page = productRepository.findAll(
+                filterProducts(requestDto.getKeyword(),
                         requestDto.getSearchBy(),
-                        sellerStockMax,
-                        sellerStockMin,
-                        soldMax,
-                        soldMin,
-                        categoryId)
-                        .and(isNotDeleted())
-                , pageable
+                        filter.getSellerStockMax(),
+                        filter.getSellerStockMin(),
+                        filter.getSoldMax(),
+                        filter.getSoldMin(),
+                        filter.getCategoryId())
+                        .and(isNotDeleted()),
+                pageable
         );
 
         PagingMeta pagingMeta = PaginationUtil.buildPagingMeta(requestDto, SortByDataConstant.PRODUCT, page);
@@ -197,7 +193,7 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Override
-    public Product createProduct(CreateProductRequestDto productDto) {
+    public Product createProduct(CreateProductRequestDto productDto, String username) {
         Product product;
         if (productDto.getId() == null) {//create product
             product = productMapper.toProduct(productDto);
@@ -260,6 +256,9 @@ public class ProductServiceImpl implements ProductService {
         product.setAuthors(authors);
         product.setCategory(category);
 
+        //Delete image urls from redis cache
+        uploadRedisService.deleteUrls(username, productDto.getImageURLs());
+
         return productRepository.save(product);
     }
 
@@ -271,10 +270,7 @@ public class ProductServiceImpl implements ProductService {
 
     @Override
     public CommonResponseDto deleteProduct(int productId) {
-        Product product = getProduct(productId);
-
-        product.setDeleteFlag(Boolean.TRUE);
-        productRepository.save(product);
+        productRepository.setProductAsDeleted(productId);
 
         String message = messageSource.getMessage(SuccessMessage.DELETE, null, LocaleContextHolder.getLocale());
         return new CommonResponseDto(message);

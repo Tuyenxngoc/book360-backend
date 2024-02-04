@@ -22,4 +22,5 @@ public interface CategoryRepository extends JpaRepository<Category, Integer>, Jp
     void deleteById(Integer id);
 
     boolean existsById(Integer id);
+
 }

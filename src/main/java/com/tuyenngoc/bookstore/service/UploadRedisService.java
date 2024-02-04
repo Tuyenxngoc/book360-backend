@@ -8,4 +8,6 @@ public interface UploadRedisService {
 
     List<String> getUrls(String username);
 
+    void deleteUrls(String username, List<String> urls);
+
 }

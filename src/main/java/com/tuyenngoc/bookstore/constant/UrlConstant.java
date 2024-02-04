@@ -28,15 +28,16 @@ public class UrlConstant {
         public static final String CHECK_FAVORITE_PRODUCT = PRE_FIX + "/favorite-products/{productId}";
         public static final String ADD_FAVORITE_PRODUCT = PRE_FIX + "/favorite-products/{productId}";
         public static final String REMOVE_FAVORITE_PRODUCT = PRE_FIX + "/favorite-products/{productId}";
-
-        public static final String UPLOAD_IMAGE = PRE_FIX + "/upload-image";
-        public static final String UPLOAD_IMAGES = PRE_FIX + "/upload-images";
-        public static final String UPDATE_CUSTOMER = PRE_FIX;
+        public static final String UPLOAD_AVATAR = PRE_FIX + "/upload-avatar";
+        public static final String UPDATE_CUSTOMER = PRE_FIX + "/update";
 
         //Admin
-        public static final String GET_TODO = PRE_FIX + "/get-todo";
-        public static final String GET_COUNT_CUSTOMER = PRE_FIX + "/get-count-customer";
-        public static final String GET_CUSTOMERS = PRE_FIX + "/get-customers";
+        public static final String UPLOAD_IMAGES = ADMIN_URL + PRE_FIX + "/upload-images";
+        public static final String GET_TODO = ADMIN_URL + PRE_FIX + "/get-todo";
+        public static final String GET_COUNT_CUSTOMER = ADMIN_URL + PRE_FIX + "/count";
+        public static final String GET_CUSTOMERS = ADMIN_URL + PRE_FIX + "/get";
+        public static final String GET_CUSTOMER = ADMIN_URL + PRE_FIX + "/{customerId}";
+        public static final String CREATE_CUSTOMER = ADMIN_URL + PRE_FIX + "/create";
     }
 
     public static class Cart {
@@ -65,9 +66,14 @@ public class UrlConstant {
     }
 
     public static class Author {
+
         private static final String PRE_FIX = "/author";
 
         public static final String GET_ALL_AUTHORS = ADMIN_URL + PRE_FIX + "/all";
+        public static final String GET_AUTHOR = ADMIN_URL + PRE_FIX + "/{authorId}";
+        public static final String GET_AUTHORS = ADMIN_URL + PRE_FIX + "/get";
+        public static final String CREATE_AUTHOR = ADMIN_URL + PRE_FIX + "/create";
+        public static final String DELETE_AUTHOR = ADMIN_URL + PRE_FIX + "/delete/{authorId}";
     }
 
     public static class Banner {
@@ -75,7 +81,7 @@ public class UrlConstant {
 
         public static final String GET_ALL_BANNERS = PRE_FIX + "/all";
 
-        public static final String GET_BANNERS_FOR_ADMIN = ADMIN_URL + PRE_FIX + "/get";
+        public static final String GET_BANNERS = ADMIN_URL + PRE_FIX + "/get";
         public static final String GET_BANNER = ADMIN_URL + PRE_FIX + "/{bannerId}";
         public static final String CREATE_BANNER = ADMIN_URL + PRE_FIX + "/create";
         public static final String DELETE_BANNER = ADMIN_URL + PRE_FIX + "/delete/{bannerId}";
@@ -85,6 +91,10 @@ public class UrlConstant {
         private static final String PRE_FIX = "/book-set";
 
         public static final String GET_ALL_BOOK_SETS = ADMIN_URL + PRE_FIX + "/all";
+        public static final String GET_BOOK_SETS = ADMIN_URL + PRE_FIX + "/get";
+        public static final String GET_BOOK_SET = ADMIN_URL + PRE_FIX + "/{bookSetId}";
+        public static final String CREATE_BOOK_SET = ADMIN_URL + PRE_FIX + "/create";
+        public static final String DELETE_BOOK_SET = ADMIN_URL + PRE_FIX + "/delete/{bookSetId}";
     }
 
     public static class Category {

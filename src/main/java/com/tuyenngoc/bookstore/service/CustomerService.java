@@ -2,6 +2,7 @@ package com.tuyenngoc.bookstore.service;
 
 import com.tuyenngoc.bookstore.domain.dto.pagination.PaginationFullRequestDto;
 import com.tuyenngoc.bookstore.domain.dto.pagination.PaginationResponseDto;
+import com.tuyenngoc.bookstore.domain.dto.request.CreateCustomerRequestDto;
 import com.tuyenngoc.bookstore.domain.dto.request.UpdateCustomerRequestDto;
 import com.tuyenngoc.bookstore.domain.dto.response.CommonResponseDto;
 import com.tuyenngoc.bookstore.domain.dto.response.GetProductResponseDto;
@@ -21,18 +22,22 @@ public interface CustomerService {
 
     CommonResponseDto removeFavoriteProduct(int customerId, int productId);
 
-    String uploadImage(String username, MultipartFile file);
+    CommonResponseDto uploadAvatar(int customerId, MultipartFile file);
 
     List<String> uploadImages(String username, List<MultipartFile> files);
+
+    long parseSize(String size);
 
     CommonResponseDto updateCustomer(int customerId, UpdateCustomerRequestDto updateCustomerRequestDto);
 
     GetTodoResponseDto getTodo(int customerId);
 
-    int getCountCustomer();
+    long getCountCustomer();
 
     PaginationResponseDto<Customer> getCustomers(PaginationFullRequestDto requestDto);
 
     Customer getCustomer(int customerId);
+
+    Customer createCustomer(CreateCustomerRequestDto requestDto);
 
 }

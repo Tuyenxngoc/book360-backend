@@ -7,8 +7,8 @@ import com.tuyenngoc.bookstore.constant.UrlConstant;
 import com.tuyenngoc.bookstore.domain.dto.CartDetailDto;
 import com.tuyenngoc.bookstore.security.CustomUserDetails;
 import com.tuyenngoc.bookstore.service.CartService;
-import com.tuyenngoc.bookstore.service.impl.CartServiceImpl;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.*;
 
 @RestApiV1
 @RequiredArgsConstructor
+@Tag(name = "Cart")
 public class CartController {
 
     private final CartService cartService;
@@ -28,9 +29,11 @@ public class CartController {
 
     @Operation(summary = "API add product to cart")
     @PostMapping(UrlConstant.Cart.ADD_PRODUCT_TO_CART)
-    public ResponseEntity<?> addProductToCart(@Valid @RequestBody CartDetailDto responseDto,
-                                              @CurrentUser CustomUserDetails userDetails) {
-        return VsResponseUtil.success(cartService.addProductToCart(userDetails.getCustomerId(), responseDto));
+    public ResponseEntity<?> addProductToCart(
+            @Valid @RequestBody CartDetailDto requestDto,
+            @CurrentUser CustomUserDetails userDetails
+    ) {
+        return VsResponseUtil.success(cartService.addProductToCart(userDetails.getCustomerId(), requestDto));
     }
 
     @Operation(summary = "API get products from cart")
@@ -41,15 +44,19 @@ public class CartController {
 
     @Operation(summary = "API update cart detail")
     @PutMapping(UrlConstant.Cart.UPDATE_CART_DETAIL)
-    public ResponseEntity<?> updateCartDetail(@Valid @RequestBody CartDetailDto cartDetailDto,
-                                              @CurrentUser CustomUserDetails userDetails) {
-        return VsResponseUtil.success(cartService.updateCartDetail(userDetails.getCustomerId(), cartDetailDto));
+    public ResponseEntity<?> updateCartDetail(
+            @Valid @RequestBody CartDetailDto requestDto,
+            @CurrentUser CustomUserDetails userDetails
+    ) {
+        return VsResponseUtil.success(cartService.updateCartDetail(userDetails.getCustomerId(), requestDto));
     }
 
     @Operation(summary = "API delete product from cart")
     @DeleteMapping(UrlConstant.Cart.DELETE_PRODUCT)
-    public ResponseEntity<?> deleteProductFromCart(@PathVariable int productId,
-                                                   @CurrentUser CustomUserDetails userDetails) {
+    public ResponseEntity<?> deleteProductFromCart(
+            @PathVariable int productId,
+            @CurrentUser CustomUserDetails userDetails
+    ) {
         return VsResponseUtil.success(cartService.deleteProductFromCart(userDetails.getCustomerId(), productId));
     }
 }

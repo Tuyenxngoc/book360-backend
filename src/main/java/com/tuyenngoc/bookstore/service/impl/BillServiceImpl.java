@@ -15,10 +15,8 @@ import com.tuyenngoc.bookstore.domain.entity.*;
 import com.tuyenngoc.bookstore.domain.mapper.BillMapper;
 import com.tuyenngoc.bookstore.exception.InvalidException;
 import com.tuyenngoc.bookstore.exception.NotFoundException;
-import com.tuyenngoc.bookstore.repository.BillDetailRepository;
 import com.tuyenngoc.bookstore.repository.BillRepository;
 import com.tuyenngoc.bookstore.repository.CartDetailRepository;
-import com.tuyenngoc.bookstore.repository.ProductRepository;
 import com.tuyenngoc.bookstore.service.BillService;
 import com.tuyenngoc.bookstore.service.CartService;
 import com.tuyenngoc.bookstore.util.PaginationUtil;
@@ -43,11 +41,7 @@ public class BillServiceImpl implements BillService {
 
     private final CartDetailRepository cartDetailRepository;
 
-    private final ProductRepository productRepository;
-
     private final BillRepository billRepository;
-
-    private final BillDetailRepository billDetailRepository;
 
     private final BillMapper billMapper;
 
@@ -66,7 +60,7 @@ public class BillServiceImpl implements BillService {
     }
 
     @Override
-    public BillDetail createNewBillDetail(int customerId, Product product, int quantity, Bill bill) {
+    public BillDetail createNewBillDetail(Product product, int quantity, Bill bill) {
         BillDetail newBillDetail = new BillDetail();
         newBillDetail.setProduct(product);
         newBillDetail.setQuantity(quantity);
@@ -90,23 +84,22 @@ public class BillServiceImpl implements BillService {
         List<Integer> listProductIds = requestDto.getListProductId();
         List<CartDetail> cartDetails = cart.getCartDetails()
                 .stream()
-                .filter(cartDetail -> listProductIds.contains(cartDetail.getProduct().getId()))
+                .filter(cartDetail -> (listProductIds.contains(cartDetail.getProduct().getId()) && !cartDetail.getProduct().getDeleteFlag()))
                 .collect(Collectors.toList());
         if (cartDetails.size() == 0) {
-            throw new InvalidException(ErrorMessage.Cart.ERR_NOT_FOUND_PRODUCT_ID, listProductIds.toString());
+            throw new InvalidException(ErrorMessage.Cart.ERR_NOT_FOUND_PRODUCT_IDS, listProductIds.toString());
         }
         //Create a new Bill
         Bill newBill = createNewBill(customerId, requestDto);
-
+        //Create new Bill details
         double totalPrice = 30000;
         List<BillDetail> billDetails = new ArrayList<>();
-
         for (CartDetail cartDetail : cartDetails) {
             //Get the total price
             Product product = cartDetail.getProduct();
             totalPrice += calculatePrice(product.getPrice(), product.getDiscount(), cartDetail.getQuantity());
             //Add new bill detail to list
-            BillDetail newBillDetail = createNewBillDetail(customerId, product, cartDetail.getQuantity(), newBill);
+            BillDetail newBillDetail = createNewBillDetail(product, cartDetail.getQuantity(), newBill);
             billDetails.add(newBillDetail);
         }
         newBill.setTotalAmount(totalPrice);
@@ -119,7 +112,8 @@ public class BillServiceImpl implements BillService {
         return new CommonResponseDto(message);
     }
 
-    private double calculatePrice(double price, int discount, int quantity) {
+    @Override
+    public double calculatePrice(double price, int discount, int quantity) {
         double discountedPrice = price * (1 - discount / 100.0);
         return discountedPrice * quantity;
     }
@@ -149,8 +143,8 @@ public class BillServiceImpl implements BillService {
     }
 
     @Override
-    public int getCountBills() {
-        return billRepository.getCountBills();
+    public Long getCountBills() {
+        return billRepository.count();
     }
 
     @Override
@@ -177,10 +171,16 @@ public class BillServiceImpl implements BillService {
 
     @Override
     public CommonResponseDto updateBillStatus(int billId, BillStatus newStatus) {
-        if (!billRepository.existsById(billId)) {
+        BillStatus billStatus = billRepository.getBillStatus(billId);
+
+        if (billStatus == null) {
             throw new NotFoundException(ErrorMessage.Bill.ERR_NOT_FOUND_ID, String.valueOf(billId));
         }
-        billRepository.updateBillStatus(billId, newStatus);
+
+        if (!newStatus.equals(billStatus)) {
+            billRepository.updateBillStatus(billId, newStatus);
+        }
+
         String message = messageSource.getMessage(SuccessMessage.UPDATE, null, LocaleContextHolder.getLocale());
         return new CommonResponseDto(message);
     }

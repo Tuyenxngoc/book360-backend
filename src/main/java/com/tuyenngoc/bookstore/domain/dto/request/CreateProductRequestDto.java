@@ -7,6 +7,7 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.hibernate.validator.constraints.URL;
 
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -37,7 +38,10 @@ public class CreateProductRequestDto {
 
     private String coverType;
 
-    private Set<AgeGroup> ageClassifications = new HashSet<>();
+    private Set<
+            @NotNull(message = ErrorMessage.INVALID_NOT_NULL_FIELD)
+                    AgeGroup
+            > ageClassifications = new HashSet<>();
 
     @Min(value = 0, message = ErrorMessage.INVALID_MINIMUM_ZERO)
     private Double weight;
@@ -64,10 +68,17 @@ public class CreateProductRequestDto {
 
     @NotNull(message = ErrorMessage.INVALID_ARRAY_IS_REQUIRED)
     @NotEmpty(message = ErrorMessage.INVALID_ARRAY_NOT_EMPTY)
-    private List<String> imageURLs = new ArrayList<>();
+    private List<
+            @URL(message = ErrorMessage.INVALID_URL_FORMAT)
+            @NotBlank(message = ErrorMessage.INVALID_NOT_BLANK_FIELD)
+                    String
+            > imageURLs = new ArrayList<>();
 
     @NotNull(message = ErrorMessage.INVALID_ARRAY_IS_REQUIRED)
     @NotEmpty(message = ErrorMessage.INVALID_ARRAY_NOT_EMPTY)
-    private Set<Integer> authorIds = new HashSet<>();
+    private Set<
+            @NotNull(message = ErrorMessage.INVALID_SOME_THING_FIELD_IS_REQUIRED)
+                    Integer
+            > authorIds = new HashSet<>();
 
 }

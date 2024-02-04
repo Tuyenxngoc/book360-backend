@@ -1,5 +1,6 @@
 package com.tuyenngoc.bookstore.service;
 
+import com.tuyenngoc.bookstore.domain.dto.filter.FilterProduct;
 import com.tuyenngoc.bookstore.domain.dto.pagination.PaginationFullRequestDto;
 import com.tuyenngoc.bookstore.domain.dto.pagination.PaginationRequestDto;
 import com.tuyenngoc.bookstore.domain.dto.pagination.PaginationResponseDto;
@@ -28,11 +29,11 @@ public interface ProductService {
 
     int getStockQuantityProducts();
 
-    PaginationResponseDto<Product> getProductsForAdmin(PaginationFullRequestDto requestDto, int sellerStockMax, int sellerStockMin, int soldMax, int soldMin, int categoryId);
+    PaginationResponseDto<Product> getProductsForAdmin(PaginationFullRequestDto requestDto, FilterProduct filter);
 
     ProductImage createProductImage(String image, Product product);
 
-    Product createProduct(CreateProductRequestDto productDto);
+    Product createProduct(CreateProductRequestDto productDto, String username);
 
     Product getProduct(int productId);
 

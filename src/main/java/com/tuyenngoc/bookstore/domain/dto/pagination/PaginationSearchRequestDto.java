@@ -6,9 +6,9 @@ import lombok.AllArgsConstructor;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+@Setter
 @AllArgsConstructor
 @NoArgsConstructor
-@Setter
 public class PaginationSearchRequestDto extends PaginationRequestDto {
 
     @Parameter(description = "Keyword to search")

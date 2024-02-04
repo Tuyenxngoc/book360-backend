@@ -1,6 +1,7 @@
 package com.tuyenngoc.bookstore.domain.dto.response;
 
 import com.tuyenngoc.bookstore.domain.entity.Category;
+import com.tuyenngoc.bookstore.domain.entity.common.FlagUserDateAuditing;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -24,7 +25,7 @@ public class GetCategoryResponseDto {
 
     private String image;
 
-    private Integer totalProducts;
+    private Long totalProducts;
 
     public GetCategoryResponseDto(Category category) {
         this.createdDate = category.getCreatedDate();
@@ -32,6 +33,9 @@ public class GetCategoryResponseDto {
         this.id = category.getId();
         this.name = category.getName();
         this.image = category.getImage();
-        this.totalProducts = category.getProducts().size();
+        this.totalProducts = category.getProducts()
+                .stream()
+                .filter(FlagUserDateAuditing::getDeleteFlag)
+                .count();
     }
 }

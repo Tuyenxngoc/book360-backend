@@ -13,11 +13,11 @@ import lombok.Setter;
 @AllArgsConstructor
 public class BillDetailDto {
 
-    private int id;
+    private Integer id;
 
-    private int quantity;
+    private Integer quantity;
 
-    private double price;
+    private Double price;
 
     private GetProductResponseDto product;
 

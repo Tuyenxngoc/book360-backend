@@ -21,7 +21,7 @@ public interface CategoryService {
 
     PaginationResponseDto<GetCategoryResponseDto> getCategoriesForAdmin(PaginationFullRequestDto requestDto);
 
-    Category createCategory(CategoryDto categoryDto);
+    Category createCategory(CategoryDto categoryDto, String username);
 
     CommonResponseDto deleteCategory(int categoryId);
 

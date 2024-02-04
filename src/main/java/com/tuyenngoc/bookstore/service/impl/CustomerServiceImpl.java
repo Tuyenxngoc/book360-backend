@@ -7,21 +7,22 @@ import com.tuyenngoc.bookstore.constant.SuccessMessage;
 import com.tuyenngoc.bookstore.domain.dto.pagination.PaginationFullRequestDto;
 import com.tuyenngoc.bookstore.domain.dto.pagination.PaginationResponseDto;
 import com.tuyenngoc.bookstore.domain.dto.pagination.PagingMeta;
+import com.tuyenngoc.bookstore.domain.dto.request.CreateCustomerRequestDto;
 import com.tuyenngoc.bookstore.domain.dto.request.UpdateCustomerRequestDto;
 import com.tuyenngoc.bookstore.domain.dto.response.CommonResponseDto;
 import com.tuyenngoc.bookstore.domain.dto.response.GetProductResponseDto;
 import com.tuyenngoc.bookstore.domain.dto.response.GetTodoResponseDto;
-import com.tuyenngoc.bookstore.domain.entity.Address;
-import com.tuyenngoc.bookstore.domain.entity.Customer;
-import com.tuyenngoc.bookstore.domain.entity.Product;
+import com.tuyenngoc.bookstore.domain.entity.*;
+import com.tuyenngoc.bookstore.domain.mapper.CustomerMapper;
+import com.tuyenngoc.bookstore.domain.mapper.UserMapper;
+import com.tuyenngoc.bookstore.exception.DataIntegrityViolationException;
 import com.tuyenngoc.bookstore.exception.InvalidException;
 import com.tuyenngoc.bookstore.exception.NotFoundException;
 import com.tuyenngoc.bookstore.repository.BillRepository;
 import com.tuyenngoc.bookstore.repository.CustomerRepository;
 import com.tuyenngoc.bookstore.repository.ProductRepository;
-import com.tuyenngoc.bookstore.service.CustomerService;
-import com.tuyenngoc.bookstore.service.ProductService;
-import com.tuyenngoc.bookstore.service.UploadRedisService;
+import com.tuyenngoc.bookstore.repository.UserRepository;
+import com.tuyenngoc.bookstore.service.*;
 import com.tuyenngoc.bookstore.util.PaginationUtil;
 import com.tuyenngoc.bookstore.util.UploadFileUtil;
 import lombok.RequiredArgsConstructor;
@@ -48,11 +49,23 @@ public class CustomerServiceImpl implements CustomerService {
 
     private final ProductRepository productRepository;
 
+    private final UserRepository userRepository;
+
     private final UploadFileUtil uploadFileUtil;
 
     private final MessageSource messageSource;
 
     private final UploadRedisService uploadRedisService;
+
+    private final AddressService addressService;
+
+    private final RoleService roleService;
+
+    private final CustomerMapper customerMapper;
+
+    private final UserMapper userMapper;
+
+    private final CartService cartService;
 
     @Value("${upload.file.size.limit}")
     private String fileSizeLimit;
@@ -80,7 +93,9 @@ public class CustomerServiceImpl implements CustomerService {
     public CommonResponseDto addFavoriteProduct(int customerId, int productId) {
         Customer customer = getCustomer(customerId);
         Product product = productService.getProduct(productId);
+
         customer.getFavoriteProducts().add(product);
+
         customerRepository.save(customer);
 
         String message = messageSource.getMessage(SuccessMessage.UPDATE, null, LocaleContextHolder.getLocale());
@@ -91,7 +106,9 @@ public class CustomerServiceImpl implements CustomerService {
     public CommonResponseDto removeFavoriteProduct(int customerId, int productId) {
         Customer customer = getCustomer(customerId);
         Product product = productService.getProduct(productId);
+
         customer.getFavoriteProducts().remove(product);
+
         customerRepository.save(customer);
 
         String message = messageSource.getMessage(SuccessMessage.DELETE, null, LocaleContextHolder.getLocale());
@@ -99,7 +116,7 @@ public class CustomerServiceImpl implements CustomerService {
     }
 
     @Override
-    public String uploadImage(String username, MultipartFile file) {
+    public CommonResponseDto uploadAvatar(int customerId, MultipartFile file) {
         if (file == null || file.isEmpty()) {
             throw new InvalidException(ErrorMessage.INVALID_FILE_REQUIRED);
         }
@@ -113,10 +130,15 @@ public class CustomerServiceImpl implements CustomerService {
             throw new InvalidException(ErrorMessage.INVALID_FILE_TYPE);
         }
 
-        String newUrl = uploadFileUtil.uploadFile(file);
-        uploadRedisService.saveUrls(username, List.of(newUrl));
+        Customer customer = getCustomer(customerId);
+        uploadFileUtil.destroyFileWithUrl(customer.getAvatar());
 
-        return newUrl;
+        String newUrl = uploadFileUtil.uploadFile(file);
+        customer.setAvatar(newUrl);
+        customerRepository.save(customer);
+
+        String message = messageSource.getMessage(SuccessMessage.UPDATE, null, LocaleContextHolder.getLocale());
+        return new CommonResponseDto(message);
     }
 
     @Override
@@ -140,20 +162,27 @@ public class CustomerServiceImpl implements CustomerService {
             String newUrl = uploadFileUtil.uploadFile(file);
             uploadedFiles.add(newUrl);
         }
+        //Save image urls to redis cache
         uploadRedisService.saveUrls(username, uploadedFiles);
         return uploadedFiles;
     }
 
-    private long parseSize(String size) {
-        size = size.toUpperCase();
-        if (size.endsWith("KB")) {
-            return Long.parseLong(size.substring(0, size.length() - 2)) * 1024;
-        } else if (size.endsWith("MB")) {
-            return Long.parseLong(size.substring(0, size.length() - 2)) * 1024 * 1024;
-        } else if (size.endsWith("GB")) {
-            return Long.parseLong(size.substring(0, size.length() - 2)) * 1024 * 1024 * 1024;
-        } else {
-            return Long.parseLong(size);
+    @Override
+    public long parseSize(String size) {
+        try {
+            size = size.toUpperCase();
+            long parseLong = Long.parseLong(size.substring(0, size.length() - 2));
+            if (size.endsWith("KB")) {
+                return parseLong * 1024;
+            } else if (size.endsWith("MB")) {
+                return parseLong * 1024 * 1024;
+            } else if (size.endsWith("GB")) {
+                return parseLong * 1024 * 1024 * 1024;
+            } else {
+                return parseLong;
+            }
+        } catch (NumberFormatException | StringIndexOutOfBoundsException e) {
+            return 2 * 1024 * 1024;
         }
     }
 
@@ -161,14 +190,12 @@ public class CustomerServiceImpl implements CustomerService {
     public CommonResponseDto updateCustomer(int customerId, UpdateCustomerRequestDto updateCustomerRequestDto) {
         Customer customer = getCustomer(customerId);
 
-        Address address = new Address();
+        Address address = customer.getAddress();
         address.setAddressName(updateCustomerRequestDto.getAddress());
 
         customer.setFullName(updateCustomerRequestDto.getFullName());
         customer.setPhoneNumber(updateCustomerRequestDto.getPhoneNumber());
-        customer.setAvatar(updateCustomerRequestDto.getAvatar());
         customer.setDob(updateCustomerRequestDto.getDob());
-        customer.setAddress(address);
         customer.setGender(updateCustomerRequestDto.getGender());
 
         customerRepository.save(customer);
@@ -180,16 +207,16 @@ public class CustomerServiceImpl implements CustomerService {
     @Override
     public GetTodoResponseDto getTodo(int customerId) {
         int productSoldOut = productRepository.getCountProductSoldOut();
-        int waitForConfirmationCount = billRepository.getCountBillByStatus(BillStatus.WAIT_FOR_CONFIRMATION.getName());
-        int waitForDeliveryCount = billRepository.getCountBillByStatus(BillStatus.WAIT_FOR_DELIVERY.getName());
-        int deliveringCount = billRepository.getCountBillByStatus(BillStatus.DELIVERING.getName());
-        int cancelledCount = billRepository.getCountBillByStatus(BillStatus.CANCELLED.getName());
+        int waitForConfirmationCount = billRepository.getCountBillByStatus(BillStatus.WAIT_FOR_CONFIRMATION);
+        int waitForDeliveryCount = billRepository.getCountBillByStatus(BillStatus.WAIT_FOR_DELIVERY);
+        int deliveringCount = billRepository.getCountBillByStatus(BillStatus.DELIVERING);
+        int cancelledCount = billRepository.getCountBillByStatus(BillStatus.CANCELLED);
         return new GetTodoResponseDto(productSoldOut, waitForConfirmationCount, waitForDeliveryCount, deliveringCount, cancelledCount);
     }
 
     @Override
-    public int getCountCustomer() {
-        return customerRepository.getCountCustomer();
+    public long getCountCustomer() {
+        return customerRepository.count();
     }
 
     @Override
@@ -210,5 +237,32 @@ public class CustomerServiceImpl implements CustomerService {
     public Customer getCustomer(int customerId) {
         return customerRepository.findById(customerId)
                 .orElseThrow(() -> new NotFoundException(ErrorMessage.Customer.ERR_NOT_FOUND_ID, String.valueOf(customerId)));
+    }
+
+    @Override
+    public Customer createCustomer(CreateCustomerRequestDto requestDto) {
+        boolean isUsernameExists = userRepository.existsByUsername(requestDto.getUsername());
+        if (isUsernameExists) {
+            throw new DataIntegrityViolationException(ErrorMessage.Auth.ERR_DUPLICATE_USERNAME);
+        }
+        boolean isEmailExists = userRepository.existsByEmail(requestDto.getEmail());
+        if (isEmailExists) {
+            throw new DataIntegrityViolationException(ErrorMessage.Auth.ERR_DUPLICATE_EMAIL);
+        }
+        Role role = roleService.getRole(requestDto.getRoleName());
+        //Create Address
+        Address address = addressService.createAddress(requestDto.getAddressName());
+        //Create Customer
+        Customer customer = customerMapper.toCustomer(requestDto);
+        customer.setAddress(address);
+        customerRepository.save(customer);
+        //Create User
+        User newUser = userMapper.toUser(requestDto);
+        newUser.setRole(role);
+        newUser.setCustomer(customer);
+        userRepository.save(newUser);
+        //Create Cart
+        cartService.createNewCart(customer);
+        return customer;
     }
 }

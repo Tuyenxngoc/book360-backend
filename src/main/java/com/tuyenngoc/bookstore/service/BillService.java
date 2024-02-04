@@ -17,17 +17,19 @@ public interface BillService {
 
     Bill createNewBill(int customerId, BillRequestDto requestDto);
 
-    BillDetail createNewBillDetail(int customerId, Product product, int quantity, Bill bill);
+    BillDetail createNewBillDetail(Product product, int quantity, Bill bill);
 
     List<GetBillResponseDto> getBills(int customerId, BillStatus billStatus);
 
     CommonResponseDto saveOrder(int customerId, BillRequestDto requestDto);
 
+    double calculatePrice(double price, int discount, int quantity);
+
     CommonResponseDto cancelOrder(int customerId, int billId);
 
     int getCountBillByStatus(int customerId, BillStatus billStatus);
 
-    int getCountBills();
+    Long getCountBills();
 
     Bill getBill(int billId);
 

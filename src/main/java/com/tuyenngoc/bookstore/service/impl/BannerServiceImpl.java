@@ -13,6 +13,7 @@ import com.tuyenngoc.bookstore.domain.mapper.BannerMapper;
 import com.tuyenngoc.bookstore.exception.NotFoundException;
 import com.tuyenngoc.bookstore.repository.BannerRepository;
 import com.tuyenngoc.bookstore.service.BannerService;
+import com.tuyenngoc.bookstore.service.UploadRedisService;
 import com.tuyenngoc.bookstore.util.PaginationUtil;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.MessageSource;
@@ -33,13 +34,15 @@ public class BannerServiceImpl implements BannerService {
 
     private final BannerMapper bannerMapper;
 
+    private final UploadRedisService uploadRedisService;
+
     @Override
     public List<BannerDto> getAllBanners() {
         return bannerRepository.getBanners();
     }
 
     @Override
-    public PaginationResponseDto<Banner> getAllBanners(PaginationFullRequestDto requestDto) {
+    public PaginationResponseDto<Banner> getBanners(PaginationFullRequestDto requestDto) {
         Pageable pageable = PaginationUtil.buildPageable(requestDto, SortByDataConstant.BANNER);
 
         Page<Banner> page = bannerRepository.findAll(pageable);
@@ -58,20 +61,21 @@ public class BannerServiceImpl implements BannerService {
                 .orElseThrow(() -> new NotFoundException(ErrorMessage.Banner.ERR_NOT_FOUND_ID, String.valueOf(bannerId)));
     }
 
-    //Todo remove url
     @Override
-    public Banner createBanner(BannerDto bannerDto) {
+    public Banner createBanner(BannerDto bannerDto, String username) {
         Banner banner;
         if (bannerDto.getId() == null) {
             banner = bannerMapper.toBanner(bannerDto);
         } else {
-            banner = bannerRepository.findById(bannerDto.getId())
-                    .orElseThrow(() -> new NotFoundException(ErrorMessage.Banner.ERR_NOT_FOUND_ID, String.valueOf(bannerDto.getId())));
+            banner = getBanner(bannerDto.getId());
 
             banner.setImage(bannerDto.getImage());
             banner.setUrl(bannerDto.getUrl());
             banner.setViewOrder(bannerDto.getViewOrder());
         }
+        //Delete image urls from redis cache
+        uploadRedisService.deleteUrls(username, List.of(bannerDto.getImage()));
+
         return bannerRepository.save(banner);
     }
 

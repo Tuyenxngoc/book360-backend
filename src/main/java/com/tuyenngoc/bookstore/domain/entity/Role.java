@@ -1,6 +1,7 @@
 package com.tuyenngoc.bookstore.domain.entity;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.tuyenngoc.bookstore.constant.RoleConstant;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -23,8 +24,9 @@ public class Role {
     @Column(name = "role_id")
     private Integer id;
 
+    @Enumerated(EnumType.STRING)
     @Column(nullable = false, unique = true)
-    private String name;
+    private RoleConstant name;
 
     @OneToMany(mappedBy = "role", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     @JsonIgnore
