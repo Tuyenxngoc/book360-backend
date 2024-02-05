@@ -1,6 +1,7 @@
 package com.tuyenngoc.bookstore.domain.dto;
 
 import com.tuyenngoc.bookstore.constant.ErrorMessage;
+import com.tuyenngoc.bookstore.domain.entity.BookSet;
 import jakarta.validation.constraints.NotBlank;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -17,5 +18,10 @@ public class BookSetDto {
 
     @NotBlank(message = ErrorMessage.INVALID_NOT_BLANK_FIELD)
     private String name;
+
+    public BookSetDto(BookSet bookSet) {
+        this.id = bookSet.getId();
+        this.name = bookSet.getName();
+    }
 
 }

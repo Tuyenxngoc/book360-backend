@@ -3,6 +3,7 @@ package com.tuyenngoc.bookstore.domain.entity;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.tuyenngoc.bookstore.constant.AgeGroup;
 import com.tuyenngoc.bookstore.domain.entity.common.FlagUserDateAuditing;
+import com.tuyenngoc.bookstore.domain.entity.listener.ProductListener;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -19,6 +20,7 @@ import java.util.Set;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
+@EntityListeners(ProductListener.class)
 @Table(name = "product")
 public class Product extends FlagUserDateAuditing {
 

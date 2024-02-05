@@ -206,6 +206,7 @@ public class ProductServiceImpl implements ProductService {
                 uploadFileUtil.destroyFileWithUrl(productImage.getUrl());
             }
             productImageRepository.deleteAllByProductId(productDto.getId());
+
             //Set new values
             product.setName(productDto.getName());
             product.setDescription(productDto.getDescription());

@@ -1,6 +1,9 @@
 package com.tuyenngoc.bookstore.domain.dto.response;
 
+import com.tuyenngoc.bookstore.constant.AgeGroup;
+import com.tuyenngoc.bookstore.domain.dto.AgeGroupDto;
 import com.tuyenngoc.bookstore.domain.dto.AuthorDto;
+import com.tuyenngoc.bookstore.domain.dto.BookSetDto;
 import com.tuyenngoc.bookstore.domain.dto.CategoryDto;
 import com.tuyenngoc.bookstore.domain.entity.Author;
 import com.tuyenngoc.bookstore.domain.entity.Product;
@@ -40,15 +43,19 @@ public class GetProductDetailResponseDto {
 
     private String description;
 
-    private String format;
+    private String coverType;
 
     private double weight;
 
     private CategoryDto category;
 
+    private BookSetDto bookSet;
+
     private List<ProductImage> images;
 
     private Set<AuthorDto> authors;
+
+    private Set<AgeGroupDto> ageClassifications;
 
     public GetProductDetailResponseDto(Product product) {
         this.productId = product.getId();
@@ -63,9 +70,22 @@ public class GetProductDetailResponseDto {
         this.description = product.getDescription();
         this.pageCount = product.getPageCount();
         this.weight = product.getWeight();
+        this.coverType = product.getCoverType();
 
         this.category = new CategoryDto(product.getCategory());
+        this.bookSet = new BookSetDto(product.getBookSet());
+
         this.authors = getAuthorDto(product.getAuthors());
+        this.ageClassifications = getAgeGroupDto(product.getAgeClassifications());
+    }
+
+    private Set<AgeGroupDto> getAgeGroupDto(Set<AgeGroup> ageClassifications) {
+        Set<AgeGroupDto> result = new HashSet<>();
+        for (AgeGroup ageGroup : ageClassifications) {
+            AgeGroupDto ageGroupDto = new AgeGroupDto(ageGroup);
+            result.add(ageGroupDto);
+        }
+        return result;
     }
 
     private Set<AuthorDto> getAuthorDto(Set<Author> authors) {
