@@ -14,37 +14,34 @@ public class ProductListener {
 
     @PrePersist
     public void prePersist(Product product) {
-        log.info("PrePersist");
     }
 
     @PreUpdate
     public void preUpdate(Product product) {
-        log.info("PreUpdate");
     }
 
     @PreRemove
     public void preRemove(Product product) {
-        log.info("PreRemove");
     }
 
     @PostLoad
     public void postLoad(Product product) {
-        log.info("PostLoad");
     }
 
     @PostRemove
     public void postRemove(Product product) {
-        log.info("PostRemove");
     }
 
     @PostUpdate
     public void postUpdate(Product product) {
-        log.info("PostUpdate");
+        productRedisService.clearAllProductCache();
+        productRedisService.clearProductDetailCache(product.getId());
+        productRedisService.clearProductSameAuthorCache(product.getId());
     }
 
     @PostPersist
     public void postPersist(Product product) {
-        log.info("PostPersist");
+        productRedisService.clearAllProductCache();
     }
 
 }

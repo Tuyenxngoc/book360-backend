@@ -38,4 +38,5 @@ public interface ProductService {
     Product getProduct(int productId);
 
     CommonResponseDto deleteProduct(int productId);
+
 }

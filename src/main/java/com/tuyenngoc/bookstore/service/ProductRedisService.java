@@ -21,4 +21,10 @@ public interface ProductRedisService {
 
     void saveProductsSameAuthor(int productId, List<GetProductResponseDto> responseDto, Pageable pageable);
 
+    void clearAllProductCache();
+
+    void clearProductDetailCache(int productId);
+
+    void clearProductSameAuthorCache(int productId);
+
 }

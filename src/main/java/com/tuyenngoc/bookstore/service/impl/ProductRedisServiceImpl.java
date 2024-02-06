@@ -15,6 +15,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 
 import java.util.List;
+import java.util.Set;
 
 @Slf4j
 @Service
@@ -135,6 +136,36 @@ public class ProductRedisServiceImpl implements ProductRedisService {
             redisTemplate.opsForValue().set(key, json);
         } catch (Exception e) {
             log.error("Error saving product details to Redis: {}", e.getMessage(), e);
+        }
+    }
+
+    @Override
+    public void clearAllProductCache() {
+        Set<String> keys = redisTemplate.keys("ALL_PRODUCTS:*");
+        if (keys != null && !keys.isEmpty()) {
+            redisTemplate.delete(keys);
+            log.info("Cleared all keys starting with 'all_products'");
+        } else {
+            log.info("No keys found starting with 'all_products'");
+        }
+    }
+
+    @Override
+    public void clearProductDetailCache(int productId) {
+        String key = getKeyFrom(productId);
+        redisTemplate.delete(key);
+        log.info("Cleared all keys starting with 'product_details'");
+    }
+
+    @Override
+    public void clearProductSameAuthorCache(int productId) {
+        String pattern = String.format("PRODUCT_SAME_AUTHOR: %d*", productId);
+        Set<String> keys = redisTemplate.keys(pattern);
+        if (keys != null && !keys.isEmpty()) {
+            redisTemplate.delete(keys);
+            log.info("Cleared all keys starting with 'product_same_author'");
+        } else {
+            log.info("No keys found starting with 'product_same_author'");
         }
     }
 

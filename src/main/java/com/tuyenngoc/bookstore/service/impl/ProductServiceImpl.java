@@ -273,6 +273,11 @@ public class ProductServiceImpl implements ProductService {
     public CommonResponseDto deleteProduct(int productId) {
         productRepository.setProductAsDeleted(productId);
 
+        // Delete cache
+        productRedisService.clearAllProductCache();
+        productRedisService.clearProductDetailCache(productId);
+        productRedisService.clearProductSameAuthorCache(productId);
+
         String message = messageSource.getMessage(SuccessMessage.DELETE, null, LocaleContextHolder.getLocale());
         return new CommonResponseDto(message);
     }

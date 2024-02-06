@@ -33,8 +33,11 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 public class BookStoreApplication {
 
     private final RoleRepository roleRepository;
+
     private final UserRepository userRepository;
+
     private final CustomerRepository customerRepository;
+
     private final PasswordEncoder passwordEncoder;
 
     public static void main(String[] args) {

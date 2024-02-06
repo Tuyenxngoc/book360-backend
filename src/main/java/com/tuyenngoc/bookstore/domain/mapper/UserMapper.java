@@ -1,6 +1,5 @@
 package com.tuyenngoc.bookstore.domain.mapper;
 
-import com.tuyenngoc.bookstore.constant.BillStatus;
 import com.tuyenngoc.bookstore.constant.RoleConstant;
 import com.tuyenngoc.bookstore.domain.dto.UserDto;
 import com.tuyenngoc.bookstore.domain.dto.request.CreateCustomerRequestDto;
