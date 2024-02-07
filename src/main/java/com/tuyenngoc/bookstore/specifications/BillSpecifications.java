@@ -31,7 +31,7 @@ public class BillSpecifications {
                     case Product_.NAME -> {
                         Join<Bill, BillDetail> billDetailJoin = root.join(Bill_.billDetails);
                         Join<BillDetail, Product> productJoin = billDetailJoin.join(BillDetail_.product);
-                        predicate = builder.and(predicate, builder.like(productJoin.get(Product_.NAME), "%" + keyword + "%"));
+                        predicate = builder.and(predicate, builder.like(productJoin.get(Product_.name), "%" + keyword + "%"));
                     }
                 }
             }
