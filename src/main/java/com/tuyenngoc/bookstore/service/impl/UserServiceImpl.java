@@ -6,7 +6,6 @@ import com.tuyenngoc.bookstore.domain.entity.User;
 import com.tuyenngoc.bookstore.domain.mapper.UserMapper;
 import com.tuyenngoc.bookstore.exception.NotFoundException;
 import com.tuyenngoc.bookstore.repository.UserRepository;
-import com.tuyenngoc.bookstore.security.CustomUserDetails;
 import com.tuyenngoc.bookstore.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -20,9 +19,9 @@ public class UserServiceImpl implements UserService {
     private final UserMapper userMapper;
 
     @Override
-    public UserDto getCurrentUser(CustomUserDetails userDetails) {
-        User user = userRepository.findByUsername(userDetails.getUsername())
-                .orElseThrow(() -> new NotFoundException(ErrorMessage.User.ERR_NOT_FOUND_USERNAME, userDetails.getUsername()));
+    public UserDto getCurrentUser(String username) {
+        User user = userRepository.findByUsername(username)
+                .orElseThrow(() -> new NotFoundException(ErrorMessage.User.ERR_NOT_FOUND_USERNAME, username));
         return userMapper.toUserDto(user);
     }
 }

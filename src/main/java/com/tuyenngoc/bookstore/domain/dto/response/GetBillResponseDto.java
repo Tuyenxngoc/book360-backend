@@ -25,7 +25,7 @@ public class GetBillResponseDto {
 
     private LocalDateTime createdDate;
 
-    private String orderStatus;
+    private String billStatus;
 
     private double totalAmount;
 
@@ -35,7 +35,7 @@ public class GetBillResponseDto {
         this.id = bill.getId();
         this.consigneeName = bill.getConsigneeName();
         this.createdDate = bill.getCreatedDate();
-        this.orderStatus = bill.getBillStatus().getName();
+        this.billStatus = bill.getBillStatus().getName();
         this.totalAmount = bill.getTotalAmount();
 
         this.billDetails = getBillDetailDto(bill.getBillDetails());

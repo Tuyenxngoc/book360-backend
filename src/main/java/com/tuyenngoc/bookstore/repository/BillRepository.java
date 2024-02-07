@@ -19,7 +19,8 @@ public interface BillRepository extends JpaRepository<Bill, Integer>, JpaSpecifi
 
     @Query("SELECT new com.tuyenngoc.bookstore.domain.dto.response.GetBillResponseDto(b) " +
             "FROM Bill b WHERE " +
-            "b.customer.id=:customerId ")
+            "b.customer.id=:customerId " +
+            "ORDER BY b.createdDate DESC")
     List<GetBillResponseDto> getBills(
             @Param("customerId") int customerId
     );
@@ -27,7 +28,8 @@ public interface BillRepository extends JpaRepository<Bill, Integer>, JpaSpecifi
     @Query("SELECT new com.tuyenngoc.bookstore.domain.dto.response.GetBillResponseDto(b) " +
             "FROM Bill b WHERE " +
             "b.customer.id=:customerId AND " +
-            "b.billStatus= :billStatus")
+            "b.billStatus= :billStatus " +
+            "ORDER BY b.createdDate DESC")
     List<GetBillResponseDto> getBills(
             @Param("customerId") int customerId,
             @Param("billStatus") BillStatus billStatus
@@ -55,6 +57,18 @@ public interface BillRepository extends JpaRepository<Bill, Integer>, JpaSpecifi
     void updateBillStatus(
             @Param("billId") int billId,
             @Param("billStatus") BillStatus billStatus
+    );
+
+    @Modifying
+    @Transactional
+    @Query("UPDATE Bill b " +
+            "SET b.billStatus = 'CANCELLED', b.cancellationInfo= :cancellationInfo WHERE " +
+            "b.id =:billId AND " +
+            "b.customer.id =:customerId")
+    void cancelBill(
+            @Param("billId") int billId,
+            @Param("customerId") int customerId,
+            @Param("cancellationInfo") String cancellationInfo
     );
 
     @Query("SELECT count(b) " +

@@ -52,6 +52,8 @@ public class Bill extends DateAuditing {
 
     private String note;
 
+    private String cancellationInfo;
+
     @OneToMany(mappedBy = "bill", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private List<BillDetail> billDetails = new ArrayList<>();
 

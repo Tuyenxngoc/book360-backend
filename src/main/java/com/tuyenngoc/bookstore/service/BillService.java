@@ -25,7 +25,7 @@ public interface BillService {
 
     double calculatePrice(double price, int discount, int quantity);
 
-    CommonResponseDto cancelOrder(int customerId, int billId);
+    CommonResponseDto cancelOrder(int customerId, int billId, String cancellationReason);
 
     int getCountBillByStatus(int customerId, BillStatus billStatus);
 

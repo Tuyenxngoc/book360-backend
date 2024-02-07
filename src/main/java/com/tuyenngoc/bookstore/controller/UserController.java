@@ -26,6 +26,6 @@ public class UserController {
             @Parameter(name = "userDetails", hidden = true)
             @CurrentUser CustomUserDetails userDetails
     ) {
-        return VsResponseUtil.success(userService.getCurrentUser(userDetails));
+        return VsResponseUtil.success(userService.getCurrentUser(userDetails.getUsername()));
     }
 }

@@ -47,9 +47,10 @@ public class BillController {
     @PatchMapping(UrlConstant.Bill.CANCEL_ORDER)
     public ResponseEntity<?> cancelOrder(
             @PathVariable int billId,
+            @RequestParam(name = "cancellationReason") String cancellationReason,
             @CurrentUser CustomUserDetails userDetails
     ) {
-        return VsResponseUtil.success(billService.cancelOrder(userDetails.getCustomerId(), billId));
+        return VsResponseUtil.success(billService.cancelOrder(userDetails.getCustomerId(), billId, cancellationReason));
     }
 
     @Operation(summary = "API get count bills by status")

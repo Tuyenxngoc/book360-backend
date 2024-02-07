@@ -119,7 +119,7 @@ public class BillServiceImpl implements BillService {
     }
 
     @Override
-    public CommonResponseDto cancelOrder(int customerId, int billId) {
+    public CommonResponseDto cancelOrder(int customerId, int billId, String cancellationReason) {
         BillStatus billStatus = billRepository.getBillStatus(billId, customerId);
 
         if (billStatus == null) {
@@ -130,7 +130,7 @@ public class BillServiceImpl implements BillService {
             if (!billStatus.equals(BillStatus.WAIT_FOR_CONFIRMATION)) {
                 throw new InvalidException(ErrorMessage.Bill.ERR_NOT_ALLOW_CANCEL);
             }
-            billRepository.updateBillStatus(billId, BillStatus.CANCELLED);
+            billRepository.cancelBill(billId, customerId, cancellationReason);
         }
 
         String message = messageSource.getMessage(SuccessMessage.Bill.CANCEL_ORDER, null, LocaleContextHolder.getLocale());
