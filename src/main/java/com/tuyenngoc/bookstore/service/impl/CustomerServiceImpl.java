@@ -12,7 +12,10 @@ import com.tuyenngoc.bookstore.domain.dto.request.UpdateCustomerRequestDto;
 import com.tuyenngoc.bookstore.domain.dto.response.CommonResponseDto;
 import com.tuyenngoc.bookstore.domain.dto.response.GetProductResponseDto;
 import com.tuyenngoc.bookstore.domain.dto.response.GetTodoResponseDto;
-import com.tuyenngoc.bookstore.domain.entity.*;
+import com.tuyenngoc.bookstore.domain.entity.Customer;
+import com.tuyenngoc.bookstore.domain.entity.Product;
+import com.tuyenngoc.bookstore.domain.entity.Role;
+import com.tuyenngoc.bookstore.domain.entity.User;
 import com.tuyenngoc.bookstore.domain.mapper.CustomerMapper;
 import com.tuyenngoc.bookstore.domain.mapper.UserMapper;
 import com.tuyenngoc.bookstore.exception.DataIntegrityViolationException;
@@ -190,13 +193,9 @@ public class CustomerServiceImpl implements CustomerService {
     public CommonResponseDto updateCustomer(int customerId, UpdateCustomerRequestDto updateCustomerRequestDto) {
         Customer customer = getCustomer(customerId);
 
-        Address address = customer.getAddress();
-        address.setAddressName(updateCustomerRequestDto.getAddress());
-
         customer.setFullName(updateCustomerRequestDto.getFullName());
-        customer.setPhoneNumber(updateCustomerRequestDto.getPhoneNumber());
-        customer.setDob(updateCustomerRequestDto.getDob());
         customer.setGender(updateCustomerRequestDto.getGender());
+        customer.setDob(updateCustomerRequestDto.getDob());
 
         customerRepository.save(customer);
 
@@ -250,11 +249,12 @@ public class CustomerServiceImpl implements CustomerService {
             throw new DataIntegrityViolationException(ErrorMessage.Auth.ERR_DUPLICATE_EMAIL);
         }
         Role role = roleService.getRole(requestDto.getRoleName());
-        //Create Address
-        Address address = addressService.createAddress(requestDto.getAddressName());
+        //Create Address todo
+//        Address address = addressService.createAddress(requestDto.getAddressName());
+
         //Create Customer
         Customer customer = customerMapper.toCustomer(requestDto);
-        customer.setAddress(address);
+//        customer.setAddress(address);
         customerRepository.save(customer);
         //Create User
         User newUser = userMapper.toUser(requestDto);

@@ -15,6 +15,12 @@ public class UrlConstant {
         public static final String REFRESH_TOKEN = PRE_FIX + "/refresh-token";
     }
 
+    public static class Address {
+        private static final String PRE_FIX = "/address";
+
+        public static final String SAVE_LOCATION_CUSTOMER = PRE_FIX;
+    }
+
     public static class User {
         private static final String PRE_FIX = "/user";
 

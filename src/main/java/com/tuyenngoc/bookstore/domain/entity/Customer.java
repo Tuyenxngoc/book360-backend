@@ -28,7 +28,7 @@ public class Customer extends DateAuditing {
     private Integer id;
 
     @Nationalized
-    @Column(nullable = false, name = "full_name")
+    @Column(name = "full_name", nullable = false)
     private String fullName;
 
     @Temporal(TemporalType.DATE)
@@ -42,11 +42,11 @@ public class Customer extends DateAuditing {
 
     private String avatar;
 
-    @OneToOne(mappedBy = "customer", cascade = CascadeType.ALL)
+    @OneToOne(mappedBy = "customer", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     @JsonIgnore
     private User user;
 
-    @OneToOne(mappedBy = "customer", cascade = CascadeType.ALL)
+    @OneToOne(mappedBy = "customer", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     @JsonIgnore
     private Cart cart;
 
@@ -54,23 +54,16 @@ public class Customer extends DateAuditing {
     @JsonIgnore
     private List<Bill> bills = new ArrayList<>();
 
-    @ManyToOne
-    @JoinColumn(name = "address_id", foreignKey = @ForeignKey(name = "FK_CUSTOMER_ADDRESS_ID"), referencedColumnName = "address_id")
-    @JsonIgnore
-    private Address address;
+    @OneToMany(mappedBy = "customer", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    private List<AddressDetail> addressesDetails = new ArrayList<>();
 
-    @ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @ManyToMany(fetch = FetchType.LAZY)
     @JoinTable(
-            name = "customer_favorite_products",
+            name = "customer_favorite_product",
             joinColumns = @JoinColumn(name = "customer_id", foreignKey = @ForeignKey(name = "FK_CUSTOMER_FAVORITE_PRODUCT_CUSTOMER_ID"), referencedColumnName = "customer_id"),
             inverseJoinColumns = @JoinColumn(name = "product_id", foreignKey = @ForeignKey(name = "FK_CUSTOMER_FAVORITE_PRODUCT_PRODUCT_ID"), referencedColumnName = "product_id")
     )
     @JsonIgnore
     private List<Product> favoriteProducts = new ArrayList<>();
-
-    public Customer(String fullName, String phoneNumber) {
-        this.fullName = fullName;
-        this.phoneNumber = phoneNumber;
-    }
 
 }

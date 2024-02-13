@@ -27,7 +27,7 @@ public class Author extends DateAuditing {
     @Column(name = "full_name", nullable = false)
     private String fullName;
 
-    @ManyToMany(mappedBy = "authors", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @ManyToMany(mappedBy = "authors", fetch = FetchType.LAZY)
     @JsonIgnore
     private List<Product> products = new ArrayList<>();
 

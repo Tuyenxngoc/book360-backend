@@ -1,13 +1,13 @@
 package com.tuyenngoc.bookstore.domain.entity;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.tuyenngoc.bookstore.domain.entity.common.DateAuditing;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-import java.util.ArrayList;
 import java.util.List;
 
 @Entity
@@ -16,22 +16,34 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 @Table(name = "address")
-public class Address {
+public class Address extends DateAuditing {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "address_id")
     private Integer id;
 
+    private String country;
+
+    private String state;
+
+    private String city;
+
+    private String district;
+
+    private String address;
+
+    private String zipcode;
+
     private double latitude;
 
     private double longitude;
 
-    @Column(name = "address_name")
-    private String addressName;
+    @Column(name = "is_valid")
+    private boolean isValid;
 
-    @OneToMany(mappedBy = "address", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "address", fetch = FetchType.LAZY)
     @JsonIgnore
-    private List<Customer> customers = new ArrayList<>();
+    private List<AddressDetail> addressDetail;
 
 }

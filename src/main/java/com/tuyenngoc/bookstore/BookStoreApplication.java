@@ -4,9 +4,7 @@ import com.tuyenngoc.bookstore.config.CloudinaryConfig;
 import com.tuyenngoc.bookstore.config.MailConfig;
 import com.tuyenngoc.bookstore.config.properties.AdminInfo;
 import com.tuyenngoc.bookstore.constant.RoleConstant;
-import com.tuyenngoc.bookstore.domain.entity.Customer;
 import com.tuyenngoc.bookstore.domain.entity.Role;
-import com.tuyenngoc.bookstore.domain.entity.User;
 import com.tuyenngoc.bookstore.repository.CustomerRepository;
 import com.tuyenngoc.bookstore.repository.RoleRepository;
 import com.tuyenngoc.bookstore.repository.UserRepository;
@@ -20,6 +18,8 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.core.env.Environment;
 import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.security.crypto.password.PasswordEncoder;
+
+import java.util.Collections;
 
 @Slf4j
 @RequiredArgsConstructor
@@ -60,21 +60,14 @@ public class BookStoreApplication {
         return args -> {
             //init role
             if (roleRepository.count() == 0) {
-                roleRepository.save(new Role(1, RoleConstant.ADMINISTRATOR, null));
-                roleRepository.save(new Role(2, RoleConstant.CUSTOMER, null));
-                roleRepository.save(new Role(3, RoleConstant.SALES_STAFF, null));
+                roleRepository.save(new Role(1, RoleConstant.ADMINISTRATOR, Collections.emptyList()));
+                roleRepository.save(new Role(2, RoleConstant.CUSTOMER, Collections.emptyList()));
+                roleRepository.save(new Role(3, RoleConstant.SALES_STAFF, Collections.emptyList()));
             }
             //init admin
             if (userRepository.count() == 0) {
                 try {
-                    User admin = User.builder()
-                            .username(adminInfo.getUsername())
-                            .password(passwordEncoder.encode(adminInfo.getPassword()))
-                            .email(adminInfo.getEmail())
-                            .role(roleRepository.findByName(RoleConstant.ADMINISTRATOR).orElse(null))
-                            .customer(customerRepository.save(new Customer(adminInfo.getName(), adminInfo.getPhoneNumber())))
-                            .build();
-                    userRepository.save(admin);
+
                 } catch (Exception e) {
                     e.printStackTrace();
                 }

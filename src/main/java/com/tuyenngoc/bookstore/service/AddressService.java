@@ -4,6 +4,5 @@ import com.tuyenngoc.bookstore.domain.entity.Address;
 
 public interface AddressService {
 
-    Address createAddress(String addressName);
-
+    void getAddressName(Address address);
 }

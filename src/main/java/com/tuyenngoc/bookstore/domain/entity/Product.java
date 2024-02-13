@@ -91,7 +91,7 @@ public class Product extends FlagUserDateAuditing {
     @JoinColumn(name = "book_set_id", foreignKey = @ForeignKey(name = "FK_PRODUCT_BOOK_SET_ID"), referencedColumnName = "book_set_id")
     private BookSet bookSet;
 
-    @ManyToMany(fetch = FetchType.LAZY)
+    @ManyToMany
     @JoinTable(
             name = "product_author",
             joinColumns = @JoinColumn(name = "product_id", foreignKey = @ForeignKey(name = "FK_PRODUCT_AUTHOR_PRODUCT_ID"), referencedColumnName = "product_id"),
@@ -99,7 +99,7 @@ public class Product extends FlagUserDateAuditing {
     )
     private Set<Author> authors = new HashSet<>();
 
-    @ManyToMany(mappedBy = "favoriteProducts", cascade = CascadeType.MERGE, fetch = FetchType.LAZY)
+    @ManyToMany(mappedBy = "favoriteProducts", fetch = FetchType.LAZY)
     @JsonIgnore
     private List<Customer> customers = new ArrayList<>();
 }

@@ -9,10 +9,7 @@ import com.tuyenngoc.bookstore.domain.dto.request.*;
 import com.tuyenngoc.bookstore.domain.dto.response.CommonResponseDto;
 import com.tuyenngoc.bookstore.domain.dto.response.LoginResponseDto;
 import com.tuyenngoc.bookstore.domain.dto.response.TokenRefreshResponseDto;
-import com.tuyenngoc.bookstore.domain.entity.Address;
-import com.tuyenngoc.bookstore.domain.entity.Cart;
-import com.tuyenngoc.bookstore.domain.entity.Customer;
-import com.tuyenngoc.bookstore.domain.entity.User;
+import com.tuyenngoc.bookstore.domain.entity.*;
 import com.tuyenngoc.bookstore.domain.mapper.AddressMapper;
 import com.tuyenngoc.bookstore.domain.mapper.UserMapper;
 import com.tuyenngoc.bookstore.exception.DataIntegrityViolationException;
@@ -47,6 +44,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.Date;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.concurrent.CompletableFuture;
 
@@ -80,6 +78,8 @@ public class AuthServiceImpl implements AuthService {
     private final AddressMapper addressMapper;
 
     private final AddressRepository addressRepository;
+
+    private final AddressServiceImpl addressService;
 
     @Override
     public LoginResponseDto login(LoginRequestDto request) {
@@ -182,14 +182,27 @@ public class AuthServiceImpl implements AuthService {
                 e.printStackTrace();
             }
         });
-        //Create new address
-        Address address = addressMapper.toAddress(addressDto);
-        addressRepository.save(address);
 
         //Create new Customer
         Customer customer = new Customer();
         customer.setFullName(requestDto.getUsername());
-        customer.setAddress(address);
+
+        //Create new address
+        if (addressDto.getLatitude() != null && addressDto.getLongitude() != null) {
+            Address address = addressRepository.findByLatitudeAndLongitude(addressDto.getLatitude(), addressDto.getLongitude())
+                    .orElse(addressMapper.toAddress(addressDto));
+            //Get address name from openstreetmap while address is invalid
+            if (!address.isValid()) {
+                addressService.getAddressName(address);
+                addressRepository.save(address);
+            }
+
+            AddressDetail addressDetail = new AddressDetail();
+            addressDetail.setAddress(address);
+            addressDetail.setFullName(requestDto.getUsername());
+            addressDetail.setDefaultAddress(true);
+            customer.setAddressesDetails(List.of(addressDetail));
+        }
         customerRepository.save(customer);
 
         //Create new Cart
