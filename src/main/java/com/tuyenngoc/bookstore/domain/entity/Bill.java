@@ -24,18 +24,6 @@ public class Bill extends DateAuditing {
     @Column(name = "bill_id")
     private Integer id;
 
-    @Column(nullable = false, name = "consignee_name")
-    private String consigneeName;
-
-    @Column(nullable = false, name = "shipping_address")
-    private String shippingAddress;
-
-    @Column(nullable = false, name = "phone_number")
-    private String phoneNumber;
-
-    @Column(nullable = false)
-    private String email;
-
     @Column(name = "shipping_fee")
     private double shippingFee;
 
@@ -52,6 +40,7 @@ public class Bill extends DateAuditing {
 
     private String note;
 
+    @Column(name = "cancellation_info")
     private String cancellationInfo;
 
     @OneToMany(mappedBy = "bill", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
@@ -61,5 +50,9 @@ public class Bill extends DateAuditing {
     @JoinColumn(name = "customer_id", foreignKey = @ForeignKey(name = "FK_BILL_CUSTOMER_ID"), referencedColumnName = "customer_id")
     @JsonIgnore
     private Customer customer;
+
+    @ManyToOne
+    @JoinColumn(name = "address_detail_id", foreignKey = @ForeignKey(name = "FK_BILL_ADDRESS_DETAIL_ID"), referencedColumnName = "address_detail_id")
+    private AddressDetail shippingAddress;
 
 }

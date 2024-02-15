@@ -1,6 +1,7 @@
 package com.tuyenngoc.bookstore.domain.dto.response;
 
 import com.tuyenngoc.bookstore.domain.dto.BillDetailDto;
+import com.tuyenngoc.bookstore.domain.entity.AddressDetail;
 import com.tuyenngoc.bookstore.domain.entity.Bill;
 import com.tuyenngoc.bookstore.domain.entity.BillDetail;
 import lombok.AllArgsConstructor;
@@ -32,8 +33,9 @@ public class GetBillResponseDto {
     private List<BillDetailDto> billDetails = new ArrayList<>();
 
     public GetBillResponseDto(Bill bill) {
+        AddressDetail addressDetail = bill.getShippingAddress();
         this.id = bill.getId();
-        this.consigneeName = bill.getConsigneeName();
+        this.consigneeName = addressDetail.getFullName();
         this.createdDate = bill.getCreatedDate();
         this.billStatus = bill.getBillStatus().getName();
         this.totalAmount = bill.getTotalAmount();

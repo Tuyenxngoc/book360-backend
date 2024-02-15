@@ -23,12 +23,15 @@ public class BillSpecifications {
 
             if (StringUtils.isNotBlank(keyword) && StringUtils.isNotBlank(searchBy)) {
                 switch (searchBy) {
-                    case Bill_.ID -> predicate = builder.and(predicate, builder.equal(root.get(Bill_.id),
+                    case "id" -> predicate = builder.and(predicate, builder.equal(root.get(Bill_.id),
                             castToRequiredType(root.get(Bill_.id).getJavaType(), keyword)));
 
-                    case Bill_.CONSIGNEE_NAME -> predicate = builder.and(predicate, builder.equal(root.get(Bill_.consigneeName), keyword));
+                    case "customerName" -> {
+                        Join<Bill, AddressDetail> addressDetailJoin = root.join(Bill_.shippingAddress);
+                        predicate = builder.and(predicate, builder.equal(addressDetailJoin.get(AddressDetail_.fullName), keyword));
+                    }
 
-                    case Product_.NAME -> {
+                    case "productName" -> {
                         Join<Bill, BillDetail> billDetailJoin = root.join(Bill_.billDetails);
                         Join<BillDetail, Product> productJoin = billDetailJoin.join(BillDetail_.product);
                         predicate = builder.and(predicate, builder.like(productJoin.get(Product_.name), "%" + keyword + "%"));

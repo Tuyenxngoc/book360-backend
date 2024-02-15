@@ -29,9 +29,8 @@ public class Address extends DateAuditing {
 
     private String city;
 
-    private String district;
-
-    private String address;
+    @Column(name = "full_address")
+    private String fullAddress;
 
     private String zipcode;
 

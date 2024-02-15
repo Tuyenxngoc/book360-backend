@@ -18,7 +18,11 @@ public class UrlConstant {
     public static class Address {
         private static final String PRE_FIX = "/address";
 
-        public static final String SAVE_LOCATION_CUSTOMER = PRE_FIX;
+        public static final String GET_ADDRESS = PRE_FIX + "/{addressId}";
+        public static final String GET_ADDRESSES = PRE_FIX + "/get";
+        public static final String SAVE_LOCATION_CUSTOMER = PRE_FIX + "/create";
+        public static final String SET_DEFAULT_ADDRESS = PRE_FIX + "/set-default/{addressId}";
+        public static final String DELETE_ADDRESS = PRE_FIX + "/delete/{addressId}";
     }
 
     public static class User {

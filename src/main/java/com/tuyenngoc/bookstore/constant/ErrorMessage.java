@@ -67,6 +67,13 @@ public class ErrorMessage {
         public static final String ERR_NOT_FOUND_ID = "exception.author.not.found.id";
     }
 
+    public static class Address {
+        public static final String ERR_NOT_FOUND_ID = "exception.address.not.found.id";
+        public static final String CANNOT_DELETE_DEFAULT_ADDRESS = "exception.address.cannot.delete.default";
+        public static final String NO_NEED_TO_UPDATE = "exception.address.is-default";
+        public static final String TOO_MANY_ADDRESSES = "exception.address.to-many";
+    }
+
     public static class Role {
         public static final String ERR_NOT_FOUND_ID = "exception.role.not.found.id";
         public static final String ERR_NOT_FOUND_NAME = "exception.role.not.found.name";

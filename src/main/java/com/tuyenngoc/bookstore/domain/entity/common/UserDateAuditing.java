@@ -20,7 +20,7 @@ public abstract class UserDateAuditing extends DateAuditing {
     private String createdBy;
 
     @LastModifiedBy
-    @Column(name = "last_modified_by", nullable = true)//todo update nullable false
+    @Column(name = "last_modified_by", nullable = false)
     private String lastModifiedBy;
 
 }

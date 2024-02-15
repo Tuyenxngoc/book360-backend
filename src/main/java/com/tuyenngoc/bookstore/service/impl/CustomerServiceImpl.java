@@ -249,12 +249,8 @@ public class CustomerServiceImpl implements CustomerService {
             throw new DataIntegrityViolationException(ErrorMessage.Auth.ERR_DUPLICATE_EMAIL);
         }
         Role role = roleService.getRole(requestDto.getRoleName());
-        //Create Address todo
-//        Address address = addressService.createAddress(requestDto.getAddressName());
-
         //Create Customer
         Customer customer = customerMapper.toCustomer(requestDto);
-//        customer.setAddress(address);
         customerRepository.save(customer);
         //Create User
         User newUser = userMapper.toUser(requestDto);

@@ -1,6 +1,7 @@
 package com.tuyenngoc.bookstore.domain.dto.response;
 
 import com.tuyenngoc.bookstore.domain.dto.BillDetailDto;
+import com.tuyenngoc.bookstore.domain.entity.AddressDetail;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -22,7 +23,7 @@ public class GetBillDetailResponseDto {
 
     private LocalDateTime createdDate;
 
-    private String shippingAddress;
+    private AddressDetail shippingAddress;
 
     private String phoneNumber;
 

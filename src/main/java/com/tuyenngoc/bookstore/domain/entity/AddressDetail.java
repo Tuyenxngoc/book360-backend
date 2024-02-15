@@ -9,6 +9,8 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.util.List;
+
 @Entity
 @Getter
 @Setter
@@ -25,7 +27,7 @@ public class AddressDetail extends DateAuditing {
     @Column(name = "full_name", nullable = false)
     private String fullName;
 
-    @Column(name = "phone_number")
+    @Column(name = "phone_number", nullable = false)
     private String phoneNumber;
 
     @Enumerated(EnumType.STRING)
@@ -34,7 +36,7 @@ public class AddressDetail extends DateAuditing {
     @Column(name = "is_default_address")
     private boolean isDefaultAddress;
 
-    @ManyToOne
+    @ManyToOne(cascade = {CascadeType.MERGE, CascadeType.PERSIST})
     @JoinColumn(name = "address_id", foreignKey = @ForeignKey(name = "FK_ADDRESS_DETAIL_ADDRESS_ID"), referencedColumnName = "address_id")
     private Address address;
 
@@ -43,4 +45,7 @@ public class AddressDetail extends DateAuditing {
     @JsonIgnore
     private Customer customer;
 
+    @OneToMany(mappedBy = "shippingAddress", fetch = FetchType.LAZY)
+    @JsonIgnore
+    private List<Bill> bills;
 }

@@ -5,6 +5,7 @@ import com.tuyenngoc.bookstore.constant.PaymentMethod;
 import com.tuyenngoc.bookstore.domain.dto.BillDetailDto;
 import com.tuyenngoc.bookstore.domain.dto.request.BillRequestDto;
 import com.tuyenngoc.bookstore.domain.dto.response.GetBillDetailResponseDto;
+import com.tuyenngoc.bookstore.domain.entity.AddressDetail;
 import com.tuyenngoc.bookstore.domain.entity.Bill;
 import com.tuyenngoc.bookstore.domain.entity.BillDetail;
 import org.mapstruct.Mapper;

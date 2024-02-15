@@ -16,10 +16,7 @@ import com.tuyenngoc.bookstore.exception.DataIntegrityViolationException;
 import com.tuyenngoc.bookstore.exception.InvalidException;
 import com.tuyenngoc.bookstore.exception.NotFoundException;
 import com.tuyenngoc.bookstore.exception.UnauthorizedException;
-import com.tuyenngoc.bookstore.repository.AddressRepository;
-import com.tuyenngoc.bookstore.repository.CartRepository;
-import com.tuyenngoc.bookstore.repository.CustomerRepository;
-import com.tuyenngoc.bookstore.repository.UserRepository;
+import com.tuyenngoc.bookstore.repository.*;
 import com.tuyenngoc.bookstore.security.CustomUserDetails;
 import com.tuyenngoc.bookstore.security.jwt.JwtTokenProvider;
 import com.tuyenngoc.bookstore.service.AuthService;
@@ -44,7 +41,6 @@ import org.springframework.stereotype.Service;
 
 import java.util.Date;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 import java.util.concurrent.CompletableFuture;
 
@@ -80,6 +76,8 @@ public class AuthServiceImpl implements AuthService {
     private final AddressRepository addressRepository;
 
     private final AddressServiceImpl addressService;
+
+    private final AddressDetailRepository addressDetailRepository;
 
     @Override
     public LoginResponseDto login(LoginRequestDto request) {
@@ -186,6 +184,7 @@ public class AuthServiceImpl implements AuthService {
         //Create new Customer
         Customer customer = new Customer();
         customer.setFullName(requestDto.getUsername());
+        customerRepository.save(customer);
 
         //Create new address
         if (addressDto.getLatitude() != null && addressDto.getLongitude() != null) {
@@ -200,10 +199,12 @@ public class AuthServiceImpl implements AuthService {
             AddressDetail addressDetail = new AddressDetail();
             addressDetail.setAddress(address);
             addressDetail.setFullName(requestDto.getUsername());
+            addressDetail.setPhoneNumber("");
             addressDetail.setDefaultAddress(true);
-            customer.setAddressesDetails(List.of(addressDetail));
+            addressDetail.setCustomer(customer);
+
+            addressDetailRepository.save(addressDetail);
         }
-        customerRepository.save(customer);
 
         //Create new Cart
         Cart cart = new Cart();

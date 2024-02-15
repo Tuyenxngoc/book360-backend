@@ -43,8 +43,6 @@ public class CreateCustomerRequestDto {
 
     private Gender gender;
 
-    private String addressName;
-
     private String fullName;
 
     private LocalDate dob;
