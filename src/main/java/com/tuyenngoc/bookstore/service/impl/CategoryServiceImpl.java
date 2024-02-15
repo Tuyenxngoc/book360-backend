@@ -8,7 +8,6 @@ import com.tuyenngoc.bookstore.domain.dto.pagination.PaginationFullRequestDto;
 import com.tuyenngoc.bookstore.domain.dto.pagination.PaginationResponseDto;
 import com.tuyenngoc.bookstore.domain.dto.pagination.PagingMeta;
 import com.tuyenngoc.bookstore.domain.dto.response.CommonResponseDto;
-import com.tuyenngoc.bookstore.domain.dto.response.GetCategoryResponseDto;
 import com.tuyenngoc.bookstore.domain.entity.Category;
 import com.tuyenngoc.bookstore.domain.mapper.CategoryMapper;
 import com.tuyenngoc.bookstore.exception.NotFoundException;
@@ -16,6 +15,7 @@ import com.tuyenngoc.bookstore.repository.CategoryRepository;
 import com.tuyenngoc.bookstore.service.CategoryService;
 import com.tuyenngoc.bookstore.service.UploadRedisService;
 import com.tuyenngoc.bookstore.util.PaginationUtil;
+import com.tuyenngoc.bookstore.util.UploadFileUtil;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.MessageSource;
 import org.springframework.context.i18n.LocaleContextHolder;
@@ -36,6 +36,8 @@ public class CategoryServiceImpl implements CategoryService {
     private final MessageSource messageSource;
 
     private final UploadRedisService uploadRedisService;
+
+    private final UploadFileUtil uploadFileUtil;
 
     @Override
     public Category createCategory(CategoryDto categoryDto, String username) {
@@ -80,13 +82,13 @@ public class CategoryServiceImpl implements CategoryService {
     }
 
     @Override
-    public PaginationResponseDto<GetCategoryResponseDto> getCategoriesForAdmin(PaginationFullRequestDto requestDto) {
+    public PaginationResponseDto<Category> getCategoriesForAdmin(PaginationFullRequestDto requestDto) {
         Pageable pageable = PaginationUtil.buildPageable(requestDto, SortByDataConstant.CATEGORY);
 
-        Page<GetCategoryResponseDto> page = categoryRepository.getCategoriesForAdmin(pageable);
+        Page<Category> page = categoryRepository.findAll(pageable);
         PagingMeta pagingMeta = PaginationUtil.buildPagingMeta(requestDto, SortByDataConstant.CATEGORY, page);
 
-        PaginationResponseDto<GetCategoryResponseDto> responseDto = new PaginationResponseDto<>();
+        PaginationResponseDto<Category> responseDto = new PaginationResponseDto<>();
         responseDto.setItems(page.getContent());
         responseDto.setMeta(pagingMeta);
 
@@ -95,13 +97,13 @@ public class CategoryServiceImpl implements CategoryService {
 
     @Override
     public CommonResponseDto deleteCategory(int categoryId) {
-        if (categoryRepository.existsById(categoryId)) {
-            categoryRepository.deleteById(categoryId);
-            String message = messageSource.getMessage(SuccessMessage.DELETE, null, LocaleContextHolder.getLocale());
-            return new CommonResponseDto(message);
-        } else {
-            throw new NotFoundException(ErrorMessage.Category.ERR_NOT_FOUND_ID, String.valueOf(categoryId));
-        }
+        Category category = getCategory(categoryId);
+        uploadFileUtil.destroyFileWithUrl(category.getImage());
+
+        categoryRepository.delete(category);
+
+        String message = messageSource.getMessage(SuccessMessage.DELETE, null, LocaleContextHolder.getLocale());
+        return new CommonResponseDto(message);
     }
 
 }

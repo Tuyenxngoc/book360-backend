@@ -1,7 +1,7 @@
 package com.tuyenngoc.bookstore.domain.entity;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.tuyenngoc.bookstore.domain.entity.common.DateAuditing;
+import com.tuyenngoc.bookstore.domain.entity.common.UserDateAuditing;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -17,7 +17,7 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 @Table(name = "category")
-public class Category extends DateAuditing {
+public class Category extends UserDateAuditing {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

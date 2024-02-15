@@ -4,13 +4,15 @@ import com.tuyenngoc.bookstore.config.CloudinaryConfig;
 import com.tuyenngoc.bookstore.config.MailConfig;
 import com.tuyenngoc.bookstore.config.properties.AdminInfo;
 import com.tuyenngoc.bookstore.constant.RoleConstant;
+import com.tuyenngoc.bookstore.domain.entity.Cart;
+import com.tuyenngoc.bookstore.domain.entity.Customer;
 import com.tuyenngoc.bookstore.domain.entity.Role;
+import com.tuyenngoc.bookstore.domain.entity.User;
+import com.tuyenngoc.bookstore.repository.CartRepository;
 import com.tuyenngoc.bookstore.repository.CustomerRepository;
 import com.tuyenngoc.bookstore.repository.RoleRepository;
 import com.tuyenngoc.bookstore.repository.UserRepository;
-import com.tuyenngoc.bookstore.service.AuthService;
-import com.tuyenngoc.bookstore.service.AuthorService;
-import com.tuyenngoc.bookstore.service.CustomerService;
+import com.tuyenngoc.bookstore.service.RoleService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.CommandLineRunner;
@@ -43,6 +45,10 @@ public class BookStoreApplication {
 
     private final PasswordEncoder passwordEncoder;
 
+    private final RoleService roleService;
+
+    private final CartRepository cartRepository;
+
     public static void main(String[] args) {
         Environment env = SpringApplication.run(BookStoreApplication.class, args).getEnvironment();
         String appName = env.getProperty("spring.application.name");
@@ -70,6 +76,25 @@ public class BookStoreApplication {
             //init admin
             if (userRepository.count() == 0) {
                 try {
+                    //Create new Customer
+                    Customer customer = new Customer();
+                    customer.setFullName(adminInfo.getName());
+                    customer.setPhoneNumber(adminInfo.getPhoneNumber());
+                    Customer newCustomer = customerRepository.save(customer);
+
+                    //Create new Cart
+                    Cart cart = new Cart();
+                    cart.setCustomer(newCustomer);
+                    cartRepository.save(cart);
+
+                    //Create new User
+                    User user = new User();
+                    user.setUsername(adminInfo.getUsername());
+                    user.setEmail(adminInfo.getEmail());
+                    user.setPassword(passwordEncoder.encode(adminInfo.getPassword()));
+                    user.setRole(roleService.getRole(RoleConstant.ADMINISTRATOR));
+                    user.setCustomer(newCustomer);
+                    userRepository.save(user);
                 } catch (Exception e) {
                     e.printStackTrace();
                 }

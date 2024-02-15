@@ -13,9 +13,10 @@ import java.util.List;
 @Repository
 public interface BannerRepository extends JpaRepository<Banner, Integer> {
 
+    @Query("SELECT b FROM Banner b ORDER BY b.viewOrder")
     Page<Banner> findAll(Pageable pageable);
 
-    @Query("SELECT new com.tuyenngoc.bookstore.domain.dto.BannerDto(b) FROM Banner b")
+    @Query("SELECT new com.tuyenngoc.bookstore.domain.dto.BannerDto(b) FROM Banner b ORDER BY b.viewOrder")
     List<BannerDto> getBanners();
 
     void deleteById(Integer id);

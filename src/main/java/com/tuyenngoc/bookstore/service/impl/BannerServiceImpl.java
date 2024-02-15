@@ -15,6 +15,7 @@ import com.tuyenngoc.bookstore.repository.BannerRepository;
 import com.tuyenngoc.bookstore.service.BannerService;
 import com.tuyenngoc.bookstore.service.UploadRedisService;
 import com.tuyenngoc.bookstore.util.PaginationUtil;
+import com.tuyenngoc.bookstore.util.UploadFileUtil;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.MessageSource;
 import org.springframework.context.i18n.LocaleContextHolder;
@@ -35,6 +36,8 @@ public class BannerServiceImpl implements BannerService {
     private final BannerMapper bannerMapper;
 
     private final UploadRedisService uploadRedisService;
+
+    private final UploadFileUtil uploadFileUtil;
 
     @Override
     public List<BannerDto> getAllBanners() {
@@ -81,13 +84,13 @@ public class BannerServiceImpl implements BannerService {
 
     @Override
     public CommonResponseDto deleteBanner(int bannerId) {
-        if (bannerRepository.existsById(bannerId)) {
-            bannerRepository.deleteById(bannerId);
-            String message = messageSource.getMessage(SuccessMessage.DELETE, null, LocaleContextHolder.getLocale());
-            return new CommonResponseDto(message);
-        } else {
-            throw new NotFoundException(ErrorMessage.Banner.ERR_NOT_FOUND_ID, String.valueOf(bannerId));
-        }
+        Banner banner = getBanner(bannerId);
+        uploadFileUtil.destroyFileWithUrl(banner.getImage());
+
+        bannerRepository.delete(banner);
+
+        String message = messageSource.getMessage(SuccessMessage.DELETE, null, LocaleContextHolder.getLocale());
+        return new CommonResponseDto(message);
     }
 
 }

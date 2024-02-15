@@ -206,7 +206,7 @@ public class AuthServiceImpl implements AuthService {
         cart.setCustomer(newCustomer);
         cartRepository.save(cart);
 
-        //Create new user
+        //Create new User
         User user = userMapper.toUser(requestDto);
         user.setPassword(passwordEncoder.encode(requestDto.getPassword()));
         user.setRole(roleService.getRole(RoleConstant.CUSTOMER));
