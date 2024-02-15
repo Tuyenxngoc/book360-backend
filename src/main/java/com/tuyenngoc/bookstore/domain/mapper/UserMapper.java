@@ -27,7 +27,7 @@ public interface UserMapper {
 
     @Named("mapAddresses")// TODO
     default String getAddressName(List<Address> addresses) {
-        return addresses.get(0).getCountry();
+        return null;
     }
 
     @Mappings({

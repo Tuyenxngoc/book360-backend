@@ -1,17 +1,19 @@
 package com.tuyenngoc.bookstore.util;
 
-import com.tuyenngoc.bookstore.domain.dto.AddressDto;
+import com.tuyenngoc.bookstore.domain.dto.request.CoordinatesRequestDto;
+import lombok.extern.slf4j.Slf4j;
 
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
 
+@Slf4j
 public class AddressUtil {
 
-    public static String getLocationName(double latitude, double longitude) {
-
-        String url = "https://nominatim.openstreetmap.org/reverse?format=json&lat=" + latitude + "&lon=" + longitude + "&zoom=18&addressdetails=1";
+    public static String getLocationName(CoordinatesRequestDto addressDto) {
+        String url = String.format("https://nominatim.openstreetmap.org/reverse?format=json&lat=%s&lon=%s&zoom=18&addressdetails=1",
+                addressDto.getLatitude(), addressDto.getLongitude());
 
         HttpURLConnection connection;
         try {
@@ -28,15 +30,21 @@ public class AddressUtil {
                 }
                 reader.close();
 
-                return response.toString();
+                String json = response.toString();
+                int index = json.indexOf("\"display_name\":\"");
+                if (index != -1) {
+                    int startIndex = index + 16;
+                    int endIndex = json.indexOf("\"", startIndex);
+                    return json.substring(startIndex, endIndex);
+                }
             }
         } catch (Exception e) {
-            e.printStackTrace();
+            log.error("Error get address name: {}", e.getMessage(), e);
         }
         return null;
     }
 
-    public static double calculateDistance(AddressDto address1Dto, AddressDto address2Dto) {
+    public static double calculateDistance(CoordinatesRequestDto address1Dto, CoordinatesRequestDto address2Dto) {
         double earthRadius = 6371;
 
         double latDiff = Math.toRadians(address2Dto.getLatitude() - address1Dto.getLatitude());

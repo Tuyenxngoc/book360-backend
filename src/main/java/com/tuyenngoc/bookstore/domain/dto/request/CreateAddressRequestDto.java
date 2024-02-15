@@ -25,15 +25,7 @@ public class CreateAddressRequestDto {
     private String phoneNumber;
 
     @NotBlank(message = ErrorMessage.INVALID_NOT_BLANK_FIELD)
-    private String country;
-
-    @NotBlank(message = ErrorMessage.INVALID_NOT_BLANK_FIELD)
-    private String state;
-
-    @NotBlank(message = ErrorMessage.INVALID_NOT_BLANK_FIELD)
-    private String city;
-
-    private String zipcode;
+    private String addressName;
 
     @Max(value = 90, message = ErrorMessage.INVALID_COORDINATES)
     @Min(value = -90, message = ErrorMessage.INVALID_COORDINATES)

@@ -1,4 +1,4 @@
-package com.tuyenngoc.bookstore.domain.dto;
+package com.tuyenngoc.bookstore.domain.dto.request;
 
 import com.tuyenngoc.bookstore.constant.ErrorMessage;
 import jakarta.validation.constraints.Max;
@@ -13,7 +13,7 @@ import lombok.Setter;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class AddressDto {
+public class CoordinatesRequestDto {
 
     @Max(value = 90, message = ErrorMessage.INVALID_COORDINATES)
     @Min(value = -90, message = ErrorMessage.INVALID_COORDINATES)

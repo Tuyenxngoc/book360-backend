@@ -23,23 +23,12 @@ public class Address extends DateAuditing {
     @Column(name = "address_id")
     private Integer id;
 
-    private String country;
-
-    private String state;
-
-    private String city;
-
-    @Column(name = "full_address")
-    private String fullAddress;
-
-    private String zipcode;
+    @Column(name = "address_name")
+    private String addressName;
 
     private double latitude;
 
     private double longitude;
-
-    @Column(name = "is_valid")
-    private boolean isValid;
 
     @OneToMany(mappedBy = "address", fetch = FetchType.LAZY)
     @JsonIgnore

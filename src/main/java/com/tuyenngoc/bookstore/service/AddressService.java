@@ -1,5 +1,6 @@
 package com.tuyenngoc.bookstore.service;
 
+import com.tuyenngoc.bookstore.domain.dto.request.CoordinatesRequestDto;
 import com.tuyenngoc.bookstore.domain.dto.request.CreateAddressRequestDto;
 import com.tuyenngoc.bookstore.domain.dto.response.CommonResponseDto;
 import com.tuyenngoc.bookstore.domain.entity.Address;
@@ -8,8 +9,6 @@ import com.tuyenngoc.bookstore.domain.entity.AddressDetail;
 import java.util.List;
 
 public interface AddressService {
-
-    void getAddressName(Address address);
 
     CommonResponseDto saveLocationCustomer(int customerId, CreateAddressRequestDto requestDto);
 
@@ -21,4 +20,5 @@ public interface AddressService {
 
     List<AddressDetail> getAddressDetails(int customerId);
 
+    Address getAddress(CoordinatesRequestDto addressDto);
 }

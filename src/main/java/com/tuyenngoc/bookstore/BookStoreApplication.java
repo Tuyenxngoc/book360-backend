@@ -8,6 +8,9 @@ import com.tuyenngoc.bookstore.domain.entity.Role;
 import com.tuyenngoc.bookstore.repository.CustomerRepository;
 import com.tuyenngoc.bookstore.repository.RoleRepository;
 import com.tuyenngoc.bookstore.repository.UserRepository;
+import com.tuyenngoc.bookstore.service.AuthService;
+import com.tuyenngoc.bookstore.service.AuthorService;
+import com.tuyenngoc.bookstore.service.CustomerService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.CommandLineRunner;
@@ -67,7 +70,6 @@ public class BookStoreApplication {
             //init admin
             if (userRepository.count() == 0) {
                 try {
-
                 } catch (Exception e) {
                     e.printStackTrace();
                 }

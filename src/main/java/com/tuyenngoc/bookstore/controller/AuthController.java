@@ -4,7 +4,6 @@ import com.tuyenngoc.bookstore.annotation.CurrentUser;
 import com.tuyenngoc.bookstore.annotation.RestApiV1;
 import com.tuyenngoc.bookstore.base.VsResponseUtil;
 import com.tuyenngoc.bookstore.constant.UrlConstant;
-import com.tuyenngoc.bookstore.domain.dto.AddressDto;
 import com.tuyenngoc.bookstore.domain.dto.request.*;
 import com.tuyenngoc.bookstore.security.CustomUserDetails;
 import com.tuyenngoc.bookstore.service.AuthService;
@@ -54,7 +53,7 @@ public class AuthController {
     @PostMapping(UrlConstant.Auth.REGISTER)
     public ResponseEntity<?> register(
             @Valid @RequestBody RegisterRequestDto requestDto,
-            @Valid @ParameterObject AddressDto addressDto
+            @Valid @ParameterObject CoordinatesRequestDto addressDto
     ) {
         return VsResponseUtil.success(authService.register(requestDto, addressDto));
     }

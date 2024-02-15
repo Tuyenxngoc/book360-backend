@@ -1,10 +1,8 @@
 package com.tuyenngoc.bookstore.service.impl;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.tuyenngoc.bookstore.constant.ErrorMessage;
 import com.tuyenngoc.bookstore.constant.SuccessMessage;
+import com.tuyenngoc.bookstore.domain.dto.request.CoordinatesRequestDto;
 import com.tuyenngoc.bookstore.domain.dto.request.CreateAddressRequestDto;
 import com.tuyenngoc.bookstore.domain.dto.response.CommonResponseDto;
 import com.tuyenngoc.bookstore.domain.entity.Address;
@@ -40,33 +38,6 @@ public class AddressServiceImpl implements AddressService {
 
     private final AddressDetailMapper addressDetailMapper;
 
-    @Override
-    public void getAddressName(Address address) {
-        try {
-            String json = AddressUtil.getLocationName(address.getLatitude(), address.getLongitude());
-            ObjectMapper objectMapper = new ObjectMapper();
-
-            JsonNode rootNode = objectMapper.readTree(json);
-
-            JsonNode rootAddress = rootNode.get("address");
-
-            String county = rootAddress.get("county").asText();
-            String state = rootAddress.get("state").asText();
-            String country = rootAddress.get("country").asText();
-
-            String fullAddress = rootNode.get("display_name").asText();
-
-            address.setCountry(country);
-            address.setState(state);
-            address.setCity(county);
-
-            address.setFullAddress(fullAddress);
-
-            address.setValid(true);
-        } catch (JsonProcessingException e) {
-            log.error("Error processing {}", e.getMessage(), e);
-        }
-    }
 
     @Override
     public CommonResponseDto saveLocationCustomer(int customerId, CreateAddressRequestDto requestDto) {
@@ -151,4 +122,22 @@ public class AddressServiceImpl implements AddressService {
     public List<AddressDetail> getAddressDetails(int customerId) {
         return addressDetailRepository.findAllByCustomerId(customerId);
     }
+
+    @Override
+    public Address getAddress(CoordinatesRequestDto addressDto) {
+        Address address = addressRepository.findByLatitudeAndLongitude(addressDto.getLatitude(), addressDto.getLongitude())
+                .orElse(addressMapper.toAddress(addressDto));
+
+        if (address.getAddressName() == null || address.getAddressName().isEmpty()) {
+            String addressName = AddressUtil.getLocationName(addressDto);
+            if (addressName == null) {
+                return null;
+            } else {
+                address.setAddressName(addressName);
+                addressRepository.save(address);
+            }
+        }
+        return address;
+    }
+
 }

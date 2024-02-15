@@ -3,7 +3,6 @@ package com.tuyenngoc.bookstore.service.impl;
 import com.tuyenngoc.bookstore.constant.ErrorMessage;
 import com.tuyenngoc.bookstore.constant.RoleConstant;
 import com.tuyenngoc.bookstore.constant.SuccessMessage;
-import com.tuyenngoc.bookstore.domain.dto.AddressDto;
 import com.tuyenngoc.bookstore.domain.dto.common.DataMailDto;
 import com.tuyenngoc.bookstore.domain.dto.request.*;
 import com.tuyenngoc.bookstore.domain.dto.response.CommonResponseDto;
@@ -151,7 +150,7 @@ public class AuthServiceImpl implements AuthService {
     }
 
     @Override
-    public User register(RegisterRequestDto requestDto, AddressDto addressDto) {
+    public User register(RegisterRequestDto requestDto, CoordinatesRequestDto addressDto) {
         if (!requestDto.getPassword().equals(requestDto.getRepeatPassword())) {
             throw new InvalidException(ErrorMessage.INVALID_REPEAT_PASSWORD);
         }
@@ -184,38 +183,34 @@ public class AuthServiceImpl implements AuthService {
         //Create new Customer
         Customer customer = new Customer();
         customer.setFullName(requestDto.getUsername());
-        customerRepository.save(customer);
+        Customer newCustomer = customerRepository.save(customer);
 
         //Create new address
         if (addressDto.getLatitude() != null && addressDto.getLongitude() != null) {
-            Address address = addressRepository.findByLatitudeAndLongitude(addressDto.getLatitude(), addressDto.getLongitude())
-                    .orElse(addressMapper.toAddress(addressDto));
-            //Get address name from openstreetmap while address is invalid
-            if (!address.isValid()) {
-                addressService.getAddressName(address);
-                addressRepository.save(address);
+            Address address = addressService.getAddress(addressDto);
+            if (address != null) {
+                AddressDetail addressDetail = new AddressDetail();
+
+                addressDetail.setFullName(newCustomer.getFullName());
+                addressDetail.setPhoneNumber("");
+                addressDetail.setAddress(address);
+                addressDetail.setCustomer(newCustomer);
+                addressDetail.setDefaultAddress(true);
+
+                addressDetailRepository.save(addressDetail);
             }
-
-            AddressDetail addressDetail = new AddressDetail();
-            addressDetail.setAddress(address);
-            addressDetail.setFullName(requestDto.getUsername());
-            addressDetail.setPhoneNumber("");
-            addressDetail.setDefaultAddress(true);
-            addressDetail.setCustomer(customer);
-
-            addressDetailRepository.save(addressDetail);
         }
 
         //Create new Cart
         Cart cart = new Cart();
-        cart.setCustomer(customer);
+        cart.setCustomer(newCustomer);
         cartRepository.save(cart);
 
         //Create new user
         User user = userMapper.toUser(requestDto);
         user.setPassword(passwordEncoder.encode(requestDto.getPassword()));
         user.setRole(roleService.getRole(RoleConstant.CUSTOMER));
-        user.setCustomer(customer);
+        user.setCustomer(newCustomer);
         return userRepository.save(user);
     }
 
