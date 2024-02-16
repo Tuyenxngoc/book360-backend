@@ -6,8 +6,8 @@ import com.tuyenngoc.bookstore.domain.dto.pagination.PaginationRequestDto;
 import com.tuyenngoc.bookstore.domain.dto.pagination.PaginationResponseDto;
 import com.tuyenngoc.bookstore.domain.dto.request.CreateProductRequestDto;
 import com.tuyenngoc.bookstore.domain.dto.response.CommonResponseDto;
-import com.tuyenngoc.bookstore.domain.dto.response.GetProductDetailResponseDto;
-import com.tuyenngoc.bookstore.domain.dto.response.GetProductResponseDto;
+import com.tuyenngoc.bookstore.domain.dto.response.product.GetProductDetailResponseDto;
+import com.tuyenngoc.bookstore.domain.dto.response.product.GetProductResponseDto;
 import com.tuyenngoc.bookstore.domain.entity.Product;
 import com.tuyenngoc.bookstore.domain.entity.ProductImage;
 

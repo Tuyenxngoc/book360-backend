@@ -11,4 +11,7 @@ public interface AuthorRepository extends JpaRepository<Author, Integer> {
 
     void deleteById(int authorId);
 
+    boolean existsByFullName(String fullName);
+
+    boolean existsByFullNameAndIdNot(String fullName, int authorId);
 }

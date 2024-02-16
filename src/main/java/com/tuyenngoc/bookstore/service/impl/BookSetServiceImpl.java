@@ -8,8 +8,10 @@ import com.tuyenngoc.bookstore.domain.dto.pagination.PaginationFullRequestDto;
 import com.tuyenngoc.bookstore.domain.dto.pagination.PaginationResponseDto;
 import com.tuyenngoc.bookstore.domain.dto.pagination.PagingMeta;
 import com.tuyenngoc.bookstore.domain.dto.response.CommonResponseDto;
+import com.tuyenngoc.bookstore.domain.dto.response.bookSet.GetBookSetDetailResponseDto;
 import com.tuyenngoc.bookstore.domain.entity.BookSet;
 import com.tuyenngoc.bookstore.domain.mapper.BookSetMapper;
+import com.tuyenngoc.bookstore.exception.DataIntegrityViolationException;
 import com.tuyenngoc.bookstore.exception.NotFoundException;
 import com.tuyenngoc.bookstore.repository.BookSetRepository;
 import com.tuyenngoc.bookstore.service.BookSetService;
@@ -62,11 +64,22 @@ public class BookSetServiceImpl implements BookSetService {
     public BookSet createBookSet(BookSetDto bookSetDto) {
         BookSet bookSet;
         if (bookSetDto.getId() == null) {
+            // check if name already exists
+            boolean isNameExists = bookSetRepository.existsByName(bookSetDto.getName());
+            if (isNameExists) {
+                throw new DataIntegrityViolationException(ErrorMessage.BookSet.ERR_DUPLICATE_NAME, bookSetDto.getName());
+            }
+            // mapping book set
             bookSet = bookSetMapper.toBookSet(bookSetDto);
         } else {
+            // check if name exists excluding the current book set
+            boolean isNameExists = bookSetRepository.existsByNameAndIdNot(bookSetDto.getName(), bookSetDto.getId());
+            if (isNameExists) {
+                throw new DataIntegrityViolationException(ErrorMessage.BookSet.ERR_DUPLICATE_NAME, bookSetDto.getName());
+            }
+            // get book set
             bookSet = getBookSet(bookSetDto.getId());
-
-            //Set new values
+            // set new values
             bookSet.setName(bookSetDto.getName());
         }
         return bookSetRepository.save(bookSet);
@@ -74,13 +87,22 @@ public class BookSetServiceImpl implements BookSetService {
 
     @Override
     public CommonResponseDto deleteBookSet(int bookSetId) {
-        if (bookSetRepository.existsById(bookSetId)) {
-            bookSetRepository.deleteById(bookSetId);
-            String message = messageSource.getMessage(SuccessMessage.DELETE, null, LocaleContextHolder.getLocale());
-            return new CommonResponseDto(message);
-        } else {
-            throw new NotFoundException(ErrorMessage.BookSet.ERR_NOT_FOUND_ID, String.valueOf(bookSetId));
+        BookSet bookSet = getBookSet(bookSetId);
+
+        if (bookSet.getProducts().size() > 0) {
+            throw new DataIntegrityViolationException(ErrorMessage.BookSet.ERR_CANNOT_DELETE, String.valueOf(bookSetId));
         }
+
+        bookSetRepository.delete(bookSet);
+
+        String message = messageSource.getMessage(SuccessMessage.DELETE, null, LocaleContextHolder.getLocale());
+        return new CommonResponseDto(message);
+    }
+
+    @Override
+    public GetBookSetDetailResponseDto getBookSetDetail(int bookSetId) {
+        BookSet bookSet = getBookSet(bookSetId);
+        return bookSetMapper.toGetBookSetDetailResponseDto(bookSet);
     }
 
 }

@@ -4,7 +4,7 @@ import com.tuyenngoc.bookstore.constant.ErrorMessage;
 import com.tuyenngoc.bookstore.constant.SuccessMessage;
 import com.tuyenngoc.bookstore.domain.dto.CartDetailDto;
 import com.tuyenngoc.bookstore.domain.dto.response.CommonResponseDto;
-import com.tuyenngoc.bookstore.domain.dto.response.ProductFromCartResponseDto;
+import com.tuyenngoc.bookstore.domain.dto.response.product.GetProductFromCartResponseDto;
 import com.tuyenngoc.bookstore.domain.entity.Cart;
 import com.tuyenngoc.bookstore.domain.entity.CartDetail;
 import com.tuyenngoc.bookstore.domain.entity.Customer;
@@ -99,7 +99,7 @@ public class CartServiceImpl implements CartService {
     }
 
     @Override
-    public List<ProductFromCartResponseDto> getProductsFromCart(int customerId) {
+    public List<GetProductFromCartResponseDto> getProductsFromCart(int customerId) {
         return cartRepository.getProductFromCart(customerId);
     }
 

@@ -12,6 +12,7 @@ import java.util.Map;
 @NoArgsConstructor
 @AllArgsConstructor
 public class DataMailDto {
+
     private String to;
 
     private String subject;

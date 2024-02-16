@@ -11,14 +11,35 @@ import lombok.Setter;
 @AllArgsConstructor
 public class GetTodoResponseDto {
 
-    private int productSoldOut;
+    private ProductInfo productInfo;
 
-    private int waitForConfirmationCount;
+    private OrderInfo orderInfo;
 
-    private int waitForDeliveryCount;
+    public GetTodoResponseDto(int productSoldOut, int waitForConfirmationCount, int waitForDeliveryCount, int deliveringCount, int cancelledCount) {
+        this.productInfo = new ProductInfo(productSoldOut);
+        this.orderInfo = new OrderInfo(waitForConfirmationCount, waitForDeliveryCount, deliveringCount, cancelledCount);
+    }
 
-    private int deliveringCount;
+    @Getter
+    @Setter
+    @NoArgsConstructor
+    @AllArgsConstructor
+    public static class ProductInfo {
+        private int productSoldOut;
+    }
 
-    private int cancelledCount;
+    @Getter
+    @Setter
+    @NoArgsConstructor
+    @AllArgsConstructor
+    public static class OrderInfo {
+        private int waitForConfirmationCount;
+
+        private int waitForDeliveryCount;
+
+        private int deliveringCount;
+
+        private int cancelledCount;
+    }
 
 }

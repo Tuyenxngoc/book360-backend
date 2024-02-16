@@ -10,6 +10,7 @@ import com.tuyenngoc.bookstore.domain.dto.pagination.PagingMeta;
 import com.tuyenngoc.bookstore.domain.dto.response.CommonResponseDto;
 import com.tuyenngoc.bookstore.domain.entity.Category;
 import com.tuyenngoc.bookstore.domain.mapper.CategoryMapper;
+import com.tuyenngoc.bookstore.exception.DataIntegrityViolationException;
 import com.tuyenngoc.bookstore.exception.NotFoundException;
 import com.tuyenngoc.bookstore.repository.CategoryRepository;
 import com.tuyenngoc.bookstore.service.CategoryService;
@@ -43,10 +44,22 @@ public class CategoryServiceImpl implements CategoryService {
     public Category createCategory(CategoryDto categoryDto, String username) {
         Category category;
         if (categoryDto.getId() == null) {
+            // check if name already exists
+            boolean isNameExists = categoryRepository.existsByName(categoryDto.getName());
+            if (isNameExists) {
+                throw new DataIntegrityViolationException(ErrorMessage.Category.ERR_DUPLICATE_NAME, categoryDto.getName());
+            }
+            // mapping category
             category = categoryMapper.toCategory(categoryDto);
         } else {
+            // check if name exists excluding the current category
+            boolean isNameExists = categoryRepository.existsByNameAndIdNot(categoryDto.getName(), categoryDto.getId());
+            if (isNameExists) {
+                throw new DataIntegrityViolationException(ErrorMessage.Category.ERR_DUPLICATE_NAME, categoryDto.getName());
+            }
+            // get category
             category = getCategory(categoryDto.getId());
-
+            // set new values
             category.setName(categoryDto.getName());
             category.setImage(categoryDto.getImage());
         }
@@ -98,6 +111,11 @@ public class CategoryServiceImpl implements CategoryService {
     @Override
     public CommonResponseDto deleteCategory(int categoryId) {
         Category category = getCategory(categoryId);
+
+        if (category.getProducts().size() > 0) {
+            throw new DataIntegrityViolationException(ErrorMessage.Category.ERR_CANNOT_DELETE, String.valueOf(categoryId));
+        }
+
         uploadFileUtil.destroyFileWithUrl(category.getImage());
 
         categoryRepository.delete(category);

@@ -24,10 +24,10 @@ public class BookSet extends UserDateAuditing {
     @Column(name = "book_set_id")
     private Integer id;
 
-    @Column(name = "name", nullable = false, unique = true)
+    @Column(nullable = false, unique = true)
     private String name;
 
-    @OneToMany(mappedBy = "bookSet", cascade = CascadeType.MERGE, fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "bookSet", fetch = FetchType.LAZY)
     @JsonIgnore
     private Set<Product> products = new HashSet<>();
 

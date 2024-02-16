@@ -20,4 +20,12 @@ public class DataIntegrityViolationException extends RuntimeException {
         this.status = HttpStatus.CONFLICT;
         this.message = message;
     }
+
+    public DataIntegrityViolationException(String message, String... params) {
+        super(message);
+        this.status = HttpStatus.CONFLICT;
+        this.message = message;
+        this.params = params;
+    }
+
 }

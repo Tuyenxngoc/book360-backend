@@ -55,13 +55,13 @@ public class Product extends FlagUserDateAuditing {
     private String coverType;// Loại bìa của sách.
 
     @Column(name = "page_count")
-    private Integer pageCount;// Số trang của sách.
+    private int pageCount;// Số trang của sách.
 
     @Column(name = "sold_quantity")
-    private Integer soldQuantity; // Số lượng đã bán
+    private int soldQuantity; // Số lượng đã bán
 
     @Column(name = "stock_quantity")
-    private Integer stockQuantity;// Số lượng sách còn trong kho.
+    private int stockQuantity;// Số lượng sách còn trong kho.
 
     @ElementCollection(targetClass = AgeGroup.class)
     @Enumerated(EnumType.STRING)

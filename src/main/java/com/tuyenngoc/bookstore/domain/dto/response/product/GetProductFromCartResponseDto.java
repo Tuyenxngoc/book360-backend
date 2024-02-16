@@ -1,4 +1,4 @@
-package com.tuyenngoc.bookstore.domain.dto.response;
+package com.tuyenngoc.bookstore.domain.dto.response.product;
 
 import com.tuyenngoc.bookstore.domain.entity.CartDetail;
 import com.tuyenngoc.bookstore.domain.entity.Product;
@@ -11,7 +11,7 @@ import lombok.Setter;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class ProductFromCartResponseDto {
+public class GetProductFromCartResponseDto {
 
     private int productId;
 
@@ -25,7 +25,7 @@ public class ProductFromCartResponseDto {
 
     private int quantity;
 
-    public ProductFromCartResponseDto(CartDetail cartDetail) {
+    public GetProductFromCartResponseDto(CartDetail cartDetail) {
         Product product = cartDetail.getProduct();
 
         this.productId = product.getId();

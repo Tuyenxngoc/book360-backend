@@ -6,7 +6,7 @@ public interface UploadRedisService {
 
     void saveUrls(String username, List<String> urls);
 
-    List<String> getUrls(String username);
+    List<String> getUrls(String username, String key);
 
     void deleteUrls(String username, List<String> urls);
 

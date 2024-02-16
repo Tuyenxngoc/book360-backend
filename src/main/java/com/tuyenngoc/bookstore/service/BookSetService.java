@@ -4,6 +4,7 @@ import com.tuyenngoc.bookstore.domain.dto.BookSetDto;
 import com.tuyenngoc.bookstore.domain.dto.pagination.PaginationFullRequestDto;
 import com.tuyenngoc.bookstore.domain.dto.pagination.PaginationResponseDto;
 import com.tuyenngoc.bookstore.domain.dto.response.CommonResponseDto;
+import com.tuyenngoc.bookstore.domain.dto.response.bookSet.GetBookSetDetailResponseDto;
 import com.tuyenngoc.bookstore.domain.entity.BookSet;
 
 import java.util.List;
@@ -19,5 +20,7 @@ public interface BookSetService {
     BookSet createBookSet(BookSetDto bookSetDto);
 
     CommonResponseDto deleteBookSet(int bookSetId);
+
+    GetBookSetDetailResponseDto getBookSetDetail(int bookSetId);
 
 }

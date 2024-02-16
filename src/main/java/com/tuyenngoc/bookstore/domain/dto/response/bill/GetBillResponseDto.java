@@ -1,4 +1,4 @@
-package com.tuyenngoc.bookstore.domain.dto.response;
+package com.tuyenngoc.bookstore.domain.dto.response.bill;
 
 import com.tuyenngoc.bookstore.domain.dto.BillDetailDto;
 import com.tuyenngoc.bookstore.domain.entity.AddressDetail;

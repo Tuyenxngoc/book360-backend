@@ -1,13 +1,13 @@
-package com.tuyenngoc.bookstore.domain.dto.response;
+package com.tuyenngoc.bookstore.domain.dto.response.bill;
 
 import com.tuyenngoc.bookstore.domain.dto.BillDetailDto;
+import com.tuyenngoc.bookstore.domain.dto.common.DateAuditingDto;
 import com.tuyenngoc.bookstore.domain.entity.AddressDetail;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -15,13 +15,11 @@ import java.util.List;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class GetBillDetailResponseDto {
+public class GetBillDetailResponseDto extends DateAuditingDto {
 
     private Integer id;
 
     private String consigneeName;
-
-    private LocalDateTime createdDate;
 
     private AddressDetail shippingAddress;
 

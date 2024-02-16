@@ -1,6 +1,6 @@
 package com.tuyenngoc.bookstore.domain.dto;
 
-import com.tuyenngoc.bookstore.domain.dto.response.GetProductResponseDto;
+import com.tuyenngoc.bookstore.domain.dto.response.product.GetProductResponseDto;
 import com.tuyenngoc.bookstore.domain.entity.BillDetail;
 import lombok.AllArgsConstructor;
 import lombok.Getter;

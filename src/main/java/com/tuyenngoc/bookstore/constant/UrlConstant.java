@@ -81,6 +81,7 @@ public class UrlConstant {
 
         public static final String GET_ALL_AUTHORS = ADMIN_URL + PRE_FIX + "/all";
         public static final String GET_AUTHOR = ADMIN_URL + PRE_FIX + "/{authorId}";
+        public static final String GET_AUTHOR_DETAIL = ADMIN_URL + PRE_FIX + "/detail/{authorId}";
         public static final String GET_AUTHORS = ADMIN_URL + PRE_FIX + "/get";
         public static final String CREATE_AUTHOR = ADMIN_URL + PRE_FIX + "/create";
         public static final String DELETE_AUTHOR = ADMIN_URL + PRE_FIX + "/delete/{authorId}";
@@ -103,6 +104,7 @@ public class UrlConstant {
         public static final String GET_ALL_BOOK_SETS = ADMIN_URL + PRE_FIX + "/all";
         public static final String GET_BOOK_SETS = ADMIN_URL + PRE_FIX + "/get";
         public static final String GET_BOOK_SET = ADMIN_URL + PRE_FIX + "/{bookSetId}";
+        public static final String GET_BOOK_SET_DETAIL = ADMIN_URL + PRE_FIX + "/detail/{bookSetId}";
         public static final String CREATE_BOOK_SET = ADMIN_URL + PRE_FIX + "/create";
         public static final String DELETE_BOOK_SET = ADMIN_URL + PRE_FIX + "/delete/{bookSetId}";
     }

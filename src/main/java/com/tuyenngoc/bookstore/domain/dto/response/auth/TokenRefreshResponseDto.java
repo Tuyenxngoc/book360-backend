@@ -1,4 +1,4 @@
-package com.tuyenngoc.bookstore.domain.dto.response;
+package com.tuyenngoc.bookstore.domain.dto.response.auth;
 
 import com.tuyenngoc.bookstore.constant.TokenType;
 import lombok.Getter;

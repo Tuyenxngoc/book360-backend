@@ -2,7 +2,7 @@ package com.tuyenngoc.bookstore.service;
 
 import com.tuyenngoc.bookstore.domain.dto.CartDetailDto;
 import com.tuyenngoc.bookstore.domain.dto.response.CommonResponseDto;
-import com.tuyenngoc.bookstore.domain.dto.response.ProductFromCartResponseDto;
+import com.tuyenngoc.bookstore.domain.dto.response.product.GetProductFromCartResponseDto;
 import com.tuyenngoc.bookstore.domain.entity.Cart;
 import com.tuyenngoc.bookstore.domain.entity.CartDetail;
 import com.tuyenngoc.bookstore.domain.entity.Customer;
@@ -24,7 +24,7 @@ public interface CartService {
 
     CommonResponseDto addProductToCart(int customerId, CartDetailDto requestDto);
 
-    List<ProductFromCartResponseDto> getProductsFromCart(int customerId);
+    List<GetProductFromCartResponseDto> getProductsFromCart(int customerId);
 
     CommonResponseDto updateCartDetail(int customerId, CartDetailDto requestDto);
 

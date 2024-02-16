@@ -29,19 +29,19 @@ public class UploadRedisServiceImpl implements UploadRedisService {
     }
 
     @Override
-    public List<String> getUrls(String username) {
-        String key = getKeyFrom(username);
+    public List<String> getUrls(String username, String key) {
         return redisTemplate.opsForList().range(key, 0, -1);
     }
 
     @Override
     public void deleteUrls(String username, List<String> urls) {
         String key = getKeyFrom(username);
-        for (String url : getUrls(username)) {
+        for (String url : getUrls(username, key)) {
             if (!urls.contains(url)) {
                 uploadFileUtil.destroyFileWithUrl(url);
             }
         }
         redisTemplate.delete(key);
     }
+
 }

@@ -1,8 +1,8 @@
 package com.tuyenngoc.bookstore.service;
 
 import com.tuyenngoc.bookstore.domain.dto.pagination.PaginationResponseDto;
-import com.tuyenngoc.bookstore.domain.dto.response.GetProductDetailResponseDto;
-import com.tuyenngoc.bookstore.domain.dto.response.GetProductResponseDto;
+import com.tuyenngoc.bookstore.domain.dto.response.product.GetProductDetailResponseDto;
+import com.tuyenngoc.bookstore.domain.dto.response.product.GetProductResponseDto;
 import org.springframework.data.domain.Pageable;
 
 import java.util.List;

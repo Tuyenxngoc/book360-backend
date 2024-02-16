@@ -10,8 +10,8 @@ import com.tuyenngoc.bookstore.domain.dto.pagination.PaginationResponseDto;
 import com.tuyenngoc.bookstore.domain.dto.pagination.PagingMeta;
 import com.tuyenngoc.bookstore.domain.dto.request.CreateProductRequestDto;
 import com.tuyenngoc.bookstore.domain.dto.response.CommonResponseDto;
-import com.tuyenngoc.bookstore.domain.dto.response.GetProductDetailResponseDto;
-import com.tuyenngoc.bookstore.domain.dto.response.GetProductResponseDto;
+import com.tuyenngoc.bookstore.domain.dto.response.product.GetProductDetailResponseDto;
+import com.tuyenngoc.bookstore.domain.dto.response.product.GetProductResponseDto;
 import com.tuyenngoc.bookstore.domain.entity.Author;
 import com.tuyenngoc.bookstore.domain.entity.Category;
 import com.tuyenngoc.bookstore.domain.entity.Product;
@@ -197,16 +197,16 @@ public class ProductServiceImpl implements ProductService {
         Product product;
         if (productDto.getId() == null) {//create product
             product = productMapper.toProduct(productDto);
-
-            product.setSoldQuantity(0);
         } else {//update product
             product = getProduct(productDto.getId());
-            //Destroy ULR and remove product images
+            // remove from cloudinary
             for (ProductImage productImage : product.getImages()) {
-                uploadFileUtil.destroyFileWithUrl(productImage.getUrl());
+                if (!productDto.getImageURLs().contains(productImage.getUrl())) {
+                    uploadFileUtil.destroyFileWithUrl(productImage.getUrl());
+                }
             }
+            // remove product images
             productImageRepository.deleteAllByProductId(productDto.getId());
-
             //Set new values
             product.setName(productDto.getName());
             product.setDescription(productDto.getDescription());
@@ -236,11 +236,13 @@ public class ProductServiceImpl implements ProductService {
             }
         }
 
-        Category category = categoryService.getCategory(productDto.getCategoryId());
-
         if (productDto.getBookSetId() != null) {
             product.setBookSet(bookSetService.getBookSet(productDto.getBookSetId()));
+        } else {
+            product.setBookSet(null);
         }
+
+        Category category = categoryService.getCategory(productDto.getCategoryId());
 
         Set<Author> authors = new HashSet<>();
         for (Integer authorId : productDto.getAuthorIds()) {

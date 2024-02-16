@@ -1,4 +1,4 @@
-package com.tuyenngoc.bookstore.domain.dto.response;
+package com.tuyenngoc.bookstore.domain.dto.response.product;
 
 import com.tuyenngoc.bookstore.constant.AgeGroup;
 import com.tuyenngoc.bookstore.domain.dto.AgeGroupDto;

@@ -65,6 +65,8 @@ public class ErrorMessage {
 
     public static class Author {
         public static final String ERR_NOT_FOUND_ID = "exception.author.not.found.id";
+        public static final String ERR_DUPLICATE_NAME = "exception.author.duplicate.name";
+        public static final String ERR_CANNOT_DELETE = "exception.author.cannot-delete";
     }
 
     public static class Address {
@@ -98,10 +100,14 @@ public class ErrorMessage {
 
     public static class Category {
         public static final String ERR_NOT_FOUND_ID = "exception.category.not.found.id";
+        public static final String ERR_DUPLICATE_NAME = "exception.category.duplicate.name";
+        public static final String ERR_CANNOT_DELETE = "exception.category.cannot-delete";
     }
 
     public static class BookSet {
         public static final String ERR_NOT_FOUND_ID = "exception.book-set.not.found.id";
+        public static final String ERR_DUPLICATE_NAME = "exception.book-set.duplicate.name";
+        public static final String ERR_CANNOT_DELETE = "exception.book-set.cannot-delete";
     }
 
     public static class Cart {

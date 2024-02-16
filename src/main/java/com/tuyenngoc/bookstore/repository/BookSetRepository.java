@@ -11,4 +11,7 @@ public interface BookSetRepository extends JpaRepository<BookSet, Integer> {
 
     void deleteById(int bookSetId);
 
+    boolean existsByName(String name);
+
+    boolean existsByNameAndIdNot(String name, int bookSetId);
 }

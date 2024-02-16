@@ -1,7 +1,7 @@
 package com.tuyenngoc.bookstore.repository;
 
-import com.tuyenngoc.bookstore.domain.dto.response.GetProductDetailResponseDto;
-import com.tuyenngoc.bookstore.domain.dto.response.GetProductResponseDto;
+import com.tuyenngoc.bookstore.domain.dto.response.product.GetProductDetailResponseDto;
+import com.tuyenngoc.bookstore.domain.dto.response.product.GetProductResponseDto;
 import com.tuyenngoc.bookstore.domain.entity.Product;
 import jakarta.transaction.Transactional;
 import org.springframework.data.domain.Page;
@@ -18,7 +18,7 @@ import java.util.Optional;
 @Repository
 public interface ProductRepository extends JpaRepository<Product, Integer>, JpaSpecificationExecutor<Product> {
 
-    @Query("SELECT new com.tuyenngoc.bookstore.domain.dto.response.GetProductResponseDto(p) " +
+    @Query("SELECT new com.tuyenngoc.bookstore.domain.dto.response.product.GetProductResponseDto(p) " +
             "FROM Product p WHERE " +
             "LOWER(p.name) LIKE %:keyword% AND " +
             "p.deleteFlag = false")
@@ -27,12 +27,12 @@ public interface ProductRepository extends JpaRepository<Product, Integer>, JpaS
             Pageable pageable
     );
 
-    @Query("SELECT new com.tuyenngoc.bookstore.domain.dto.response.GetProductResponseDto(p) " +
+    @Query("SELECT new com.tuyenngoc.bookstore.domain.dto.response.product.GetProductResponseDto(p) " +
             "FROM Product p WHERE " +
             "p.deleteFlag = false")
     Page<GetProductResponseDto> getProducts(Pageable pageable);
 
-    @Query("SELECT new com.tuyenngoc.bookstore.domain.dto.response.GetProductResponseDto(p) " +
+    @Query("SELECT new com.tuyenngoc.bookstore.domain.dto.response.product.GetProductResponseDto(p) " +
             "FROM Product p WHERE" +
             " p.category.id= :categoryId AND " +
             "p.deleteFlag = false")
@@ -41,7 +41,7 @@ public interface ProductRepository extends JpaRepository<Product, Integer>, JpaS
             Pageable pageable
     );
 
-    @Query("SELECT new com.tuyenngoc.bookstore.domain.dto.response.GetProductResponseDto(p) " +
+    @Query("SELECT new com.tuyenngoc.bookstore.domain.dto.response.product.GetProductResponseDto(p) " +
             "FROM Product p JOIN p.authors a WHERE " +
             "p.deleteFlag = false AND " +
             "a IN (SELECT a2 FROM Product p2 JOIN p2.authors a2 WHERE p2.id = :productId) AND " +
@@ -51,7 +51,7 @@ public interface ProductRepository extends JpaRepository<Product, Integer>, JpaS
             Pageable pageable
     );
 
-    @Query("SELECT new com.tuyenngoc.bookstore.domain.dto.response.GetProductResponseDto(p) " +
+    @Query("SELECT new com.tuyenngoc.bookstore.domain.dto.response.product.GetProductResponseDto(p) " +
             "FROM Product p JOIN p.authors a WHERE " +
             "a.id = :authorId AND " +
             "p.deleteFlag = false")
@@ -60,7 +60,7 @@ public interface ProductRepository extends JpaRepository<Product, Integer>, JpaS
             Pageable pageable
     );
 
-    @Query("SELECT new com.tuyenngoc.bookstore.domain.dto.response.GetProductDetailResponseDto(p) " +
+    @Query("SELECT new com.tuyenngoc.bookstore.domain.dto.response.product.GetProductDetailResponseDto(p) " +
             "FROM Product p WHERE " +
             "p.id= :productId AND " +
             "p.deleteFlag = false")

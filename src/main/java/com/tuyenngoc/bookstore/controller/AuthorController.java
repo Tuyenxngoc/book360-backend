@@ -1,10 +1,12 @@
 package com.tuyenngoc.bookstore.controller;
 
+import com.tuyenngoc.bookstore.annotation.CurrentUser;
 import com.tuyenngoc.bookstore.annotation.RestApiV1;
 import com.tuyenngoc.bookstore.base.VsResponseUtil;
 import com.tuyenngoc.bookstore.constant.UrlConstant;
 import com.tuyenngoc.bookstore.domain.dto.AuthorDto;
 import com.tuyenngoc.bookstore.domain.dto.pagination.PaginationFullRequestDto;
+import com.tuyenngoc.bookstore.security.CustomUserDetails;
 import com.tuyenngoc.bookstore.service.AuthorService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -37,6 +39,13 @@ public class AuthorController {
     }
 
     @PreAuthorize("hasRole('ADMIN')")
+    @Operation(summary = "API get author detail")
+    @GetMapping(UrlConstant.Author.GET_AUTHOR_DETAIL)
+    public ResponseEntity<?> getAuthorDetail(@PathVariable int authorId) {
+        return VsResponseUtil.success(authorService.getAuthorDetail(authorId));
+    }
+
+    @PreAuthorize("hasRole('ADMIN')")
     @Operation(summary = "API get authors")
     @GetMapping(UrlConstant.Author.GET_AUTHORS)
     public ResponseEntity<?> getAuthors(@ParameterObject PaginationFullRequestDto requestDto) {
@@ -46,8 +55,11 @@ public class AuthorController {
     @PreAuthorize("hasRole('ADMIN')")
     @Operation(summary = "API create and update author")
     @PutMapping(value = UrlConstant.Author.CREATE_AUTHOR)
-    public ResponseEntity<?> createAuthor(@Valid @RequestBody AuthorDto authorDto) {
-        return VsResponseUtil.success(authorService.createAuthor(authorDto));
+    public ResponseEntity<?> createAuthor(
+            @Valid @RequestBody AuthorDto authorDto,
+            @CurrentUser CustomUserDetails userDetails
+    ) {
+        return VsResponseUtil.success(authorService.createAuthor(authorDto, userDetails.getUsername()));
     }
 
     @PreAuthorize("hasRole('ADMIN')")

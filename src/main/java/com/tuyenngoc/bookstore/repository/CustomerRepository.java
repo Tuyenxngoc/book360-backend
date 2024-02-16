@@ -1,6 +1,6 @@
 package com.tuyenngoc.bookstore.repository;
 
-import com.tuyenngoc.bookstore.domain.dto.response.GetProductResponseDto;
+import com.tuyenngoc.bookstore.domain.dto.response.product.GetProductResponseDto;
 import com.tuyenngoc.bookstore.domain.entity.Customer;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -21,7 +21,7 @@ public interface CustomerRepository extends JpaRepository<Customer, Integer> {
             @Param("productId") int productId
     );
 
-    @Query("SELECT new com.tuyenngoc.bookstore.domain.dto.response.GetProductResponseDto(p) " +
+    @Query("SELECT new com.tuyenngoc.bookstore.domain.dto.response.product.GetProductResponseDto(p) " +
             "FROM Product p JOIN p.customers c WHERE " +
             "c.id = :customerId")
     Page<GetProductResponseDto> getFavoriteProducts(

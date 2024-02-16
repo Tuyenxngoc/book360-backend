@@ -1,7 +1,7 @@
 package com.tuyenngoc.bookstore.repository;
 
 import com.tuyenngoc.bookstore.constant.BillStatus;
-import com.tuyenngoc.bookstore.domain.dto.response.GetBillResponseDto;
+import com.tuyenngoc.bookstore.domain.dto.response.bill.GetBillResponseDto;
 import com.tuyenngoc.bookstore.domain.entity.Bill;
 import jakarta.transaction.Transactional;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -17,7 +17,7 @@ import java.util.Optional;
 @Repository
 public interface BillRepository extends JpaRepository<Bill, Integer>, JpaSpecificationExecutor<Bill> {
 
-    @Query("SELECT new com.tuyenngoc.bookstore.domain.dto.response.GetBillResponseDto(b) " +
+    @Query("SELECT new com.tuyenngoc.bookstore.domain.dto.response.bill.GetBillResponseDto(b) " +
             "FROM Bill b WHERE " +
             "b.customer.id=:customerId " +
             "ORDER BY b.createdDate DESC")
@@ -25,7 +25,7 @@ public interface BillRepository extends JpaRepository<Bill, Integer>, JpaSpecifi
             @Param("customerId") int customerId
     );
 
-    @Query("SELECT new com.tuyenngoc.bookstore.domain.dto.response.GetBillResponseDto(b) " +
+    @Query("SELECT new com.tuyenngoc.bookstore.domain.dto.response.bill.GetBillResponseDto(b) " +
             "FROM Bill b WHERE " +
             "b.customer.id=:customerId AND " +
             "b.billStatus= :billStatus " +

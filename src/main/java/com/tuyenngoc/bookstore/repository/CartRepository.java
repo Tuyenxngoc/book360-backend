@@ -1,6 +1,6 @@
 package com.tuyenngoc.bookstore.repository;
 
-import com.tuyenngoc.bookstore.domain.dto.response.ProductFromCartResponseDto;
+import com.tuyenngoc.bookstore.domain.dto.response.product.GetProductFromCartResponseDto;
 import com.tuyenngoc.bookstore.domain.entity.Cart;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
@@ -26,9 +26,9 @@ public interface CartRepository extends JpaRepository<Cart, Integer> {
             "cd.product.deleteFlag = false")
     int getTotalProductQuantityByCustomerId(@Param("customerId") int customerId);
 
-    @Query("SELECT new com.tuyenngoc.bookstore.domain.dto.response.ProductFromCartResponseDto(cd) " +
+    @Query("SELECT new com.tuyenngoc.bookstore.domain.dto.response.product.GetProductFromCartResponseDto(cd) " +
             "FROM CartDetail cd WHERE " +
             "cd.cart.customer.id = :customerId AND " +
             "cd.product.deleteFlag = false ")
-    List<ProductFromCartResponseDto> getProductFromCart(@Param("customerId") int customerId);
+    List<GetProductFromCartResponseDto> getProductFromCart(@Param("customerId") int customerId);
 }

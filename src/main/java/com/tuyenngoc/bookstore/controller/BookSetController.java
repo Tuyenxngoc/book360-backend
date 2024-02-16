@@ -44,6 +44,14 @@ public class BookSetController {
     }
 
     @PreAuthorize("hasRole('ADMIN')")
+    @Operation(summary = "API get book set")
+    @GetMapping(UrlConstant.BookSet.GET_BOOK_SET_DETAIL)
+    public ResponseEntity<?> getBookSetDetail(@PathVariable int bookSetId) {
+        return VsResponseUtil.success(bookSetService.getBookSetDetail(bookSetId));
+    }
+
+
+    @PreAuthorize("hasRole('ADMIN')")
     @Operation(summary = "API create and update book set")
     @PutMapping(UrlConstant.BookSet.CREATE_BOOK_SET)
     public ResponseEntity<?> createBookSet(@Valid @RequestBody BookSetDto bookSetDto) {
