@@ -1,5 +1,6 @@
 package com.tuyenngoc.bookstore.repository;
 
+import com.tuyenngoc.bookstore.domain.dto.response.address.GetAddressResponseDto;
 import com.tuyenngoc.bookstore.domain.entity.AddressDetail;
 import jakarta.transaction.Transactional;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -14,13 +15,20 @@ import java.util.Optional;
 @Repository
 public interface AddressDetailRepository extends JpaRepository<AddressDetail, Integer> {
 
-    @Modifying
-    @Transactional
-    void deleteByCustomerIdAndId(int customerId, int addressDetailId);
+    @Query("SELECT new com.tuyenngoc.bookstore.domain.dto.response.address.GetAddressResponseDto(a) " +
+            "FROM AddressDetail a WHERE " +
+            "a.customer.id=:customerId " +
+            "ORDER BY a.isDefaultAddress DESC")
+    List<GetAddressResponseDto> findAllByCustomerId(@Param("customerId") int customerId);
 
-    List<AddressDetail> findAllByCustomerId(int customerId);
-
-    Optional<AddressDetail> findByCustomerIdAndId(int customerId, int addressDetailId);
+    @Query("SELECT new com.tuyenngoc.bookstore.domain.dto.response.address.GetAddressResponseDto(a) " +
+            "FROM AddressDetail a WHERE " +
+            "a.customer.id=:customerId AND " +
+            "a.id=:addressDetailId")
+    Optional<GetAddressResponseDto> getAddressDetailByCustomerIdAndId(
+            @Param("customerId") int customerId,
+            @Param("addressDetailId") int addressDetailId
+    );
 
     @Query("SELECT a.isDefaultAddress FROM AddressDetail a WHERE " +
             "a.customer.id=:customerId AND " +
@@ -48,5 +56,12 @@ public interface AddressDetailRepository extends JpaRepository<AddressDetail, In
             "a.customer.id=:customerId")
     void resetDeFaultAddress(@Param("customerId") int customerId);
 
+    @Modifying
+    @Transactional
+    void deleteByCustomerIdAndId(int customerId, int addressDetailId);
+
     int countByCustomerId(int customerId);
+
+    Optional<AddressDetail> findByCustomerIdAndId(int customerId, int addressDetailId);
+
 }

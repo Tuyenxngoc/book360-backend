@@ -3,7 +3,6 @@ package com.tuyenngoc.bookstore.domain.entity;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.tuyenngoc.bookstore.constant.Gender;
 import com.tuyenngoc.bookstore.domain.entity.common.DateAuditing;
-import com.tuyenngoc.bookstore.domain.entity.common.FlagUserDateAuditing;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;

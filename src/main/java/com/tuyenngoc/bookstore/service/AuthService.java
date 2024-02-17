@@ -17,7 +17,7 @@ public interface AuthService {
 
     TokenRefreshResponseDto refresh(TokenRefreshRequestDto request);
 
-    User register(RegisterRequestDto requestDto, CoordinatesRequestDto addressDto);
+    User register(RegisterRequestDto requestDto);
 
     CommonResponseDto forgetPassword(ForgetPasswordRequestDto requestDto);
 

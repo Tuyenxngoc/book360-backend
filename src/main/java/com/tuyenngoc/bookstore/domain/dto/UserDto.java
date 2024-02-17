@@ -15,15 +15,13 @@ public class UserDto {
 
     private String username;
 
-    private String nickName;
+    private String fullName;
 
     private String roleName;
 
     private String email;
 
     private String phoneNumber;
-
-    private String address;
 
     private String avatar;
 

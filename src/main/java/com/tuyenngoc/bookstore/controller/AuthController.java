@@ -13,7 +13,6 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
-import org.springdoc.core.annotations.ParameterObject;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.PatchMapping;
@@ -51,11 +50,8 @@ public class AuthController {
 
     @Operation(summary = "API Register")
     @PostMapping(UrlConstant.Auth.REGISTER)
-    public ResponseEntity<?> register(
-            @Valid @RequestBody RegisterRequestDto requestDto,
-            @Valid @ParameterObject CoordinatesRequestDto addressDto
-    ) {
-        return VsResponseUtil.success(authService.register(requestDto, addressDto));
+    public ResponseEntity<?> register(@Valid @RequestBody RegisterRequestDto requestDto) {
+        return VsResponseUtil.success(authService.register(requestDto));
     }
 
     @Operation(summary = "API forget password")

@@ -8,7 +8,9 @@ import com.tuyenngoc.bookstore.domain.dto.request.*;
 import com.tuyenngoc.bookstore.domain.dto.response.CommonResponseDto;
 import com.tuyenngoc.bookstore.domain.dto.response.auth.LoginResponseDto;
 import com.tuyenngoc.bookstore.domain.dto.response.auth.TokenRefreshResponseDto;
-import com.tuyenngoc.bookstore.domain.entity.*;
+import com.tuyenngoc.bookstore.domain.entity.Cart;
+import com.tuyenngoc.bookstore.domain.entity.Customer;
+import com.tuyenngoc.bookstore.domain.entity.User;
 import com.tuyenngoc.bookstore.domain.mapper.AddressMapper;
 import com.tuyenngoc.bookstore.domain.mapper.UserMapper;
 import com.tuyenngoc.bookstore.exception.DataIntegrityViolationException;
@@ -150,7 +152,7 @@ public class AuthServiceImpl implements AuthService {
     }
 
     @Override
-    public User register(RegisterRequestDto requestDto, CoordinatesRequestDto addressDto) {
+    public User register(RegisterRequestDto requestDto) {
         if (!requestDto.getPassword().equals(requestDto.getRepeatPassword())) {
             throw new InvalidException(ErrorMessage.INVALID_REPEAT_PASSWORD);
         }
@@ -179,33 +181,14 @@ public class AuthServiceImpl implements AuthService {
                 e.printStackTrace();
             }
         });
-
         //Create new Customer
         Customer customer = new Customer();
         customer.setFullName(requestDto.getUsername());
         Customer newCustomer = customerRepository.save(customer);
-
-        //Create new address
-        if (addressDto.getLatitude() != null && addressDto.getLongitude() != null) {
-            Address address = addressService.getAddress(addressDto);
-            if (address != null) {
-                AddressDetail addressDetail = new AddressDetail();
-
-                addressDetail.setFullName(newCustomer.getFullName());
-                addressDetail.setPhoneNumber("");
-                addressDetail.setAddress(address);
-                addressDetail.setCustomer(newCustomer);
-                addressDetail.setDefaultAddress(true);
-
-                addressDetailRepository.save(addressDetail);
-            }
-        }
-
         //Create new Cart
         Cart cart = new Cart();
         cart.setCustomer(newCustomer);
         cartRepository.save(cart);
-
         //Create new User
         User user = userMapper.toUser(requestDto);
         user.setPassword(passwordEncoder.encode(requestDto.getPassword()));

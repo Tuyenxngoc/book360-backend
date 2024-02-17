@@ -1,6 +1,5 @@
 package com.tuyenngoc.bookstore.domain.entity;
 
-import com.tuyenngoc.bookstore.domain.entity.common.DateAuditing;
 import com.tuyenngoc.bookstore.domain.entity.common.UserDateAuditing;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;

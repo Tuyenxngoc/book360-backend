@@ -1,5 +1,6 @@
 package com.tuyenngoc.bookstore.domain.dto.request;
 
+import com.tuyenngoc.bookstore.constant.CommonConstant;
 import com.tuyenngoc.bookstore.constant.ErrorMessage;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Pattern;
@@ -18,7 +19,7 @@ public class ChangePasswordRequestDto {
     private String oldPassword;
 
     @NotBlank(message = ErrorMessage.INVALID_NOT_BLANK_FIELD)
-    @Pattern(regexp = "^(?=.*[a-zA-Z])(?=.*\\d)[a-zA-Z\\d]{6,}$", message = ErrorMessage.INVALID_FORMAT_PASSWORD)
+    @Pattern(regexp = CommonConstant.REGEXP_PASSWORD, message = ErrorMessage.INVALID_FORMAT_PASSWORD)
     private String password;
 
     @NotBlank(message = ErrorMessage.INVALID_NOT_BLANK_FIELD)
