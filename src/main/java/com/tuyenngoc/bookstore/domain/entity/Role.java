@@ -2,6 +2,7 @@ package com.tuyenngoc.bookstore.domain.entity;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.tuyenngoc.bookstore.constant.RoleConstant;
+import com.tuyenngoc.bookstore.domain.entity.common.DateAuditing;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -9,6 +10,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 @Entity
@@ -17,7 +19,7 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 @Table(name = "role")
-public class Role {
+public class Role extends DateAuditing {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
