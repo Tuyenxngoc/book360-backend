@@ -24,18 +24,27 @@ public class Bill extends DateAuditing {
     @Column(name = "bill_id")
     private Integer id;
 
-    @Column(name = "shipping_fee")
+    @Column(name = "shipping_name", nullable = false)
+    private String shippingName;
+
+    @Column(name = "shipping_phone", nullable = false)
+    private String shippingPhone;
+
+    @Column(name = "shipping_address", nullable = false)
+    private String shippingAddress;
+
+    @Column(name = "shipping_fee", nullable = false)
     private double shippingFee;
 
-    @Column(name = "total_amount")
+    @Column(name = "total_amount", nullable = false)
     private double totalAmount;
 
     @Enumerated(EnumType.STRING)
-    @Column(name = "payment_method")
+    @Column(name = "payment_method", nullable = false)
     private PaymentMethod paymentMethod;
 
     @Enumerated(EnumType.STRING)
-    @Column(name = "bill_status")
+    @Column(name = "bill_status", nullable = false)
     private BillStatus billStatus;
 
     private String note;
@@ -50,9 +59,5 @@ public class Bill extends DateAuditing {
     @JoinColumn(name = "customer_id", foreignKey = @ForeignKey(name = "FK_BILL_CUSTOMER_ID"), referencedColumnName = "customer_id")
     @JsonIgnore
     private Customer customer;
-
-    @ManyToOne
-    @JoinColumn(name = "address_detail_id", foreignKey = @ForeignKey(name = "FK_BILL_ADDRESS_DETAIL_ID"), referencedColumnName = "address_detail_id")
-    private AddressDetail shippingAddress;
 
 }

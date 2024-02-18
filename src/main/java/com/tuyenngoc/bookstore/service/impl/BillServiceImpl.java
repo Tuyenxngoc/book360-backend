@@ -15,6 +15,7 @@ import com.tuyenngoc.bookstore.domain.entity.*;
 import com.tuyenngoc.bookstore.domain.mapper.BillMapper;
 import com.tuyenngoc.bookstore.exception.InvalidException;
 import com.tuyenngoc.bookstore.exception.NotFoundException;
+import com.tuyenngoc.bookstore.repository.AddressDetailRepository;
 import com.tuyenngoc.bookstore.repository.BillRepository;
 import com.tuyenngoc.bookstore.repository.CartDetailRepository;
 import com.tuyenngoc.bookstore.service.BillService;
@@ -46,6 +47,8 @@ public class BillServiceImpl implements BillService {
     private final BillMapper billMapper;
 
     private final MessageSource messageSource;
+
+    private final AddressDetailRepository addressDetailRepository;
 
     @Override
     public Bill createNewBill(int customerId, BillRequestDto requestDto) {
@@ -79,7 +82,10 @@ public class BillServiceImpl implements BillService {
 
     @Override
     public CommonResponseDto saveOrder(int customerId, BillRequestDto requestDto) {
-        //Validate
+        // get address detail
+        AddressDetail addressDetail = addressDetailRepository.findByCustomerIdAndId(customerId, requestDto.getAddressDetailId())
+                .orElseThrow(() -> new NotFoundException(ErrorMessage.Address.ERR_NOT_FOUND_ID, String.valueOf(requestDto.getAddressDetailId())));
+        // get cart
         Cart cart = cartService.getCartByCustomerId(customerId);
         List<Integer> listProductIds = requestDto.getListProductId();
         List<CartDetail> cartDetails = cart.getCartDetails()
@@ -104,8 +110,13 @@ public class BillServiceImpl implements BillService {
         }
         newBill.setTotalAmount(totalPrice);
         newBill.setBillDetails(billDetails);
-
+        // set address info
+        newBill.setShippingName(addressDetail.getFullName());
+        newBill.setShippingPhone(addressDetail.getPhoneNumber());
+        newBill.setShippingAddress(addressDetail.getAddress().getFullAddress());
+        // delete cart detail
         cartDetailRepository.deleteAllInBatch(cartDetails);
+        // save new bill
         billRepository.save(newBill);
 
         String message = messageSource.getMessage(SuccessMessage.Bill.SAVE_ORDER, null, LocaleContextHolder.getLocale());

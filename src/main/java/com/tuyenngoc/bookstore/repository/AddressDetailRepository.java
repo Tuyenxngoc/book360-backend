@@ -41,7 +41,7 @@ public interface AddressDetailRepository extends JpaRepository<AddressDetail, In
     @Modifying
     @Transactional
     @Query("UPDATE AddressDetail a " +
-            "SET a.isDefaultAddress=true WHERE " +
+            "SET a.isDefaultAddress = true WHERE " +
             "a.customer.id=:customerId AND " +
             "a.id=:addressDetailId")
     void setDeFaultAddress(
@@ -52,7 +52,7 @@ public interface AddressDetailRepository extends JpaRepository<AddressDetail, In
     @Modifying
     @Transactional
     @Query("UPDATE AddressDetail a " +
-            "SET a.isDefaultAddress=false WHERE " +
+            "SET a.isDefaultAddress = false WHERE " +
             "a.customer.id=:customerId")
     void resetDeFaultAddress(@Param("customerId") int customerId);
 

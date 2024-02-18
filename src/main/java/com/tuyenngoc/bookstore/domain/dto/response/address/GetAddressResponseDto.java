@@ -23,9 +23,17 @@ public class GetAddressResponseDto extends DateAuditingDto {
 
     private AddressType type;
 
-    private boolean isDefaultAddress;
+    private Boolean isDefaultAddress;
 
-    private String addressName;
+    private String state;
+
+    private String district;
+
+    private String ward;
+
+    private String street;
+
+    private String fullAddress;
 
     private double latitude;
 
@@ -39,10 +47,14 @@ public class GetAddressResponseDto extends DateAuditingDto {
         this.fullName = addressDetail.getFullName();
         this.phoneNumber = addressDetail.getPhoneNumber();
         this.type = addressDetail.getType();
-        this.isDefaultAddress = addressDetail.isDefaultAddress();
+        this.isDefaultAddress = addressDetail.getIsDefaultAddress();
 
         Address address = addressDetail.getAddress();
-        this.addressName = address.getAddressName();
+        this.state = address.getState();
+        this.district = address.getDistrict();
+        this.ward = address.getWard();
+        this.street = address.getStreet();
+        this.fullAddress = address.getFullAddress();
         this.latitude = address.getLatitude();
         this.longitude = address.getLongitude();
     }

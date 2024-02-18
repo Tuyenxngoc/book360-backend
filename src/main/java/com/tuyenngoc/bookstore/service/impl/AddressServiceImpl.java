@@ -53,8 +53,8 @@ public class AddressServiceImpl implements AddressService {
             addressDetail = addressDetailMapper.toAddressDetail(requestDto);
             // set default address if address count is 0
             if (addressCount == 0) {
-                addressDetail.setDefaultAddress(true);
-            } else if (addressDetail.isDefaultAddress()) {
+                addressDetail.setIsDefaultAddress(true);
+            } else if (addressDetail.getIsDefaultAddress()) {
                 addressDetailRepository.resetDeFaultAddress(customerId);
             }
         } else {// update address detail
@@ -66,7 +66,7 @@ public class AddressServiceImpl implements AddressService {
             addressDetail.setPhoneNumber(requestDto.getPhoneNumber());
             addressDetail.setType(requestDto.getType());
             // set the default address if the current address is not the default address
-            if (!addressDetail.isDefaultAddress() && requestDto.getDefaultAddress()) {
+            if (!addressDetail.getIsDefaultAddress() && requestDto.getIsDefaultAddress()) {
                 addressDetailRepository.resetDeFaultAddress(customerId);
                 addressDetailRepository.setDeFaultAddress(customerId, requestDto.getAddressId());
             }
@@ -75,8 +75,14 @@ public class AddressServiceImpl implements AddressService {
         Customer customer = new Customer();
         customer.setId(customerId);
 
-        Address address = addressRepository.findByAddressName(requestDto.getAddressName())
-                .orElse(addressMapper.toAddress(requestDto));
+        String fullAddress = String.format("%s, %s, %s, %s", requestDto.getStreet(), requestDto.getWard(), requestDto.getDistrict(), requestDto.getState());
+
+        Address address = addressRepository.findByFullAddress(fullAddress)
+                .orElseGet(() -> {
+                    Address newAddress = addressMapper.toAddress(requestDto);
+                    newAddress.setFullAddress(fullAddress);
+                    return newAddress;
+                });
 
         addressDetail.setCustomer(customer);
         addressDetail.setAddress(address);

@@ -26,10 +26,7 @@ public class BillSpecifications {
                     case "id" -> predicate = builder.and(predicate, builder.equal(root.get(Bill_.id),
                             castToRequiredType(root.get(Bill_.id).getJavaType(), keyword)));
 
-                    case "customerName" -> {
-                        Join<Bill, AddressDetail> addressDetailJoin = root.join(Bill_.shippingAddress);
-                        predicate = builder.and(predicate, builder.equal(addressDetailJoin.get(AddressDetail_.fullName), keyword));
-                    }
+                    case "customerName" -> predicate = builder.and(predicate, builder.equal(root.get(Bill_.shippingName), keyword));
 
                     case "productName" -> {
                         Join<Bill, BillDetail> billDetailJoin = root.join(Bill_.billDetails);

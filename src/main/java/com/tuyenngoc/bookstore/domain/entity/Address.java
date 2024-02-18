@@ -23,8 +23,16 @@ public class Address extends DateAuditing {
     @Column(name = "address_id")
     private Integer id;
 
-    @Column(name = "address_name")
-    private String addressName;
+    private String state;
+
+    private String district;
+
+    private String ward;
+
+    private String street;
+
+    @Column(name = "full_address")
+    private String fullAddress;
 
     private double latitude;
 

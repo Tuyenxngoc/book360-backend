@@ -11,6 +11,6 @@ public interface AddressRepository extends JpaRepository<Address, Integer> {
 
     Optional<Address> findByLatitudeAndLongitude(double latitude, double longitude);
 
-    Optional<Address> findByAddressName(String addressName);
+    Optional<Address> findByFullAddress(String fullAddress);
 
 }

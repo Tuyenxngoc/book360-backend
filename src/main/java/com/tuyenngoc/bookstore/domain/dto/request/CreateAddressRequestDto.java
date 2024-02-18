@@ -27,7 +27,16 @@ public class CreateAddressRequestDto {
     private String phoneNumber;
 
     @NotBlank(message = ErrorMessage.INVALID_NOT_BLANK_FIELD)
-    private String addressName;
+    private String state;
+
+    @NotBlank(message = ErrorMessage.INVALID_NOT_BLANK_FIELD)
+    private String district;
+
+    @NotBlank(message = ErrorMessage.INVALID_NOT_BLANK_FIELD)
+    private String ward;
+
+    @NotBlank(message = ErrorMessage.INVALID_NOT_BLANK_FIELD)
+    private String street;
 
     @Max(value = 90, message = ErrorMessage.INVALID_COORDINATES)
     @Min(value = -90, message = ErrorMessage.INVALID_COORDINATES)
@@ -38,7 +47,7 @@ public class CreateAddressRequestDto {
     private Double longitude;
 
     @NotNull(message = ErrorMessage.INVALID_SOME_THING_FIELD_IS_REQUIRED)
-    private Boolean defaultAddress;
+    private Boolean isDefaultAddress;
 
     @NotNull(message = ErrorMessage.INVALID_SOME_THING_FIELD_IS_REQUIRED)
     private AddressType type;
