@@ -14,7 +14,7 @@ import java.util.List;
 @AllArgsConstructor
 public class SalesStatistics {
 
-    private int sales; // Số lượng sản phẩm đã bán
+    private double sales; // Doanh số
 
     private int uv; // Số lượng người dùng duy nhất (Unique Visitors)
 
@@ -22,13 +22,19 @@ public class SalesStatistics {
 
     private int orders; // Số lượng đơn hàng
 
+    private int products; // Số lượng sản phẩm
+
     private double conversionRate; // Tỷ lệ chuyển đổi (Conversion Rate)
+
+    private double salesPctDiff; // Phần trăm thay đổi của daonh số so với dữ liệu trước đó
 
     private double uvPctDiff; // Phần trăm thay đổi của số lượng người dùng duy nhất so với dữ liệu trước đó
 
     private double pvPctDiff; // Phần trăm thay đổi của số lần truy cập trang so với dữ liệu trước đó
 
     private double ordersPctDiff; // Phần trăm thay đổi của số lượng đơn hàng so với dữ liệu trước đó
+
+    private double productsPctDiff; // Phần trăm thay đổi của số lượng sản phẩm so với dữ liệu trước đó
 
     private double conversionRatePctDiff; // Phần trăm thay đổi của tỷ lệ chuyển đổi so với dữ liệu trước đó
 

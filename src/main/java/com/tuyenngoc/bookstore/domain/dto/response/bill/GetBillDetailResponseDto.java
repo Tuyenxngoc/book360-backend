@@ -2,8 +2,6 @@ package com.tuyenngoc.bookstore.domain.dto.response.bill;
 
 import com.tuyenngoc.bookstore.domain.dto.BillDetailDto;
 import com.tuyenngoc.bookstore.domain.dto.common.DateAuditingDto;
-import com.tuyenngoc.bookstore.domain.entity.AddressDetail;
-import jakarta.persistence.Column;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;

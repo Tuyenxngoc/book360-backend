@@ -36,7 +36,7 @@ public class GetBillResponseDto {
         this.shippingName = bill.getShippingName();
         this.createdDate = bill.getCreatedDate();
         this.billStatus = bill.getBillStatus().getName();
-        this.totalAmount = bill.getTotalAmount();
+        this.totalAmount = bill.getTotalPrice();
 
         this.billDetails = getBillDetailDto(bill.getBillDetails());
     }

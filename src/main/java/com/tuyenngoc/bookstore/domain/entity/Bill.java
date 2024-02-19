@@ -36,8 +36,8 @@ public class Bill extends DateAuditing {
     @Column(name = "shipping_fee", nullable = false)
     private double shippingFee;
 
-    @Column(name = "total_amount", nullable = false)
-    private double totalAmount;
+    @Column(name = "total_price", nullable = false)
+    private double totalPrice;
 
     @Enumerated(EnumType.STRING)
     @Column(name = "payment_method", nullable = false)

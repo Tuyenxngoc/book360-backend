@@ -77,7 +77,7 @@ public interface BillRepository extends JpaRepository<Bill, Integer>, JpaSpecifi
             "b.billStatus=:status")
     int getCountBillByStatus(@Param("status") BillStatus status);
 
-    @Query("SELECT count(b) " +
+    @Query("SELECT COUNT(b) " +
             "FROM Bill b WHERE " +
             "b.billStatus=:status AND " +
             "b.customer.id =:customerId")
@@ -96,4 +96,11 @@ public interface BillRepository extends JpaRepository<Bill, Integer>, JpaSpecifi
             @Param("endTime") LocalDateTime endTime
     );
 
+    @Query("SELECT COALESCE(SUM(b.totalPrice), 0) FROM Bill b " +
+            "WHERE b.createdDate >= :startTime AND b.createdDate <= :endTime AND " +
+            "b.billStatus = 'DELIVERED'")
+    double getTotalRevenueBetween(
+            @Param("startTime") LocalDateTime startTime,
+            @Param("endTime") LocalDateTime endTime
+    );
 }

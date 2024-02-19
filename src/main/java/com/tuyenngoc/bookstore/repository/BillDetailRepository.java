@@ -11,7 +11,7 @@ import java.time.LocalDateTime;
 @Repository
 public interface BillDetailRepository extends JpaRepository<BillDetail, Integer> {
 
-    @Query("SELECT SUM(b.quantity) " +
+    @Query("SELECT COALESCE(SUM(b.quantity), 0)" +
             "FROM BillDetail b WHERE " +
             "b.createdDate >= :startTime AND b.createdDate <= :endTime")
     int getCountProductSoldBetween(

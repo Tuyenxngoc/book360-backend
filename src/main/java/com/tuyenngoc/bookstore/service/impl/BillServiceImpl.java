@@ -30,6 +30,7 @@ import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -115,7 +116,7 @@ public class BillServiceImpl implements BillService {
             BillDetail newBillDetail = createNewBillDetail(product, cartDetail.getQuantity(), newBill);
             billDetails.add(newBillDetail);
         }
-        newBill.setTotalAmount(totalPrice);
+        newBill.setTotalPrice(totalPrice);
         newBill.setBillDetails(billDetails);
         // set address info
         newBill.setShippingName(addressDetail.getFullName());
@@ -212,29 +213,58 @@ public class BillServiceImpl implements BillService {
 
     @Override
     public SalesStatistics getKeyMetrics(String orderType) {
+        // Get the current date
         LocalDateTime startTime = LocalDate.now().atStartOfDay();
         LocalDateTime currentTime = LocalDateTime.now();
+
+        // Get yesterday's date
+        LocalDate yesterday = LocalDate.now().minusDays(1);
+        LocalDateTime startOfYesterday = LocalDateTime.of(yesterday, LocalTime.MIN);
+        LocalDateTime endOfYesterday = LocalDateTime.of(yesterday, LocalTime.MAX);
 
         List<TimeSeriesData> timeSeries = new ArrayList<>();
 
         LocalDateTime currentHour = startTime;
         while (currentHour.isBefore(currentTime)) {
             LocalDateTime nextHour = currentHour.plusHours(1);
-
             int billCountForHour = billRepository.getCountBillBetween(currentHour, nextHour);
-
             timeSeries.add(new TimeSeriesData(currentHour.getHour(), billCountForHour));
-
             currentHour = nextHour;
         }
 
+        double sales = billRepository.getTotalRevenueBetween(startTime, currentTime);
         int productsSold = billDetailRepository.getCountProductSoldBetween(startTime, currentTime);
+        int billCount = billRepository.getCountBillBetween(startTime, currentTime);
+
+        double salesDiff = billRepository.getTotalRevenueBetween(startOfYesterday, endOfYesterday);
+        int productsSoldDiff = billDetailRepository.getCountProductSoldBetween(startOfYesterday, endOfYesterday);
+        int billCountDiff = billRepository.getCountBillBetween(startOfYesterday, endOfYesterday);
+
+        double salesPctDiff = calculatePercentageDifference(sales, salesDiff);
+        double productsPctDiff = calculatePercentageDifference(productsSold, productsSoldDiff);
+        double ordersPctDiff = calculatePercentageDifference(billCount, billCountDiff);
 
         SalesStatistics salesStatistics = new SalesStatistics();
-        salesStatistics.setSales(productsSold);
+        salesStatistics.setSales(sales);
+        salesStatistics.setProducts(productsSold);
+        salesStatistics.setOrders(billCount);
+
+        salesStatistics.setSalesPctDiff(salesPctDiff);
+        salesStatistics.setProductsPctDiff(productsPctDiff);
+        salesStatistics.setOrdersPctDiff(ordersPctDiff);
+
         salesStatistics.setTimeSeries(timeSeries);
 
         return salesStatistics;
     }
+
+    private double calculatePercentageDifference(double todayCount, double yesterdayCount) {
+        if (yesterdayCount != 0) {
+            return ((todayCount - yesterdayCount) / yesterdayCount) * 100;
+        } else {
+            return 0.0;
+        }
+    }
+
 
 }
