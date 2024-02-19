@@ -73,6 +73,7 @@ public class UrlConstant {
         public static final String GET_COUNT_BILLS = ADMIN_URL + PRE_FIX + "/count";
         public static final String GET_BILLS_FOR_ADMIN = ADMIN_URL + PRE_FIX + "/get";
         public static final String UPDATE_BILL_STATUS = ADMIN_URL + PRE_FIX + "/update-status/{billId}";
+        public static final String GET_KEY_METRICS = ADMIN_URL + PRE_FIX + "/key-metrics";
     }
 
     public static class Author {

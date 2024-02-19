@@ -13,18 +13,18 @@ import lombok.Setter;
 public class FilterProduct {
 
     @Parameter(description = "Maximum seller stock quantity")
-    Integer sellerStockMax;
+    private Integer sellerStockMax;
 
     @Parameter(description = "Minimum seller stock quantity")
-    Integer sellerStockMin;
+    private Integer sellerStockMin;
 
     @Parameter(description = "Maximum quantity sold")
-    Integer soldMax;
+    private Integer soldMax;
 
     @Parameter(description = "Minimum quantity sold")
-    Integer soldMin;
+    private Integer soldMin;
 
     @Parameter(description = "Filter by category ID")
-    Integer categoryId;
+    private Integer categoryId;
 
 }

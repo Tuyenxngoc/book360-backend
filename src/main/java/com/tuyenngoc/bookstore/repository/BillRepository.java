@@ -11,6 +11,7 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
@@ -86,4 +87,13 @@ public interface BillRepository extends JpaRepository<Bill, Integer>, JpaSpecifi
     );
 
     Optional<Bill> getBillByIdAndCustomerId(int customerId, int billId);
+
+    @Query("SELECT COUNT(b) " +
+            "FROM Bill b WHERE " +
+            "b.createdDate >= :startTime AND b.createdDate <= :endTime")
+    int getCountBillBetween(
+            @Param("startTime") LocalDateTime startTime,
+            @Param("endTime") LocalDateTime endTime
+    );
+
 }

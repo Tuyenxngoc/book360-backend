@@ -61,7 +61,7 @@ public enum SortByDataConstant implements SortByInterface {
         public String getSortBy(String sortBy) {
             return switch (sortBy) {
                 case "id" -> "id";
-                case "consigneeName" -> "consigneeName";
+                case "shippingName" -> "shippingName";
                 case "shippingAddress" -> "shippingAddress";
                 case "shippingFee" -> "shippingFee";
                 case "totalAmount" -> "totalAmount";

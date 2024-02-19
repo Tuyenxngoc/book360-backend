@@ -7,6 +7,7 @@ import com.tuyenngoc.bookstore.domain.dto.request.BillRequestDto;
 import com.tuyenngoc.bookstore.domain.dto.response.CommonResponseDto;
 import com.tuyenngoc.bookstore.domain.dto.response.bill.GetBillDetailResponseDto;
 import com.tuyenngoc.bookstore.domain.dto.response.bill.GetBillResponseDto;
+import com.tuyenngoc.bookstore.domain.dto.response.statistics.SalesStatistics;
 import com.tuyenngoc.bookstore.domain.entity.Bill;
 import com.tuyenngoc.bookstore.domain.entity.BillDetail;
 import com.tuyenngoc.bookstore.domain.entity.Product;
@@ -38,4 +39,7 @@ public interface BillService {
     CommonResponseDto updateBillStatus(int billId, BillStatus newStatus);
 
     GetBillDetailResponseDto getBillDetail(int customerId, int billId);
+
+    SalesStatistics getKeyMetrics(String orderType);
+
 }

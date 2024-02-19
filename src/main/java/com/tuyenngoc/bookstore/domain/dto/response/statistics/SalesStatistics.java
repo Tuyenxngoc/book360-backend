@@ -5,6 +5,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Getter
@@ -31,12 +32,8 @@ public class SalesStatistics {
 
     private double conversionRatePctDiff; // Phần trăm thay đổi của tỷ lệ chuyển đổi so với dữ liệu trước đó
 
-    private List<TimeSeriesData> timeSeries; // Danh sách dữ liệu thống kê theo thời gian
+    private List<TimeSeriesData> timeSeries = new ArrayList<>(); // Danh sách dữ liệu thống kê theo thời gian
 
-    public static class TimeSeriesData {
-        private long timestamp;
-        private int sales;
-    }
 }
 
 

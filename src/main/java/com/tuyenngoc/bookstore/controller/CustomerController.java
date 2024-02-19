@@ -65,7 +65,7 @@ public class CustomerController {
     }
 
     @Operation(summary = "API update customer")
-    @PutMapping(value = UrlConstant.Customer.UPDATE_CUSTOMER)
+    @PutMapping(UrlConstant.Customer.UPDATE_CUSTOMER)
     public ResponseEntity<?> updateCustomer(
             @Valid @RequestBody UpdateCustomerRequestDto updateCustomerRequestDto,
             @CurrentUser CustomUserDetails userDetails

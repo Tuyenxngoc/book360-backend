@@ -11,13 +11,13 @@ import com.tuyenngoc.bookstore.domain.dto.request.BillRequestDto;
 import com.tuyenngoc.bookstore.domain.dto.response.CommonResponseDto;
 import com.tuyenngoc.bookstore.domain.dto.response.bill.GetBillDetailResponseDto;
 import com.tuyenngoc.bookstore.domain.dto.response.bill.GetBillResponseDto;
+import com.tuyenngoc.bookstore.domain.dto.response.statistics.SalesStatistics;
+import com.tuyenngoc.bookstore.domain.dto.response.statistics.TimeSeriesData;
 import com.tuyenngoc.bookstore.domain.entity.*;
 import com.tuyenngoc.bookstore.domain.mapper.BillMapper;
 import com.tuyenngoc.bookstore.exception.InvalidException;
 import com.tuyenngoc.bookstore.exception.NotFoundException;
-import com.tuyenngoc.bookstore.repository.AddressDetailRepository;
-import com.tuyenngoc.bookstore.repository.BillRepository;
-import com.tuyenngoc.bookstore.repository.CartDetailRepository;
+import com.tuyenngoc.bookstore.repository.*;
 import com.tuyenngoc.bookstore.service.BillService;
 import com.tuyenngoc.bookstore.service.CartService;
 import com.tuyenngoc.bookstore.util.PaginationUtil;
@@ -28,6 +28,8 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -44,11 +46,16 @@ public class BillServiceImpl implements BillService {
 
     private final BillRepository billRepository;
 
+    private final BillDetailRepository billDetailRepository;
+
+    private final AddressDetailRepository addressDetailRepository;
+
+    private final ProductRepository productRepository;
+
     private final BillMapper billMapper;
 
     private final MessageSource messageSource;
 
-    private final AddressDetailRepository addressDetailRepository;
 
     @Override
     public Bill createNewBill(int customerId, BillRequestDto requestDto) {
@@ -201,6 +208,33 @@ public class BillServiceImpl implements BillService {
         Bill bill = billRepository.getBillByIdAndCustomerId(customerId, billId)
                 .orElseThrow(() -> new NotFoundException(ErrorMessage.Bill.ERR_NOT_FOUND_ID, String.valueOf(billId)));
         return billMapper.toGetBillDetailResponseDto(bill);
+    }
+
+    @Override
+    public SalesStatistics getKeyMetrics(String orderType) {
+        LocalDateTime startTime = LocalDate.now().atStartOfDay();
+        LocalDateTime currentTime = LocalDateTime.now();
+
+        List<TimeSeriesData> timeSeries = new ArrayList<>();
+
+        LocalDateTime currentHour = startTime;
+        while (currentHour.isBefore(currentTime)) {
+            LocalDateTime nextHour = currentHour.plusHours(1);
+
+            int billCountForHour = billRepository.getCountBillBetween(currentHour, nextHour);
+
+            timeSeries.add(new TimeSeriesData(currentHour.getHour(), billCountForHour));
+
+            currentHour = nextHour;
+        }
+
+        int productsSold = billDetailRepository.getCountProductSoldBetween(startTime, currentTime);
+
+        SalesStatistics salesStatistics = new SalesStatistics();
+        salesStatistics.setSales(productsSold);
+        salesStatistics.setTimeSeries(timeSeries);
+
+        return salesStatistics;
     }
 
 }
