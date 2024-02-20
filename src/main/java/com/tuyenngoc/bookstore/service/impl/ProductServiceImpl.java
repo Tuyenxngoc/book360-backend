@@ -24,6 +24,10 @@ import com.tuyenngoc.bookstore.service.*;
 import com.tuyenngoc.bookstore.util.PaginationUtil;
 import com.tuyenngoc.bookstore.util.UploadFileUtil;
 import lombok.RequiredArgsConstructor;
+import org.jsoup.Jsoup;
+import org.jsoup.nodes.Document;
+import org.jsoup.nodes.Element;
+import org.jsoup.select.Elements;
 import org.springframework.context.MessageSource;
 import org.springframework.context.i18n.LocaleContextHolder;
 import org.springframework.data.domain.Page;
@@ -258,6 +262,14 @@ public class ProductServiceImpl implements ProductService {
         product.setFeaturedImage(images.get(0).getUrl());
         product.setAuthors(authors);
         product.setCategory(category);
+
+        //Get image url from product description
+        Document document = Jsoup.parse(product.getDescription());
+        Elements imgTags = document.select("img");
+        for (Element imgTag : imgTags) {
+            String imgUrl = imgTag.attr("src");
+            productDto.getImageURLs().add(imgUrl);
+        }
 
         //Delete image urls from redis cache
         uploadRedisService.deleteUrls(username, productDto.getImageURLs());

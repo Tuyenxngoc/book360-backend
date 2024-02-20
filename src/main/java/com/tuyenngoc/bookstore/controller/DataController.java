@@ -14,11 +14,9 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.util.FileCopyUtils;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
-import java.io.FileInputStream;
 import java.io.IOException;
 
 @RestApiV1
@@ -31,22 +29,6 @@ public class DataController {
     private final BillService billService;
 
     @GetMapping("/generate-pdf")
-    public void generatePdf(HttpServletResponse response) throws IOException {
-        String content = "Nội dung của file PDF được tạo trong Spring Boot.";
-        String filePath = "sample2.pdf";
-
-        // Tạo PDF và lưu vào đường dẫn filePath
-        pdfService.generatePdf(filePath, content);
-
-        // Set headers để trình duyệt có thể tải file PDF
-        response.setContentType("application/pdf");
-        response.setHeader("Content-Disposition", "attachment; filename=sample.pdf");
-
-        // Đọc file PDF và ghi vào HttpServletResponse
-        FileCopyUtils.copy(new FileInputStream(filePath), response.getOutputStream());
-    }
-
-    @GetMapping("/generate-pdf2")
     public ResponseEntity<byte[]> generatePdf2(HttpServletResponse response) throws IOException {
         String content = "Nội dung của file PDF được tạo trong Spring Boot.";
 

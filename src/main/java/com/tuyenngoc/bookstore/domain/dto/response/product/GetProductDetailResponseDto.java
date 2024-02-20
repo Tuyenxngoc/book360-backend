@@ -73,7 +73,9 @@ public class GetProductDetailResponseDto {
         this.coverType = product.getCoverType();
 
         this.category = new CategoryDto(product.getCategory());
-        this.bookSet = new BookSetDto(product.getBookSet());
+        if (product.getBookSet() != null) {
+            this.bookSet = new BookSetDto(product.getBookSet());
+        }
 
         this.authors = getAuthorDto(product.getAuthors());
         this.ageClassifications = getAgeGroupDto(product.getAgeClassifications());
