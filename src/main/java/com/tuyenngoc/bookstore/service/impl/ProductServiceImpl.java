@@ -12,10 +12,7 @@ import com.tuyenngoc.bookstore.domain.dto.request.CreateProductRequestDto;
 import com.tuyenngoc.bookstore.domain.dto.response.CommonResponseDto;
 import com.tuyenngoc.bookstore.domain.dto.response.product.GetProductDetailResponseDto;
 import com.tuyenngoc.bookstore.domain.dto.response.product.GetProductResponseDto;
-import com.tuyenngoc.bookstore.domain.entity.Author;
-import com.tuyenngoc.bookstore.domain.entity.Category;
-import com.tuyenngoc.bookstore.domain.entity.Product;
-import com.tuyenngoc.bookstore.domain.entity.ProductImage;
+import com.tuyenngoc.bookstore.domain.entity.*;
 import com.tuyenngoc.bookstore.domain.mapper.ProductMapper;
 import com.tuyenngoc.bookstore.exception.NotFoundException;
 import com.tuyenngoc.bookstore.repository.ProductImageRepository;
@@ -199,51 +196,10 @@ public class ProductServiceImpl implements ProductService {
     @Override
     public Product createProduct(CreateProductRequestDto productDto, String username) {
         Product product;
-        if (productDto.getId() == null) {//create product
-            product = productMapper.toProduct(productDto);
-        } else {//update product
-            product = getProduct(productDto.getId());
-            // remove from cloudinary
-            for (ProductImage productImage : product.getImages()) {
-                if (!productDto.getImageURLs().contains(productImage.getUrl())) {
-                    uploadFileUtil.destroyFileWithUrl(productImage.getUrl());
-                }
-            }
-            // remove product images
-            productImageRepository.deleteAllByProductId(productDto.getId());
-            //Set new values
-            product.setName(productDto.getName());
-            product.setDescription(productDto.getDescription());
-            product.setStockQuantity(productDto.getStockQuantity());
-            product.setPrice(productDto.getPrice());
-            product.setDiscount(productDto.getDiscount());
-            if (productDto.getIsbn() != null) {
-                product.setIsbn(productDto.getIsbn());
-            }
-            if (productDto.getPublisher() != null) {
-                product.setPublisher(productDto.getPublisher());
-            }
-            if (productDto.getSize() != null) {
-                product.setSize(productDto.getSize());
-            }
-            if (productDto.getCoverType() != null) {
-                product.setCoverType(productDto.getCoverType());
-            }
-            if (productDto.getAgeClassifications() != null) {
-                product.setAgeClassifications(productDto.getAgeClassifications());
-            }
-            if (productDto.getWeight() != null) {
-                product.setWeight(productDto.getWeight());
-            }
-            if (productDto.getPageCount() != null) {
-                product.setPageCount(productDto.getPageCount());
-            }
-        }
 
+        BookSet bookSet = null;
         if (productDto.getBookSetId() != null) {
-            product.setBookSet(bookSetService.getBookSet(productDto.getBookSetId()));
-        } else {
-            product.setBookSet(null);
+            bookSet = bookSetService.getBookSet(productDto.getBookSetId());
         }
 
         Category category = categoryService.getCategory(productDto.getCategoryId());
@@ -253,28 +209,96 @@ public class ProductServiceImpl implements ProductService {
             authors.add(authorService.getAuthor(authorId));
         }
 
+        List<String> imageUrlsFromDescription = getImageUrlsFromString(productDto.getDescription());
+
+        if (productDto.getId() == null) { //create product
+            product = productMapper.toProduct(productDto);
+        } else { //update product
+            product = getProduct(productDto.getId());
+
+            // remove product images
+            for (ProductImage productImage : product.getImages()) {
+                if (!productDto.getImageURLs().contains(productImage.getUrl())) {
+                    uploadFileUtil.destroyFileWithUrl(productImage.getUrl());
+                }
+            }
+            productImageRepository.deleteAllByProductId(productDto.getId());
+
+            // remove product images from description
+            for (String url : getImageUrlsFromString(product.getDescription())) {
+                if (!imageUrlsFromDescription.contains(url)) {
+                    uploadFileUtil.destroyFileWithUrl(url);
+                }
+            }
+
+            // Update product information
+            updateProductInformation(product, productDto);
+        }
+
+        // Set up BookSet
+        product.setBookSet(bookSet);
+
+        // Set up Category
+        product.setCategory(category);
+
+        // Set up the author list
+        product.setAuthors(authors);
+
+        // Create product images
         List<ProductImage> images = new ArrayList<>();
         for (String image : productDto.getImageURLs()) {
             images.add(createProductImage(image, product));
         }
-
         product.setImages(images);
         product.setFeaturedImage(images.get(0).getUrl());
-        product.setAuthors(authors);
-        product.setCategory(category);
 
         //Get image url from product description
-        Document document = Jsoup.parse(product.getDescription());
-        Elements imgTags = document.select("img");
-        for (Element imgTag : imgTags) {
-            String imgUrl = imgTag.attr("src");
-            productDto.getImageURLs().add(imgUrl);
-        }
+        productDto.getImageURLs().addAll(imageUrlsFromDescription);
 
         //Delete image urls from redis cache
         uploadRedisService.deleteUrls(username, productDto.getImageURLs());
 
         return productRepository.save(product);
+    }
+
+    private void updateProductInformation(Product product, CreateProductRequestDto productDto) {
+        product.setName(productDto.getName());
+        product.setDescription(productDto.getDescription());
+        product.setStockQuantity(productDto.getStockQuantity());
+        product.setPrice(productDto.getPrice());
+        product.setDiscount(productDto.getDiscount());
+        if (productDto.getIsbn() != null) {
+            product.setIsbn(productDto.getIsbn());
+        }
+        if (productDto.getPublisher() != null) {
+            product.setPublisher(productDto.getPublisher());
+        }
+        if (productDto.getSize() != null) {
+            product.setSize(productDto.getSize());
+        }
+        if (productDto.getCoverType() != null) {
+            product.setCoverType(productDto.getCoverType());
+        }
+        if (productDto.getAgeClassifications() != null) {
+            product.setAgeClassifications(productDto.getAgeClassifications());
+        }
+        if (productDto.getWeight() != null) {
+            product.setWeight(productDto.getWeight());
+        }
+        if (productDto.getPageCount() != null) {
+            product.setPageCount(productDto.getPageCount());
+        }
+    }
+
+    private List<String> getImageUrlsFromString(String str) {
+        List<String> urls = new ArrayList<>();
+        Document document = Jsoup.parse(str);
+        Elements imgTags = document.select("img");
+        for (Element imgTag : imgTags) {
+            String imgUrl = imgTag.attr("src");
+            urls.add(imgUrl);
+        }
+        return urls;
     }
 
     @Override
