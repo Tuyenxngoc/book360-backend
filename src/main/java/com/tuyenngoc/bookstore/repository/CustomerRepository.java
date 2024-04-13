@@ -9,6 +9,9 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
+import java.util.List;
+import java.util.Optional;
+
 @Repository
 public interface CustomerRepository extends JpaRepository<Customer, Integer> {
 
@@ -36,5 +39,12 @@ public interface CustomerRepository extends JpaRepository<Customer, Integer> {
             @Param("keyword") String keyword,
             Pageable pageable
     );
+
+    @Query("SELECT c " +
+            "FROM Customer c JOIN c.user u WHERE " +
+            "u.username = :username")
+    Optional<Customer> findByUserName(@Param("username") String username);
+
+    List<Customer> findByIdIn(List<Integer> distinctUserIds);
 
 }

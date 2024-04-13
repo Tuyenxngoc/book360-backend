@@ -139,4 +139,11 @@ public class UrlConstant {
         public static final String DELETE_PRODUCT = ADMIN_URL + PRE_FIX + "/delete/{productId}";
     }
 
+    public static class Chat {
+        private static final String PRE_FIX = "/message";
+
+        public static final String GET_MESSAGES = PRE_FIX + "/get";
+        public static final String GET_USERS = ADMIN_URL + PRE_FIX + "/get-users";
+
+    }
 }
