@@ -1,5 +1,6 @@
 package com.tuyenngoc.bookstore.domain.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.tuyenngoc.bookstore.domain.entity.common.DateAuditing;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
@@ -22,11 +23,16 @@ public class ChatMessage extends DateAuditing {
 
     private String content;
 
+    @Column(name = "is_seen")
+    private boolean isSeen;
+
     @ManyToOne
     @JoinColumn(name = "customer_id", foreignKey = @ForeignKey(name = "FK_CHAT_MESSAGE_CUSTOMER_ID"), referencedColumnName = "customer_id")
     private Customer customer;
 
-    @Column(name = "is_seen")
-    private boolean isSeen;
+    @ManyToOne
+    @JoinColumn(name = "chat_room_id", foreignKey = @ForeignKey(name = "FK_CHAT_MESSAGE_CHAT_ROOM_ID"), referencedColumnName = "chat_room_id")
+    @JsonIgnore
+    private ChatRoom chatRoom;
 
 }

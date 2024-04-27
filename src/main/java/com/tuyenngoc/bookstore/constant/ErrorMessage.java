@@ -126,4 +126,8 @@ public class ErrorMessage {
     public static class Banner {
         public static final String ERR_NOT_FOUND_ID = "exception.banner.not.found.id";
     }
+
+    public static class ChatRoom {
+        public static final String ERR_NOT_FOUND_ID = "exception.chat-room.not.found.id";
+    }
 }

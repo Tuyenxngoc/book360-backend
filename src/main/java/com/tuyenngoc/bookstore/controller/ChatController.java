@@ -17,6 +17,7 @@ import org.springframework.messaging.handler.annotation.Payload;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 
 @RestApiV1
 @RequiredArgsConstructor
@@ -33,10 +34,19 @@ public class ChatController {
         messagingTemplate.convertAndSendToUser(chatMessage.getSenderName(), "/queue/messages", response);
     }
 
-    @Operation(summary = "API get all messages")
+    @Operation(summary = "API get messages by chat room id")
     @GetMapping(UrlConstant.Chat.GET_MESSAGES)
-    public ResponseEntity<?> getMessagesBySenderId(@CurrentUser CustomUserDetails userDetails) {
-        return VsResponseUtil.success(chatMessageService.getMessagesBySenderId(userDetails.getCustomerId()));
+    public ResponseEntity<?> getMessagesByChatRoomId(
+            @PathVariable int chatRoomId,
+            @CurrentUser CustomUserDetails userDetails
+    ) {
+        return VsResponseUtil.success(chatMessageService.getMessagesByChatRoomId(chatRoomId, userDetails.getCustomerId()));
+    }
+
+    @Operation(summary = "API get chat rooms")
+    @GetMapping(UrlConstant.Chat.GET_CHAT_ROOMS)
+    public ResponseEntity<?> getChatRooms(@CurrentUser CustomUserDetails userDetails) {
+        return VsResponseUtil.success(chatMessageService.getChatRoomsByCustomerId(userDetails.getCustomerId()));
     }
 
     @PreAuthorize("hasRole('ADMIN')")

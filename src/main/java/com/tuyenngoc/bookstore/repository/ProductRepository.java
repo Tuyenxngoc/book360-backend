@@ -72,7 +72,7 @@ public interface ProductRepository extends JpaRepository<Product, Integer>, JpaS
             "p.deleteFlag = false")
     int getCountProductSoldOut();
 
-    @Query("SELECT SUM(p.stockQuantity) " +
+    @Query("SELECT COALESCE(SUM(p.stockQuantity), 0) " +
             "FROM Product p WHERE " +
             "p.deleteFlag = false")
     int getStockQuantityProducts();

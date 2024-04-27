@@ -1,7 +1,6 @@
 package com.tuyenngoc.bookstore.domain.dto.response;
 
-import com.tuyenngoc.bookstore.constant.ErrorMessage;
-import jakarta.validation.constraints.NotBlank;
+import com.tuyenngoc.bookstore.domain.entity.ChatMessage;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -13,10 +12,12 @@ import lombok.Setter;
 @AllArgsConstructor
 public class ChatMessageResponseDto {
 
-    @NotBlank(message = ErrorMessage.INVALID_NOT_BLANK_FIELD)
     private String content;
 
-    @NotBlank(message = ErrorMessage.INVALID_NOT_BLANK_FIELD)
     private String senderName;
 
+    public ChatMessageResponseDto(ChatMessage chatMessage) {
+        this.content = chatMessage.getContent();
+        this.senderName = chatMessage.getCustomer().getUser().getUsername();
+    }
 }

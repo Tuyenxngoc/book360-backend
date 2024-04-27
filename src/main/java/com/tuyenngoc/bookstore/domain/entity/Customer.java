@@ -61,6 +61,10 @@ public class Customer extends DateAuditing {
     @JsonIgnore
     private List<ChatMessage> chatMessages = new ArrayList<>();
 
+    @OneToMany(mappedBy = "sender", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @JsonIgnore
+    private List<ChatRoom> chatRooms = new ArrayList<>();
+
     @ManyToMany(fetch = FetchType.LAZY)
     @JoinTable(
             name = "customer_favorite_product",
