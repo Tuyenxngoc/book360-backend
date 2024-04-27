@@ -14,13 +14,13 @@ public class ChatRoomResponseDto {
 
     private int chatRoomId;
 
-    private int senderId;
+    private String senderName;
 
-    private int recipientId;
+    private String recipientName;
 
     public ChatRoomResponseDto(ChatRoom chatRoom) {
         this.chatRoomId = chatRoom.getId();
-        this.senderId = chatRoom.getSender().getId();
-        this.recipientId = chatRoom.getRecipient().getId();
+        this.senderName = chatRoom.getSender().getUser().getUsername();
+        this.recipientName = chatRoom.getRecipient().getUser().getUsername();
     }
 }

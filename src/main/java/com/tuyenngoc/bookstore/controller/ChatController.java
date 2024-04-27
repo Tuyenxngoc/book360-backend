@@ -15,7 +15,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.messaging.handler.annotation.Payload;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 
@@ -34,13 +33,10 @@ public class ChatController {
         messagingTemplate.convertAndSendToUser(chatMessage.getSenderName(), "/queue/messages", response);
     }
 
-    @Operation(summary = "API get messages by chat room id")
-    @GetMapping(UrlConstant.Chat.GET_MESSAGES)
-    public ResponseEntity<?> getMessagesByChatRoomId(
-            @PathVariable int chatRoomId,
-            @CurrentUser CustomUserDetails userDetails
-    ) {
-        return VsResponseUtil.success(chatMessageService.getMessagesByChatRoomId(chatRoomId, userDetails.getCustomerId()));
+    @Operation(summary = "API get user support messages")
+    @GetMapping(UrlConstant.Chat.GET_SUPPORT_USER)
+    public ResponseEntity<?> getSupportUser() {
+        return VsResponseUtil.success(chatMessageService.getSupportUser());
     }
 
     @Operation(summary = "API get chat rooms")
@@ -49,11 +45,13 @@ public class ChatController {
         return VsResponseUtil.success(chatMessageService.getChatRoomsByCustomerId(userDetails.getCustomerId()));
     }
 
-    @PreAuthorize("hasRole('ADMIN')")
-    @Operation(summary = "API get all user send message")
-    @GetMapping(UrlConstant.Chat.GET_USERS)
-    public ResponseEntity<?> getUsersWithMessagesSent() {
-        return VsResponseUtil.success(chatMessageService.getUsersWithMessagesSent());
+    @Operation(summary = "API get messages by chat room id")
+    @GetMapping(UrlConstant.Chat.GET_MESSAGES)
+    public ResponseEntity<?> getMessagesByChatRoomId(
+            @PathVariable int chatRoomId,
+            @CurrentUser CustomUserDetails userDetails
+    ) {
+        return VsResponseUtil.success(chatMessageService.getMessagesByChatRoomId(chatRoomId, userDetails.getCustomerId()));
     }
 
 }
