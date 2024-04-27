@@ -91,6 +91,7 @@ public class ErrorMessage {
 
     public static class Customer {
         public static final String ERR_NOT_FOUND_ID = "exception.customer.not.found.id";
+        public static final String ERR_NOT_FOUND_NAME = "exception.customer.not.found.name";
     }
 
     public static class Product {
