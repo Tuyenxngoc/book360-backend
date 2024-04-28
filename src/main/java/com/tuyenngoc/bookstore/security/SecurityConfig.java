@@ -31,11 +31,11 @@ import java.util.List;
 @EnableWebSecurity
 @RequiredArgsConstructor
 @EnableMethodSecurity
-public class SecurityConfiguration {
+public class SecurityConfig {
 
     private static final String[] WHITE_LIST_URL = {
             //chat
-            "/chat-websocket/**",
+            "/chat/**",
             //swagger
             "/favicon.ico",
             "/v3/api-docs/**",
