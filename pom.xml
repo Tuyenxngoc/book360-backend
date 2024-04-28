@@ -6,11 +6,12 @@
         <groupId>org.springframework.boot</groupId>
         <artifactId>spring-boot-starter-parent</artifactId>
         <version>3.2.1</version>
-        <relativePath/> <!-- lookup parent from repository -->
+        <relativePath/>
     </parent>
     <groupId>com.tuyenngoc</groupId>
     <artifactId>book-store</artifactId>
     <version>1.0</version>
+    <packaging>jar</packaging>
     <name>Book Store</name>
     <description>Backend service for online book selling platform</description>
     <properties>

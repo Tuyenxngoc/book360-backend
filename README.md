@@ -1,6 +1,6 @@
 # Book store
 <p>
-  <img style="width: 200px" src="https://res.cloudinary.com/dkegqlchp/image/upload/v1707201483/logo_quahdr.png" alt="Book">
+  <img style="width: 200px" src="logo.png" alt="Book">
 </p>
 This project includes the following features:
 
