@@ -42,12 +42,15 @@ public class ChatMessageServiceImpl implements ChatMessageService {
     @Override
     public ChatMessageResponseDto save(ChatMessageRequestDto requestDto) {
         Customer sender = customerRepository.findByUserName(requestDto.getSenderName())
-                .orElseThrow(() -> new NotFoundException(ErrorMessage.Customer.ERR_NOT_FOUND_NAME, requestDto.getSenderName()));
-
+                .orElse(null);
         Customer recipient = customerRepository.findByUserName(requestDto.getRecipientName())
-                .orElseThrow(() -> new NotFoundException(ErrorMessage.Customer.ERR_NOT_FOUND_NAME, requestDto.getRecipientName()));
+                .orElse(null);
 
-        ChatRoom chatRoom = chatRoomRepository.findBySenderAndRecipient(sender, recipient)
+        if (sender == null || recipient == null) {
+            return null;
+        }
+
+        ChatRoom chatRoom = chatRoomRepository.findBySenderIdAndRecipientId(sender.getId(), recipient.getId())
                 .orElseGet(() -> {
                     ChatRoom newChatRoom = new ChatRoom();
                     newChatRoom.setSender(sender);
