@@ -23,6 +23,8 @@ public class ChatRoom extends DateAuditing {
     @Column(name = "chat_room_id")
     private Integer id;
 
+    private String name;
+
     @ManyToOne
     @JoinColumn(name = "sender_id", foreignKey = @ForeignKey(name = "FK_CHAT_ROOM_SENDER_ID"), referencedColumnName = "customer_id")
     private Customer sender;

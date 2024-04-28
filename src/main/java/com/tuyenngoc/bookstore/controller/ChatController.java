@@ -30,7 +30,9 @@ public class ChatController {
     @MessageMapping("/chat")
     public void processMessage(@Payload ChatMessageRequestDto chatMessage) {
         ChatMessageResponseDto response = chatMessageService.save(chatMessage);
-        messagingTemplate.convertAndSendToUser(chatMessage.getSenderName(), "/queue/messages", response);
+        if (response != null) {
+            messagingTemplate.convertAndSendToUser(chatMessage.getRoomName(), "/queue/messages", response);
+        }
     }
 
     @Operation(summary = "API get user support messages")

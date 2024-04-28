@@ -24,4 +24,7 @@ public class ChatMessageRequestDto {
     @NotBlank(message = ErrorMessage.INVALID_NOT_BLANK_FIELD)
     private String recipientName;
 
+    @NotBlank(message = ErrorMessage.INVALID_NOT_BLANK_FIELD)
+    private String roomName;
+
 }
