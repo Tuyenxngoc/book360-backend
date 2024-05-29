@@ -86,7 +86,7 @@ public interface BillRepository extends JpaRepository<Bill, Integer>, JpaSpecifi
             @Param("status") BillStatus status
     );
 
-    Optional<Bill> getBillByIdAndCustomerId(int customerId, int billId);
+    Optional<Bill> getBillByCustomerIdAndId(int customerId, int billId);
 
     @Query("SELECT COUNT(b) " +
             "FROM Bill b WHERE " +

@@ -139,17 +139,21 @@ public class BillServiceImpl implements BillService {
 
     @Override
     public CommonResponseDto cancelOrder(int customerId, int billId, String cancellationReason) {
-        BillStatus billStatus = billRepository.getBillStatus(billId, customerId);
+        Bill bill = billRepository.getBillByCustomerIdAndId(billId, customerId)
+                .orElseThrow(() -> new NotFoundException(ErrorMessage.Bill.ERR_NOT_FOUND_ID, String.valueOf(billId)));
 
-        if (billStatus == null) {
-            throw new NotFoundException(ErrorMessage.Bill.ERR_NOT_FOUND_ID, String.valueOf(billId));
-        }
-
+        BillStatus billStatus = bill.getBillStatus();
         if (!billStatus.equals(BillStatus.CANCELLED)) {
             if (!billStatus.equals(BillStatus.WAIT_FOR_CONFIRMATION)) {
                 throw new InvalidException(ErrorMessage.Bill.ERR_NOT_ALLOW_CANCEL);
             }
             billRepository.cancelBill(billId, customerId, cancellationReason);
+            for (BillDetail billDetail : bill.getBillDetails()) {
+                Product product = billDetail.getProduct();
+                int quantity = billDetail.getQuantity();
+                product.setStockQuantity(product.getStockQuantity() + quantity);
+                productRepository.save(product);
+            }
         }
 
         String message = messageSource.getMessage(SuccessMessage.Bill.CANCEL_ORDER, null, LocaleContextHolder.getLocale());
@@ -206,7 +210,7 @@ public class BillServiceImpl implements BillService {
 
     @Override
     public GetBillDetailResponseDto getBillDetail(int customerId, int billId) {
-        Bill bill = billRepository.getBillByIdAndCustomerId(customerId, billId)
+        Bill bill = billRepository.getBillByCustomerIdAndId(customerId, billId)
                 .orElseThrow(() -> new NotFoundException(ErrorMessage.Bill.ERR_NOT_FOUND_ID, String.valueOf(billId)));
         return billMapper.toGetBillDetailResponseDto(bill);
     }
