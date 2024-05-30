@@ -70,8 +70,13 @@ public class BannerServiceImpl implements BannerService {
         if (bannerDto.getId() == null) {
             banner = bannerMapper.toBanner(bannerDto);
         } else {
+            //Get banner
             banner = getBanner(bannerDto.getId());
 
+            //Destroy old image
+            uploadFileUtil.destroyFileWithUrl(banner.getImage());
+
+            //Set new values
             banner.setImage(bannerDto.getImage());
             banner.setUrl(bannerDto.getUrl());
             banner.setViewOrder(bannerDto.getViewOrder());

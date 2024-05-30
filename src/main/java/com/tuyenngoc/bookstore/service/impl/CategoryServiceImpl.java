@@ -59,6 +59,10 @@ public class CategoryServiceImpl implements CategoryService {
             }
             // get category
             category = getCategory(categoryDto.getId());
+
+            //Destroy old image
+            uploadFileUtil.destroyFileWithUrl(category.getImage());
+
             // set new values
             category.setName(categoryDto.getName());
             category.setImage(categoryDto.getImage());

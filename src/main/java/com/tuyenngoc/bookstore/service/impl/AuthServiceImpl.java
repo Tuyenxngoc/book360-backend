@@ -11,13 +11,14 @@ import com.tuyenngoc.bookstore.domain.dto.response.auth.TokenRefreshResponseDto;
 import com.tuyenngoc.bookstore.domain.entity.Cart;
 import com.tuyenngoc.bookstore.domain.entity.Customer;
 import com.tuyenngoc.bookstore.domain.entity.User;
-import com.tuyenngoc.bookstore.domain.mapper.AddressMapper;
 import com.tuyenngoc.bookstore.domain.mapper.UserMapper;
 import com.tuyenngoc.bookstore.exception.DataIntegrityViolationException;
 import com.tuyenngoc.bookstore.exception.InvalidException;
 import com.tuyenngoc.bookstore.exception.NotFoundException;
 import com.tuyenngoc.bookstore.exception.UnauthorizedException;
-import com.tuyenngoc.bookstore.repository.*;
+import com.tuyenngoc.bookstore.repository.CartRepository;
+import com.tuyenngoc.bookstore.repository.CustomerRepository;
+import com.tuyenngoc.bookstore.repository.UserRepository;
 import com.tuyenngoc.bookstore.security.CustomUserDetails;
 import com.tuyenngoc.bookstore.security.jwt.JwtTokenProvider;
 import com.tuyenngoc.bookstore.service.AuthService;
@@ -71,14 +72,6 @@ public class AuthServiceImpl implements AuthService {
     private final CustomerRepository customerRepository;
 
     private final CartRepository cartRepository;
-
-    private final AddressMapper addressMapper;
-
-    private final AddressRepository addressRepository;
-
-    private final AddressServiceImpl addressService;
-
-    private final AddressDetailRepository addressDetailRepository;
 
     @Override
     public LoginResponseDto login(LoginRequestDto request) {

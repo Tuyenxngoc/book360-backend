@@ -41,12 +41,10 @@ public class JwtTokenServiceImpl implements JwtTokenService {
         redisTemplate.opsForValue().set(getRefreshTokenKey(username), refreshToken, EXPIRATION_TIME_REFRESH_TOKEN, TimeUnit.MINUTES);
     }
 
-    //Todo install redis docker
     @Override
     public boolean checkAccessTokenExistenceInRedis(String accessToken, String username) {
-        return true;
-//        return Boolean.TRUE.equals(redisTemplate.hasKey(getAccessTokenKey(username))) &&
-//                accessToken.equals(redisTemplate.opsForValue().get(getAccessTokenKey(username)));
+        return Boolean.TRUE.equals(redisTemplate.hasKey(getAccessTokenKey(username))) &&
+                accessToken.equals(redisTemplate.opsForValue().get(getAccessTokenKey(username)));
     }
 
     @Override

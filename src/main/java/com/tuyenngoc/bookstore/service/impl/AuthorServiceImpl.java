@@ -83,8 +83,13 @@ public class AuthorServiceImpl implements AuthorService {
             if (isFullNameExists) {
                 throw new DataIntegrityViolationException(ErrorMessage.Author.ERR_DUPLICATE_NAME, authorDto.getFullName());
             }
+
             // get author
             author = getAuthor(authorDto.getId());
+
+            //Destroy old image
+            uploadFileUtil.destroyFileWithUrl(author.getAvatar());
+
             // set new values
             author.setFullName(authorDto.getFullName());
             if (authorDto.getBiography() != null) {
