@@ -57,7 +57,6 @@ public class BillServiceImpl implements BillService {
 
     private final MessageSource messageSource;
 
-
     @Override
     public Bill createNewBill(int customerId, BillRequestDto requestDto) {
         Customer customer = new Customer();
@@ -269,6 +268,4 @@ public class BillServiceImpl implements BillService {
             return 0.0;
         }
     }
-
-
 }

@@ -38,7 +38,6 @@ public class AddressServiceImpl implements AddressService {
 
     private final AddressDetailMapper addressDetailMapper;
 
-
     @Override
     public CommonResponseDto saveLocationCustomer(int customerId, CreateAddressRequestDto requestDto) {
         AddressDetail addressDetail;

@@ -64,7 +64,7 @@ public class CategoryServiceImpl implements CategoryService {
             category.setImage(categoryDto.getImage());
         }
         //Delete image urls from redis cache
-        uploadRedisService.deleteUrls(username, List.of(categoryDto.getImage()));
+        uploadRedisService.deleteUrlFromRedisList(username, categoryDto.getImage());
 
         return categoryRepository.save(category);
     }

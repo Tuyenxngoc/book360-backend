@@ -10,4 +10,5 @@ public interface UploadRedisService {
 
     void deleteUrls(String username, List<String> urls);
 
+    void deleteUrlFromRedisList(String username, String url);
 }

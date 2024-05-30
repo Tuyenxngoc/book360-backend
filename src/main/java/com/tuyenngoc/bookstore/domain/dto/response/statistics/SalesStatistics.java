@@ -41,5 +41,3 @@ public class SalesStatistics {
     private List<TimeSeriesData> timeSeries = new ArrayList<>(); // Danh sách dữ liệu thống kê theo thời gian
 
 }
-
-

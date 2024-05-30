@@ -77,7 +77,7 @@ public class BannerServiceImpl implements BannerService {
             banner.setViewOrder(bannerDto.getViewOrder());
         }
         //Delete image urls from redis cache
-        uploadRedisService.deleteUrls(username, List.of(bannerDto.getImage()));
+        uploadRedisService.deleteUrlFromRedisList(username, bannerDto.getImage());
 
         return bannerRepository.save(banner);
     }

@@ -25,7 +25,6 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
-import java.util.Collections;
 import java.util.List;
 
 @Service
@@ -97,14 +96,11 @@ public class AuthorServiceImpl implements AuthorService {
         }
         //Delete image urls from redis cache
         if (authorDto.getAvatar() != null) {
-            uploadRedisService.deleteUrls(username, List.of(authorDto.getAvatar()));
-        } else {
-            uploadRedisService.deleteUrls(username, Collections.emptyList());
+            uploadRedisService.deleteUrlFromRedisList(username, authorDto.getAvatar());
         }
 
         return authorRepository.save(author);
     }
-
 
     @Override
     public CommonResponseDto deleteAuthor(int authorId) {

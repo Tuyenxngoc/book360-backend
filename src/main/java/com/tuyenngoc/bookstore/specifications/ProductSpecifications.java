@@ -19,7 +19,6 @@ public class ProductSpecifications {
         return (root, query, criteriaBuilder) -> criteriaBuilder.isFalse(root.get(Product_.deleteFlag));
     }
 
-
     public static Specification<Product> filterProducts(
             String keyword,
             String searchBy,

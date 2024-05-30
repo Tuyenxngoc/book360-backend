@@ -50,7 +50,6 @@ public class BookSetController {
         return VsResponseUtil.success(bookSetService.getBookSetDetail(bookSetId));
     }
 
-
     @PreAuthorize("hasRole('ADMIN')")
     @Operation(summary = "API create and update book set")
     @PutMapping(UrlConstant.BookSet.CREATE_BOOK_SET)

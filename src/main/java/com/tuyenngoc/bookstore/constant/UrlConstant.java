@@ -144,11 +144,9 @@ public class UrlConstant {
         private static final String PRE_CHAT_ROOM = "/chatrooms";
         private static final String PRE_CHAT = "/chat";
 
-
         public static final String GET_CHAT_ROOMS = PRE_CHAT_ROOM;
         public static final String GET_MESSAGES = PRE_CHAT_ROOM + "/{chatRoomId}/messages";
         public static final String GET_SUPPORT_USER = PRE_CHAT + "/support-user";
-
 
         public static final String GET_USERS = ADMIN_URL + PRE_FIX + "/get-users";
     }

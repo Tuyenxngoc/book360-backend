@@ -44,4 +44,13 @@ public class UploadRedisServiceImpl implements UploadRedisService {
         redisTemplate.delete(key);
     }
 
+    @Override
+    public void deleteUrlFromRedisList(String username, String url) {
+        String key = getKeyFrom(username);
+        List<String> urls = getUrls(username, key);
+
+        // Remove the URL from the Redis list
+        redisTemplate.opsForList().remove(key, 1, url);
+    }
+
 }
